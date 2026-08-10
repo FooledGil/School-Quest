@@ -7,10 +7,9 @@
 
     <title inertia>{{ config('app.name', 'SchoolQuest') }}</title>
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <!-- Self-hosted Fonts (eliminates render-blocking Google Fonts request) -->
+    <link rel="preload" href="/fonts/Outfit-Variable-Latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/fonts/PressStart2P-Latin.woff2" as="font" type="font/woff2" crossorigin>
 
     @viteReactRefresh
     @vite(['resources/css/app.css', 'resources/js/app.jsx'])

@@ -1,43 +1,57 @@
-import React from 'react';
-import { LockClosedIcon, StarIcon } from '@heroicons/react/24/solid';
+import React, { useRef } from 'react';
+import { LockClosedIcon, TrophyIcon } from '@heroicons/react/24/solid';
+import gsap from 'gsap';
 
-export default function AchievementBadge({ achievement, isUnlocked }) {
+export default function AchievementBadge({ achievement = {}, isUnlocked }) {
+    const badgeRef = useRef(null);
+    const title = achievement.title || achievement.name || 'Achievement';
+    const description = achievement.description || '';
+
+    const handleMouseEnter = () => {
+        if (badgeRef.current) {
+            gsap.to(badgeRef.current, { scale: 1.15, duration: 0.25, ease: 'back.out(2)' });
+        }
+    };
+
+    const handleMouseLeave = () => {
+        if (badgeRef.current) {
+            gsap.to(badgeRef.current, { scale: 1, duration: 0.2, ease: 'power2.out' });
+        }
+    };
+
     return (
-        <div className="group relative flex flex-col items-center">
-            {/* Badge */}
+        <div 
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            className="group relative flex flex-col items-center cursor-pointer"
+        >
             <div 
-                className={`w-20 h-20 rounded-full border-4 flex items-center justify-center mb-2 transition-all duration-500
+                ref={badgeRef}
+                className={`w-14 h-14 rounded-xl border flex items-center justify-center mb-2 transition-all duration-200
                     ${isUnlocked 
-                        ? 'border-accent-gold bg-gradient-to-br from-yellow-600 to-yellow-900 shadow-[0_0_20px_rgba(255,215,0,0.6)] hover:scale-110 cursor-pointer' 
-                        : 'border-gray-700 bg-gray-800 grayscale cursor-not-allowed opacity-50'
+                        ? 'border-amber-500/50 bg-amber-500/10 text-amber-400 hover:border-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.2)]' 
+                        : 'border-slate-800 bg-slate-900/60 text-slate-600 opacity-60'
                     }
                 `}
             >
                 {isUnlocked ? (
-                    <div className="relative">
-                        <StarIcon className="w-10 h-10 text-accent-gold drop-shadow-[0_0_5px_rgba(255,255,255,0.8)]" />
-                        {/* Sparkle effect */}
-                        <div className="absolute top-0 right-0 w-2 h-2 bg-white rounded-full animate-ping"></div>
-                    </div>
+                    <TrophyIcon className="w-7 h-7 text-amber-400" />
                 ) : (
-                    <LockClosedIcon className="w-8 h-8 text-gray-500" />
+                    <LockClosedIcon className="w-5 h-5 text-slate-600" />
                 )}
             </div>
 
-            {/* Title */}
-            <span className={`text-xs font-bold text-center ${isUnlocked ? 'text-accent-gold' : 'text-gray-500'}`}>
-                {achievement.title}
+            <span className={`text-xs font-semibold text-center truncate max-w-[90px] ${isUnlocked ? 'text-white' : 'text-slate-500'}`}>
+                {title}
             </span>
 
-            {/* Tooltip on hover */}
-            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-48 p-2 bg-black/90 border border-gray-700 rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 backdrop-blur-sm">
-                <div className="text-sm font-bold text-white mb-1">{achievement.title}</div>
-                <div className="text-xs text-gray-400">{achievement.description}</div>
+            {/* Tooltip */}
+            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-48 p-2.5 bg-slate-900 border border-slate-700 rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
+                <div className="text-xs font-bold text-white mb-1">{title}</div>
+                <div className="text-[11px] text-slate-400 leading-tight">{description}</div>
                 {isUnlocked && (
-                    <div className="text-[10px] text-accent-emerald mt-2 font-game">UNLOCKED</div>
+                    <div className="text-[10px] text-emerald-400 font-bold mt-1.5 uppercase">Terbuka</div>
                 )}
-                {/* Arrow */}
-                <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-[6px] border-r-[6px] border-t-[6px] border-l-transparent border-r-transparent border-t-black/90"></div>
             </div>
         </div>
     );

@@ -8,28 +8,31 @@ export default function Sidebar({ links, isOpen, setIsOpen, user, role }) {
             {/* Mobile overlay */}
             {isOpen && (
                 <div 
-                    className="fixed inset-0 bg-black/60 z-20 md:hidden backdrop-blur-sm"
+                    className="fixed inset-0 bg-black/60 z-20 md:hidden"
                     onClick={() => setIsOpen(false)}
                 />
             )}
 
             {/* Sidebar */}
             <aside 
-                className={`fixed inset-y-0 left-0 z-30 w-64 glass-card rounded-none border-t-0 border-b-0 border-l-0 border-r-gray-800 transition-transform duration-300 ease-in-out flex flex-col
+                className={`fixed inset-y-0 left-0 z-30 w-64 bg-[#111827] border-r border-gray-800 transition-transform duration-200 ease-in-out flex flex-col
                     ${isOpen ? 'translate-x-0' : '-translate-x-full'} 
                     md:relative md:translate-x-0
                 `}
             >
                 {/* Logo Area */}
-                <div className="h-16 flex items-center justify-between px-6 border-b border-gray-800/50 bg-black/20">
-                    <span className="font-game text-sm text-gradient">SchoolQuest</span>
+                <div className="h-16 flex items-center justify-between px-6 border-b border-gray-800 bg-[#0b0f19]">
+                    <div className="flex items-center gap-2">
+                        <img src="/images/logo.png" alt="SchoolQuest Logo" className="w-8 h-8 drop-shadow-md" />
+                        <span className="font-game text-sm text-gradient">SchoolQuest</span>
+                    </div>
                     <button className="md:hidden text-gray-400 hover:text-white" onClick={() => setIsOpen(false)}>
                         <XMarkIcon className="w-6 h-6" />
                     </button>
                 </div>
 
                 {/* User Info (Mobile Only) */}
-                <div className="md:hidden p-4 border-b border-gray-800/50 flex items-center gap-3">
+                <div className="md:hidden p-4 border-b border-gray-800 flex items-center gap-3">
                     <img src={user.avatar} alt="Avatar" className="w-10 h-10 rounded bg-gray-800" />
                     <div>
                         <p className="font-bold text-sm text-white">{user.name}</p>
@@ -47,26 +50,22 @@ export default function Sidebar({ links, isOpen, setIsOpen, user, role }) {
                             <Link
                                 key={link.name}
                                 href={link.href}
-                                className={`flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium transition-all duration-200 group
+                                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors group
                                     ${isActive 
-                                        ? 'bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/30 shadow-[inset_4px_0_0_0_#06b6d4]' 
-                                        : 'text-gray-400 hover:bg-gray-800/50 hover:text-white'
+                                        ? 'bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/20' 
+                                        : 'text-gray-400 hover:bg-gray-800/60 hover:text-white'
                                     }
                                 `}
                             >
                                 <Icon className={`w-5 h-5 ${isActive ? 'text-accent-cyan' : 'text-gray-400 group-hover:text-white'}`} />
                                 {link.name}
-                                
-                                {isActive && (
-                                    <div className="ml-auto w-1.5 h-1.5 rounded-full bg-accent-cyan shadow-[0_0_5px_rgba(6,182,212,0.8)]"></div>
-                                )}
                             </Link>
                         );
                     })}
                 </nav>
 
                 {/* Logout Button */}
-                <div className="p-4 border-t border-gray-800/50">
+                <div className="p-4 border-t border-gray-800">
                     <Link
                         href="/logout"
                         method="post"

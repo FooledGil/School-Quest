@@ -5,7 +5,7 @@ import ExpBar from './ExpBar';
 
 export default function Navbar({ user, onMenuToggle, isAdmin = false }) {
     return (
-        <header className="h-16 glass-card rounded-none border-t-0 border-l-0 border-r-0 flex items-center justify-between px-4 sticky top-0 z-10 bg-black/40">
+        <header className="h-16 bg-[#111827] border-b border-gray-800 flex items-center justify-between px-4 sticky top-0 z-10">
             <div className="flex items-center gap-4">
                 <button 
                     onClick={onMenuToggle}
@@ -14,9 +14,8 @@ export default function Navbar({ user, onMenuToggle, isAdmin = false }) {
                     <Bars3Icon className="w-6 h-6" />
                 </button>
                 
-                {/* Search / Breadcrumbs could go here */}
                 <div className="hidden sm:block text-sm font-bold text-gray-400">
-                    {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+                    {new Date().toLocaleDateString('id-ID', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
                 </div>
             </div>
 
@@ -24,11 +23,11 @@ export default function Navbar({ user, onMenuToggle, isAdmin = false }) {
                 {/* Notifications */}
                 <button className="relative p-2 text-gray-400 hover:text-white transition-colors">
                     <BellIcon className="w-6 h-6" />
-                    <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-accent-red rounded-full border-2 border-bg-card animate-pulse"></span>
+                    <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-accent-red rounded-full"></span>
                 </button>
 
                 {/* Divider */}
-                <div className="w-px h-8 bg-gray-700 hidden sm:block"></div>
+                <div className="w-px h-8 bg-gray-800 hidden sm:block"></div>
 
                 {/* User Profile */}
                 <div className="flex items-center gap-3">

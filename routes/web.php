@@ -8,9 +8,17 @@ use App\Http\Controllers\Student\ProfileController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminQuestController;
 use App\Http\Controllers\Admin\AdminStudentController;
+use App\Http\Controllers\Admin\QuestValidationController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
+    if (Auth::check()) {
+        if (Auth::user()->role === 'admin') {
+            return redirect('/admin/dashboard');
+        }
+        return redirect('/dashboard');
+    }
     return redirect('/login');
 });
 
@@ -38,6 +46,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     
     Route::resource('quests', AdminQuestController::class)->except(['show']);
+    
+    Route::get('/validations', [QuestValidationController::class, 'index'])->name('validations.index');
+    Route::post('/validations/{completion}/approve', [QuestValidationController::class, 'approve'])->name('validations.approve');
+    Route::post('/validations/{completion}/reject', [QuestValidationController::class, 'reject'])->name('validations.reject');
     
     Route::get('/students', [AdminStudentController::class, 'index'])->name('students.index');
     Route::get('/students/{student}', [AdminStudentController::class, 'show'])->name('students.show');

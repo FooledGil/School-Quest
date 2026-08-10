@@ -11,10 +11,18 @@ class StudentMiddleware
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check() && Auth::user()->role === 'student') {
+        if (!Auth::check()) {
+            return redirect('/login');
+        }
+
+        if (Auth::user()->role === 'student') {
             return $next($request);
         }
 
-        return redirect('/');
+        if (Auth::user()->role === 'admin') {
+            return redirect('/admin/dashboard');
+        }
+
+        return redirect('/login');
     }
 }

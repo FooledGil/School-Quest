@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Student;
 use App\Http\Controllers\Controller;
 use App\Models\Quest;
 use App\Models\QuestCompletion;
-use App\Services\ExpService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,17 +17,21 @@ class QuestController extends Controller
         $user = Auth::user();
         $today = Carbon::today();
 
-        $completedQuestIds = $user->questCompletions()
+        // Get today's completions with their status
+        $todayCompletions = $user->questCompletions()
             ->whereDate('completed_at', $today)
-            ->pluck('quest_id')
-            ->toArray();
+            ->get()
+            ->keyBy('quest_id');
 
         // Main quests (Daily)
         $mainQuests = Quest::where('type', 'main')
             ->where('available_date', $today->toDateString())
             ->get()
-            ->map(function($q) use ($completedQuestIds) {
-                $q->completed = in_array($q->id, $completedQuestIds);
+            ->map(function($q) use ($todayCompletions) {
+                $completion = $todayCompletions->get($q->id);
+                $q->completed = $completion !== null;
+                $q->submission_status = $completion?->status ?? null;
+                $q->rejection_reason = $completion?->rejection_reason ?? null;
                 return $q;
             });
 
@@ -36,8 +39,11 @@ class QuestController extends Controller
         $additionalQuests = Quest::where('type', 'additional')
             ->where('is_active', true)
             ->get()
-            ->map(function($q) use ($completedQuestIds) {
-                $q->completed = in_array($q->id, $completedQuestIds);
+            ->map(function($q) use ($todayCompletions) {
+                $completion = $todayCompletions->get($q->id);
+                $q->completed = $completion !== null && $completion->status === 'approved';
+                $q->submission_status = $completion?->status ?? null;
+                $q->rejection_reason = $completion?->rejection_reason ?? null;
                 return $q;
             });
 
@@ -47,45 +53,42 @@ class QuestController extends Controller
         ]);
     }
 
-    public function complete(Quest $quest, ExpService $expService)
+    public function complete(Request $request, Quest $quest)
     {
         $user = Auth::user();
         $today = Carbon::today();
 
-        // Check if already completed today
-        $alreadyCompleted = QuestCompletion::where('user_id', $user->id)
+        $request->validate([
+            'proof_text' => 'required|string|max:1000',
+        ]);
+
+        // Check if already submitted today (pending or approved)
+        $existingCompletion = QuestCompletion::where('user_id', $user->id)
             ->where('quest_id', $quest->id)
             ->whereDate('completed_at', $today)
+            ->whereIn('status', ['pending', 'approved'])
             ->exists();
 
-        if ($alreadyCompleted) {
-            return back()->with('error', 'Quest sudah diselesaikan hari ini.');
+        if ($existingCompletion) {
+            return back()->with('error', 'Quest sudah disubmit atau diselesaikan hari ini.');
         }
 
-        $oldLevel = $user->level;
+        // Delete any rejected submission for today so they can resubmit
+        QuestCompletion::where('user_id', $user->id)
+            ->where('quest_id', $quest->id)
+            ->whereDate('completed_at', $today)
+            ->where('status', 'rejected')
+            ->delete();
 
         QuestCompletion::create([
             'user_id' => $user->id,
             'quest_id' => $quest->id,
             'completed_at' => now(),
             'exp_earned' => $quest->exp_reward,
+            'status' => 'pending',
+            'proof_text' => $request->proof_text,
         ]);
 
-        $expService->addExp($user, $quest->exp_reward);
-
-        $user->refresh();
-        $newLevel = $user->level;
-
-        $flashData = [
-            'success' => "Quest Selesai! +{$quest->exp_reward} EXP",
-            'exp_gained' => $quest->exp_reward,
-        ];
-
-        if ($newLevel > $oldLevel) {
-            $flashData['level_up'] = true;
-            $flashData['new_level'] = $newLevel;
-        }
-
-        return back()->with($flashData);
+        return back()->with('success', 'Bukti pengerjaan quest berhasil dikirim! Menunggu validasi admin.');
     }
 }

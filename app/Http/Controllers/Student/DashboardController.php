@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
 use App\Models\Schedule;
+use App\Models\Quest;
+use App\Models\QuestCompletion;
+use App\Models\Achievement;
 use App\Services\QuestGeneratorService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -29,11 +32,36 @@ class DashboardController extends Controller
             ->orderBy('time_start')
             ->get();
 
+        $completedQuestIds = $user->questCompletions()
+            ->whereDate('completed_at', $today)
+            ->pluck('quest_id')
+            ->toArray();
+
+        $recentQuests = Quest::where(function($query) use ($today) {
+                $query->where(function($q) use ($today) {
+                    $q->where('type', 'main')->where('available_date', $today->toDateString());
+                })->orWhere(function($q) {
+                    $q->where('type', 'additional')->where('is_active', true);
+                });
+            })
+            ->whereNotIn('id', $completedQuestIds)
+            ->take(4)
+            ->get();
+
+        $allAchievements = Achievement::all();
+        $userAchievementIds = $user->achievements()->pluck('achievement_id')->toArray();
+
+        $achievements = $allAchievements->map(function($ach) use ($userAchievementIds) {
+            $ach->isUnlocked = in_array($ach->id, $userAchievementIds);
+            return $ach;
+        });
+
         $stats = [
             'exp' => $user->exp,
             'level' => $user->level,
             'rank' => ExpService::getRankName($user->level),
             'streak' => $user->streak_days,
+            'questsCompleted' => $user->questCompletions()->count(),
             'nextLevelExp' => pow($user->level, 2) * 100,
         ];
 
@@ -41,6 +69,8 @@ class DashboardController extends Controller
             'user' => $user,
             'schedules' => $schedules,
             'stats' => $stats,
+            'recentQuests' => $recentQuests,
+            'achievements' => $achievements,
         ]);
     }
 }

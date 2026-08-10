@@ -17,6 +17,17 @@ export default defineConfig({
             '@': '/resources/js',
         },
     },
+    build: {
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    'vendor-react': ['react', 'react-dom', '@inertiajs/react'],
+                    'vendor-gsap': ['gsap', '@gsap/react'],
+                },
+            },
+        },
+        cssMinify: true,
+    },
     server: {
         watch: {
             ignored: ['**/storage/framework/views/**'],

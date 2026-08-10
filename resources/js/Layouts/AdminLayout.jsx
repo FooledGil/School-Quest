@@ -1,18 +1,27 @@
 import React, { useState } from 'react';
 import Navbar from '@/Components/Navbar';
 import Sidebar from '@/Components/Sidebar';
-import { HomeIcon, ClipboardDocumentListIcon, UsersIcon } from '@heroicons/react/24/outline';
+import { HomeIcon, ClipboardDocumentListIcon, UsersIcon, ShieldCheckIcon } from '@heroicons/react/24/outline';
 import Toast from '@/Components/Toast';
 import { usePage } from '@inertiajs/react';
 
-export default function AdminLayout({ user, children }) {
+export default function AdminLayout({ user: propUser, children }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
-    const { flash } = usePage().props;
+    const { auth, flash } = usePage().props;
+
+    const rawUser = auth?.user || propUser || {};
+    const user = {
+        ...rawUser,
+        avatar: rawUser.avatar || `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(rawUser.avatar_seed || rawUser.name || 'Admin')}`,
+    };
+
+    const pathname = typeof window !== 'undefined' ? window.location.pathname : '/admin/dashboard';
 
     const links = [
-        { name: 'Dashboard', href: '/admin/dashboard', icon: HomeIcon, active: route().current('admin.dashboard') },
-        { name: 'Manage Quests', href: '/admin/quests', icon: ClipboardDocumentListIcon, active: route().current('admin.quests.*') },
-        { name: 'Student Progress', href: '/admin/students', icon: UsersIcon, active: route().current('admin.students.*') },
+        { name: 'Dashboard', href: '/admin/dashboard', icon: HomeIcon, active: pathname === '/admin/dashboard' },
+        { name: 'Manage Quests', href: '/admin/quests', icon: ClipboardDocumentListIcon, active: pathname.startsWith('/admin/quests') },
+        { name: 'Validasi Quest', href: '/admin/validations', icon: ShieldCheckIcon, active: pathname.startsWith('/admin/validations') },
+        { name: 'Student Progress', href: '/admin/students', icon: UsersIcon, active: pathname.startsWith('/admin/students') },
     ];
 
     return (
@@ -33,8 +42,4 @@ export default function AdminLayout({ user, children }) {
             {flash?.error && <Toast type="error" message={flash.error} />}
         </div>
     );
-}
-
-function route() {
-    return { current: () => false };
 }

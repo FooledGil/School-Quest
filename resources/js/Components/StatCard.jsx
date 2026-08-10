@@ -1,51 +1,53 @@
-import React, { useEffect, useState } from 'react';
+import React, { useRef, useState } from 'react';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 
-export default function StatCard({ icon: Icon, label, value, color = 'cyan' }) {
-    const [displayValue, setDisplayValue] = useState(0);
-    const numValue = typeof value === 'number' ? value : parseInt(value?.toString().replace(/\D/g, '') || '0', 10);
-    
-    // Simple counter animation
-    useEffect(() => {
-        if (numValue === 0) return;
-        
-        let start = 0;
-        const duration = 1500; // ms
-        const increment = numValue / (duration / 16); // 60fps
-        
-        const timer = setInterval(() => {
-            start += increment;
-            if (start >= numValue) {
-                setDisplayValue(numValue);
-                clearInterval(timer);
-            } else {
-                setDisplayValue(Math.floor(start));
-            }
-        }, 16);
-        
-        return () => clearInterval(timer);
-    }, [numValue]);
+export default function StatCard({ icon: Icon, label, value, color = 'blue' }) {
+    const cardRef = useRef(null);
+    const [displayVal, setDisplayVal] = useState(typeof value === 'number' ? 0 : value);
 
-    const colors = {
-        cyan: 'text-accent-cyan from-accent-cyan/20 to-transparent shadow-[0_0_15px_rgba(6,182,212,0.15)] hover:shadow-[0_0_25px_rgba(6,182,212,0.3)] hover:border-accent-cyan/50',
-        purple: 'text-accent-purple from-accent-purple/20 to-transparent shadow-[0_0_15px_rgba(168,85,247,0.15)] hover:shadow-[0_0_25px_rgba(168,85,247,0.3)] hover:border-accent-purple/50',
-        gold: 'text-accent-gold from-accent-gold/20 to-transparent shadow-[0_0_15px_rgba(255,215,0,0.15)] hover:shadow-[0_0_25px_rgba(255,215,0,0.3)] hover:border-accent-gold/50',
-        emerald: 'text-accent-emerald from-accent-emerald/20 to-transparent shadow-[0_0_15px_rgba(16,185,129,0.15)] hover:shadow-[0_0_25px_rgba(16,185,129,0.3)] hover:border-accent-emerald/50',
+    const iconColors = {
+        blue: 'text-blue-400 bg-blue-500/10 border-blue-500/20',
+        cyan: 'text-blue-400 bg-blue-500/10 border-blue-500/20',
+        purple: 'text-indigo-400 bg-indigo-500/10 border-indigo-500/20',
+        gold: 'text-amber-400 bg-amber-500/10 border-amber-500/20',
+        emerald: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20',
     };
 
-    const style = colors[color] || colors.cyan;
+    const style = iconColors[color] || iconColors.blue;
+
+    useGSAP(() => {
+        if (cardRef.current) {
+            gsap.fromTo(
+                cardRef.current,
+                { y: 20, opacity: 0 },
+                { y: 0, opacity: 1, duration: 0.5, ease: 'power2.out' }
+            );
+
+            if (typeof value === 'number') {
+                const obj = { val: 0 };
+                gsap.to(obj, {
+                    val: value,
+                    duration: 0.8,
+                    ease: 'power2.out',
+                    onUpdate: () => setDisplayVal(Math.round(obj.val))
+                });
+            }
+        }
+    }, { dependencies: [value], scope: cardRef });
 
     return (
-        <div className={`glass-card p-5 flex items-center gap-4 bg-gradient-to-br transition-all duration-300 ${style}`}>
-            <div className={`p-3 rounded-lg bg-black/40 border border-gray-800 ${style.split(' ')[0]}`}>
+        <div ref={cardRef} className="glass-card p-5 flex items-center gap-4 transition-all hover:border-blue-500/40 hover:-translate-y-1">
+            <div className={`p-3 rounded-lg border ${style}`}>
                 <Icon className="w-6 h-6" />
             </div>
-            
+
             <div>
-                <p className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-1">
+                <p className="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-1">
                     {label}
                 </p>
-                <div className={`text-2xl font-game ${style.split(' ')[0]}`}>
-                    {typeof value === 'number' ? displayValue.toLocaleString() : value}
+                <div className="text-2xl font-bold text-white tracking-tight">
+                    {typeof displayVal === 'number' ? displayVal.toLocaleString() : value}
                 </div>
             </div>
         </div>

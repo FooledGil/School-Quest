@@ -1,23 +1,20 @@
 import React, { useState } from 'react';
 import { Head, useForm } from '@inertiajs/react';
 import AuthLayout from '@/Layouts/AuthLayout';
+import { IdentificationIcon, KeyIcon, EnvelopeIcon, InformationCircleIcon } from '@heroicons/react/24/outline';
 
 export default function Login() {
     const [tab, setTab] = useState('student');
 
     const { data, setData, post, processing, errors, reset } = useForm({
         login: '',
-        password: 'password',
+        password: '',
     });
 
     const switchTab = (newTab) => {
         setTab(newTab);
         reset();
-        if (newTab === 'student') {
-            setData({ login: '', password: 'password' });
-        } else {
-            setData({ login: '', password: '' });
-        }
+        setData({ login: '', password: '' });
     };
 
     const submit = (e) => {
@@ -27,135 +24,126 @@ export default function Login() {
 
     return (
         <AuthLayout>
-            <Head title="Login" />
+            <Head title="Login - Enter The Realm" />
 
             {/* Tab Switcher */}
-            <div className="flex mb-8 bg-black/50 p-1 rounded-lg border border-gray-700">
+            <div className="grid grid-cols-2 mb-6 bg-[#0f1118] p-1 rounded border border-[#242836]">
                 <button
                     type="button"
                     onClick={() => switchTab('student')}
-                    className={`flex-1 py-2 text-xs font-bold uppercase rounded-md transition-all duration-300 ${
+                    className={`py-2 text-xs font-mono font-bold tracking-wider uppercase transition-all duration-200 rounded-xs ${
                         tab === 'student'
-                            ? 'bg-accent-cyan text-white shadow-[0_0_10px_rgba(6,182,212,0.5)]'
-                            : 'text-gray-400 hover:text-white'
+                            ? 'bg-[#2563eb] text-white shadow-md'
+                            : 'text-slate-400 hover:text-white hover:bg-slate-800/40'
                     }`}
                 >
-                    🎮 Student
+                    SISWA (NISN)
                 </button>
                 <button
                     type="button"
                     onClick={() => switchTab('admin')}
-                    className={`flex-1 py-2 text-xs font-bold uppercase rounded-md transition-all duration-300 ${
+                    className={`py-2 text-xs font-mono font-bold tracking-wider uppercase transition-all duration-200 rounded-xs ${
                         tab === 'admin'
-                            ? 'bg-accent-purple text-white shadow-[0_0_10px_rgba(168,85,247,0.5)]'
-                            : 'text-gray-400 hover:text-white'
+                            ? 'bg-[#2563eb] text-white shadow-md'
+                            : 'text-slate-400 hover:text-white hover:bg-slate-800/40'
                     }`}
                 >
-                    🛡️ Admin
+                    ADMIN (EMAIL)
                 </button>
             </div>
 
-            <form onSubmit={submit} className="space-y-5">
-
+            <form onSubmit={submit} className="space-y-4 tab-fade-in" key={tab}>
                 {tab === 'student' ? (
-                    <div className="space-y-2 group">
-                        <label className="text-xs font-bold text-accent-cyan tracking-wider block">NISN</label>
-                        <div className="relative">
-                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500 group-focus-within:text-accent-cyan transition-colors">
-                                <span className="text-lg">🪪</span>
-                            </div>
+                    <div>
+                        <label className="text-[10px] font-mono tracking-widest text-slate-400 uppercase font-semibold mb-1.5 block">
+                            IDENTITY ID / NISN
+                        </label>
+                        <div className="flex items-center bg-[#0d0f15] border border-[#272b38] rounded focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20 transition-all duration-200 px-3 py-2">
+                            <IdentificationIcon className="w-5 h-5 text-slate-500 mr-2.5 shrink-0 transition-colors group-focus-within:text-blue-400" />
                             <input
                                 id="nisn-input"
                                 type="text"
                                 value={data.login}
                                 onChange={e => setData('login', e.target.value)}
-                                className="w-full bg-black/50 border border-gray-700 rounded-lg py-3 pl-10 pr-4 text-white placeholder-gray-600 focus:outline-none focus:border-accent-cyan focus:ring-1 focus:ring-accent-cyan transition-all"
-                                placeholder="Masukkan NISN kamu"
+                                className="bg-transparent w-full text-white font-mono text-sm focus:outline-none placeholder-slate-600"
+                                placeholder="Masukkan NISN siswa"
                                 required
                                 autoFocus
                             />
                         </div>
-                        <p className="text-gray-600 text-[10px]">Contoh: 0012345001</p>
-                        {errors.login && <p className="text-accent-red text-xs animate-shake mt-1">{errors.login}</p>}
+                        {errors.login && <p className="text-rose-400 font-mono text-xs mt-1 animate-pulse">{errors.login}</p>}
                     </div>
                 ) : (
-                    <>
-                        <div className="space-y-2 group">
-                            <label className="text-xs font-bold text-accent-purple tracking-wider block">Email</label>
-                            <div className="relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500 group-focus-within:text-accent-purple transition-colors">
-                                    <span className="text-lg">📧</span>
-                                </div>
-                                <input
-                                    id="email-input"
-                                    type="email"
-                                    value={data.login}
-                                    onChange={e => setData('login', e.target.value)}
-                                    className="w-full bg-black/50 border border-gray-700 rounded-lg py-3 pl-10 pr-4 text-white placeholder-gray-600 focus:outline-none focus:border-accent-purple focus:ring-1 focus:ring-accent-purple transition-all"
-                                    placeholder="admin@schoolquest.id"
-                                    required
-                                />
-                            </div>
-                            {errors.login && <p className="text-accent-red text-xs animate-shake mt-1">{errors.login}</p>}
+                    <div>
+                        <label className="text-[10px] font-mono tracking-widest text-slate-400 uppercase font-semibold mb-1.5 block">
+                            IDENTITY ID / EMAIL
+                        </label>
+                        <div className="flex items-center bg-[#0d0f15] border border-[#272b38] rounded focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20 transition-all duration-200 px-3 py-2">
+                            <EnvelopeIcon className="w-5 h-5 text-slate-500 mr-2.5 shrink-0 transition-colors group-focus-within:text-blue-400" />
+                            <input
+                                id="email-input"
+                                type="email"
+                                value={data.login}
+                                onChange={e => setData('login', e.target.value)}
+                                className="bg-transparent w-full text-white font-mono text-sm focus:outline-none placeholder-slate-600"
+                                placeholder="admin@schoolquest.id"
+                                required
+                                autoFocus
+                            />
                         </div>
-                        <div className="space-y-2 group">
-                            <label className="text-xs font-bold text-accent-purple tracking-wider block">Password</label>
-                            <div className="relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500 group-focus-within:text-accent-purple transition-colors">
-                                    <span className="text-lg">🔒</span>
-                                </div>
-                                <input
-                                    id="password-input"
-                                    type="password"
-                                    value={data.password}
-                                    onChange={e => setData('password', e.target.value)}
-                                    className="w-full bg-black/50 border border-gray-700 rounded-lg py-3 pl-10 pr-4 text-white placeholder-gray-600 focus:outline-none focus:border-accent-purple focus:ring-1 focus:ring-accent-purple transition-all"
-                                    placeholder="••••••••"
-                                    required
-                                />
-                            </div>
-                            {errors.password && <p className="text-accent-red text-xs animate-shake mt-1">{errors.password}</p>}
-                        </div>
-                    </>
+                        {errors.login && <p className="text-rose-400 font-mono text-xs mt-1 animate-pulse">{errors.login}</p>}
+                    </div>
                 )}
 
-                {/* Student auto-password info */}
-                {tab === 'student' && (
-                    <input type="hidden" name="password" value="password" />
-                )}
+                <div>
+                    <label className="text-[10px] font-mono tracking-widest text-slate-400 uppercase font-semibold mb-1.5 block">
+                        ACCESS KEY / PASSWORD
+                    </label>
+                    <div className="flex items-center bg-[#0d0f15] border border-[#272b38] rounded focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20 transition-all duration-200 px-3 py-2">
+                        <KeyIcon className="w-5 h-5 text-slate-500 mr-2.5 shrink-0 transition-colors group-focus-within:text-blue-400" />
+                        <input
+                            id="password-input"
+                            type="password"
+                            value={data.password}
+                            onChange={e => setData('password', e.target.value)}
+                            className="bg-transparent w-full text-white font-mono text-sm focus:outline-none placeholder-slate-600 tracking-widest"
+                            placeholder="••••••••"
+                            required
+                        />
+                    </div>
+                    {errors.password && <p className="text-rose-400 font-mono text-xs mt-1 animate-pulse">{errors.password}</p>}
+                </div>
 
                 <button
                     type="submit"
                     disabled={processing}
-                    className={`w-full py-3 rounded-lg font-game text-sm mt-6 transition-all duration-300 flex justify-center items-center gap-2 ${
-                        tab === 'student'
-                            ? 'bg-accent-cyan/20 text-accent-cyan border border-accent-cyan hover:bg-accent-cyan hover:text-white shadow-[0_0_15px_rgba(6,182,212,0.3)] hover:shadow-[0_0_25px_rgba(6,182,212,0.6)]'
-                            : 'bg-accent-purple/20 text-accent-purple border border-accent-purple hover:bg-accent-purple hover:text-white shadow-[0_0_15px_rgba(168,85,247,0.3)] hover:shadow-[0_0_25px_rgba(168,85,247,0.6)]'
-                    }`}
+                    className="w-full py-3.5 px-4 rounded bg-[#f59e0b] hover:bg-[#d97706] text-black font-extrabold font-mono tracking-wider text-sm uppercase transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-amber-500/20 active:translate-y-0 shadow-md flex items-center justify-center gap-2 mt-6 cursor-pointer"
                 >
                     {processing ? (
-                        <span className="animate-pulse">Connecting...</span>
+                        'ENTERING REALM...'
                     ) : (
-                        <>⚔️ ENTER GAME</>
+                        <>
+                            ENTER THE REALM <span className="text-lg transition-transform group-hover:scale-110">⚔</span>
+                        </>
                     )}
                 </button>
             </form>
 
-            {/* Demo credentials */}
-            <div className="mt-6 pt-4 border-t border-gray-800">
-                <p className="text-gray-600 text-[10px] text-center mb-2">Demo Accounts:</p>
-                <div className="grid grid-cols-2 gap-2 text-[9px] text-gray-500">
-                    <div className="bg-black/30 rounded p-2">
-                        <p className="text-accent-cyan font-bold">Student</p>
-                        <p>NISN: 0012345001</p>
-                        <p>Pass: password</p>
-                    </div>
-                    <div className="bg-black/30 rounded p-2">
-                        <p className="text-accent-purple font-bold">Admin</p>
-                        <p>admin@schoolquest.id</p>
-                        <p>Pass: admin123</p>
-                    </div>
+            {/* Scroll of Access / Demo Info */}
+            <div className="bg-[#0d1017] border border-[#222634] rounded p-3 text-xs font-mono text-slate-300 mt-5 transition-all duration-200 hover:border-amber-500/30">
+                <div className="text-[10px] font-bold text-amber-500 tracking-wider uppercase flex items-center gap-1.5 mb-1">
+                    <InformationCircleIcon className="w-3.5 h-3.5 text-amber-500 animate-pulse" />
+                    SCROLL OF ACCESS
                 </div>
+                {tab === 'student' ? (
+                    <p className="text-slate-300">
+                        Demo Access: <span className="text-white font-bold">NISN 0012345001</span> | Pass: <span className="text-white font-bold">password</span>
+                    </p>
+                ) : (
+                    <p className="text-slate-300">
+                        Demo Access: <span className="text-white font-bold">admin@schoolquest.id</span> | Pass: <span className="text-white font-bold">admin123</span>
+                    </p>
+                )}
             </div>
         </AuthLayout>
     );

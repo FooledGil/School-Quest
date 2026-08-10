@@ -5,15 +5,26 @@ import { HomeIcon, ListBulletIcon, TrophyIcon, UserIcon } from '@heroicons/react
 import Toast from '@/Components/Toast';
 import { usePage } from '@inertiajs/react';
 
-export default function StudentLayout({ user, children }) {
+export default function StudentLayout({ user: propUser, children }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
-    const { flash } = usePage().props;
+    const { auth, flash } = usePage().props;
+    
+    // Use user from Inertia auth share if available, fallback to prop
+    const rawUser = auth?.user || propUser || {};
+    const user = {
+        ...rawUser,
+        avatar: rawUser.avatar || `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(rawUser.avatar_seed || rawUser.name || 'Student')}`,
+        rank_name: rawUser.rank_name || 'Novice',
+        next_level_exp: rawUser.next_level_exp || (Math.pow(rawUser.level || 1, 2) * 100)
+    };
+
+    const pathname = typeof window !== 'undefined' ? window.location.pathname : '/dashboard';
 
     const links = [
-        { name: 'Dashboard', href: '/student/dashboard', icon: HomeIcon, active: route().current('student.dashboard') },
-        { name: 'Quests', href: '/student/quests', icon: ListBulletIcon, active: route().current('student.quests.*') },
-        { name: 'Leaderboard', href: '/student/leaderboard', icon: TrophyIcon, active: route().current('student.leaderboard') },
-        { name: 'Profile', href: '/student/profile', icon: UserIcon, active: route().current('student.profile') },
+        { name: 'Dashboard', href: '/dashboard', icon: HomeIcon, active: pathname === '/dashboard' },
+        { name: 'Quests', href: '/quests', icon: ListBulletIcon, active: pathname === '/quests' },
+        { name: 'Leaderboard', href: '/leaderboard', icon: TrophyIcon, active: pathname === '/leaderboard' },
+        { name: 'Profile', href: '/profile', icon: UserIcon, active: pathname === '/profile' },
     ];
 
     return (
@@ -35,14 +46,7 @@ export default function StudentLayout({ user, children }) {
             {/* Flash Messages */}
             {flash?.success && <Toast type="success" message={flash.success} />}
             {flash?.error && <Toast type="error" message={flash.error} />}
-            {flash?.levelup && <Toast type="levelup" message={flash.levelup} />}
+            {flash?.level_up && <Toast type="levelup" message={`Level Up! Selamat kamu naik ke Level ${flash.new_level || user.level}`} />}
         </div>
     );
-}
-
-function route() {
-    // Mock route helper for frontend demonstration purposes
-    return {
-        current: () => false
-    };
 }

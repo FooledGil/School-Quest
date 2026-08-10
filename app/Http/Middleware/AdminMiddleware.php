@@ -11,10 +11,18 @@ class AdminMiddleware
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check() && Auth::user()->role === 'admin') {
+        if (!Auth::check()) {
+            return redirect('/login');
+        }
+
+        if (Auth::user()->role === 'admin') {
             return $next($request);
         }
 
-        return redirect('/');
+        if (Auth::user()->role === 'student') {
+            return redirect('/dashboard');
+        }
+
+        return redirect('/login');
     }
 }

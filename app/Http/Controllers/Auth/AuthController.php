@@ -26,11 +26,11 @@ class AuthController extends Controller
         if (Auth::attempt([$loginField => $request->login, 'password' => $request->password])) {
             $request->session()->regenerate();
 
-            if (Auth::user()->role === 'admin') {
-                return redirect()->intended('/admin/dashboard');
-            }
+            $intendedUrl = Auth::user()->role === 'admin' 
+                ? redirect()->intended('/admin/dashboard')->getTargetUrl()
+                : redirect()->intended('/dashboard')->getTargetUrl();
 
-            return redirect()->intended('/dashboard');
+            return Inertia::location($intendedUrl);
         }
 
         return back()->withErrors([
@@ -44,6 +44,6 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return Inertia::location('/');
     }
 }
