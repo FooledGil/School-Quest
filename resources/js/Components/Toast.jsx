@@ -35,10 +35,10 @@ export default function Toast({ type = 'info', message }) {
     const style = styles[type] || styles.info;
 
     return (
-        <div className="fixed top-4 right-4 z-50 animate-slide-up">
-            <div className={`flex items-center gap-3 px-4 py-3 rounded-lg border backdrop-blur-md ${style.bg}`}>
-                {style.icon}
-                <span className="font-bold text-sm">{message}</span>
+        <div className="fixed top-3 sm:top-4 right-3 sm:right-4 left-3 sm:left-auto z-50 sm:max-w-md animate-slide-up pointer-events-auto">
+            <div className={`flex items-center gap-2.5 sm:gap-3 px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-lg border backdrop-blur-md shadow-xl ${style.bg}`}>
+                <div className="shrink-0">{style.icon}</div>
+                <span className="font-bold text-xs sm:text-sm break-words flex-1">{message}</span>
             </div>
         </div>
     );

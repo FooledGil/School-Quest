@@ -49,23 +49,23 @@ export default function Quests({ mainQuests = [], additionalQuests = [] }) {
         <StudentLayout>
             <Head title="Papan Quest" />
 
-            <div className="mb-6">
-                <h1 className="text-2xl md:text-3xl font-extrabold text-white mb-1 tracking-tight">Papan Quest</h1>
-                <p className="text-slate-400 text-sm">Selesaikan quest harian & tambahan untuk meningkatkan EXP!</p>
+            <div className="mb-5 sm:mb-6">
+                <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white mb-1 tracking-tight">Papan Quest</h1>
+                <p className="text-slate-400 text-xs sm:text-sm">Selesaikan quest harian & tambahan untuk meningkatkan EXP!</p>
             </div>
 
             {/* Main Tabs */}
-            <div className="flex gap-6 mb-6 border-b border-slate-800 pb-px">
+            <div className="flex overflow-x-auto gap-4 sm:gap-6 mb-5 sm:mb-6 border-b border-slate-800 pb-px">
                 <button 
                     onClick={() => setTab('main')}
-                    className={`pb-3 px-1 font-bold text-sm transition-colors relative cursor-pointer ${tab === 'main' ? 'text-blue-400' : 'text-slate-500 hover:text-slate-300'}`}
+                    className={`pb-3 px-1 font-bold text-xs sm:text-sm transition-colors relative cursor-pointer shrink-0 ${tab === 'main' ? 'text-blue-400' : 'text-slate-500 hover:text-slate-300'}`}
                 >
                     Main Quests ({mainQuests.length})
                     {tab === 'main' && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-500 rounded-full"></div>}
                 </button>
                 <button 
                     onClick={() => setTab('additional')}
-                    className={`pb-3 px-1 font-bold text-sm transition-colors relative cursor-pointer ${tab === 'additional' ? 'text-blue-400' : 'text-slate-500 hover:text-slate-300'}`}
+                    className={`pb-3 px-1 font-bold text-xs sm:text-sm transition-colors relative cursor-pointer shrink-0 ${tab === 'additional' ? 'text-blue-400' : 'text-slate-500 hover:text-slate-300'}`}
                 >
                     Additional Quests ({additionalQuests.length})
                     {tab === 'additional' && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-500 rounded-full"></div>}
@@ -73,13 +73,13 @@ export default function Quests({ mainQuests = [], additionalQuests = [] }) {
             </div>
 
             {/* Filters */}
-            <div className="flex flex-wrap items-center justify-between gap-4 mb-6 glass-card p-3">
-                <div className="flex gap-2">
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-6 glass-card p-2.5 sm:p-3">
+                <div className="flex flex-wrap gap-1.5 sm:gap-2">
                     {['all', 'active', 'pending', 'completed'].map(f => (
                         <button
                             key={f}
                             onClick={() => setFilter(f)}
-                            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase transition-colors cursor-pointer ${
+                            className={`px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-bold uppercase transition-colors cursor-pointer ${
                                 filter === f 
                                     ? 'bg-blue-600 text-white shadow-sm' 
                                     : 'bg-transparent text-slate-400 hover:bg-slate-800'
@@ -93,7 +93,7 @@ export default function Quests({ mainQuests = [], additionalQuests = [] }) {
 
             {/* Quests Grid */}
             {filteredQuests.length > 0 ? (
-                <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
                     {filteredQuests.map(quest => (
                         <QuestCard 
                             key={quest.id} 
@@ -105,9 +105,9 @@ export default function Quests({ mainQuests = [], additionalQuests = [] }) {
                     ))}
                 </div>
             ) : (
-                <div className="glass-card p-12 text-center border-dashed border-slate-800 flex flex-col items-center justify-center">
-                    <div className="text-4xl mb-3 opacity-60">📜</div>
-                    <h3 className="text-lg font-bold text-slate-300 mb-1">Belum Ada Quest</h3>
+                <div className="glass-card p-8 sm:p-12 text-center border-dashed border-slate-800 flex flex-col items-center justify-center">
+                    <div className="text-3xl sm:text-4xl mb-3 opacity-60">📜</div>
+                    <h3 className="text-base sm:text-lg font-bold text-slate-300 mb-1">Belum Ada Quest</h3>
                     <p className="text-slate-500 text-xs">Tidak ada quest untuk kriteria filter ini.</p>
                 </div>
             )}

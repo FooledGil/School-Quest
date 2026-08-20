@@ -37,9 +37,13 @@ class DashboardController extends Controller
             ->pluck('quest_id')
             ->toArray();
 
-        $recentQuests = Quest::where(function($query) use ($today) {
-                $query->where(function($q) use ($today) {
-                    $q->where('type', 'main')->where('available_date', $today->toDateString());
+        $recentQuests = Quest::where(function($query) use ($today, $user) {
+                $query->where(function($q) use ($today, $user) {
+                    $q->where('type', 'main')
+                      ->where('available_date', $today->toDateString())
+                      ->where(function($sub) use ($user) {
+                          $sub->whereNull('class')->orWhere('class', $user->class);
+                      });
                 })->orWhere(function($q) {
                     $q->where('type', 'additional')->where('is_active', true);
                 });

@@ -10,6 +10,8 @@ class Schedule extends Model
         'day_of_week',
         'subject_id',
         'class',
+        'teacher',
+        'room',
         'time_start',
         'time_end',
     ];

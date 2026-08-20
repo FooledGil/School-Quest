@@ -36,25 +36,25 @@ export default function Leaderboard({ students = [] }) {
         <StudentLayout>
             <Head title="Leaderboard" />
 
-            <div className="mb-6 text-center">
-                <h1 className="text-2xl md:text-3xl font-extrabold text-white mb-1 tracking-tight">Papan Peringkat</h1>
-                <p className="text-blue-400 font-bold text-xs uppercase tracking-wider">Murid Berprestasi Dengan EXP Tertinggi</p>
+            <div className="mb-5 sm:mb-6 text-center">
+                <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white mb-1 tracking-tight">Papan Peringkat</h1>
+                <p className="text-blue-400 font-bold text-[10px] sm:text-xs uppercase tracking-wider">Murid Berprestasi Dengan EXP Tertinggi</p>
             </div>
 
             {normalizedStudents.length >= 3 && (
                 <PodiumDisplay topThree={normalizedStudents.slice(0, 3)} />
             )}
 
-            <div className="glass-card overflow-hidden mt-6">
+            <div className="glass-card overflow-hidden mt-6 shadow-xl">
                 <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse">
+                    <table className="w-full text-left border-collapse min-w-[480px]">
                         <thead>
-                            <tr className="bg-slate-900/80 border-b border-slate-800 text-xs font-bold text-slate-400 uppercase tracking-wider">
-                                <th className="p-4 text-center w-16">Peringkat</th>
-                                <th className="p-4">Murid</th>
-                                <th className="p-4 text-center">Kelas</th>
-                                <th className="p-4 text-center">Level</th>
-                                <th className="p-4 text-right">Total EXP</th>
+                            <tr className="bg-slate-900/80 border-b border-slate-800 text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider">
+                                <th className="p-3 sm:p-4 text-center w-14 sm:w-16">Peringkat</th>
+                                <th className="p-3 sm:p-4">Murid</th>
+                                <th className="p-3 sm:p-4 text-center">Kelas</th>
+                                <th className="p-3 sm:p-4 text-center">Level</th>
+                                <th className="p-3 sm:p-4 text-right">Total EXP</th>
                             </tr>
                         </thead>
                         <tbody ref={tableBodyRef}>
@@ -68,25 +68,29 @@ export default function Leaderboard({ students = [] }) {
                                             ${isCurrentUser ? 'bg-blue-600/10 border-l-4 border-l-blue-500 font-semibold' : ''}
                                         `}
                                     >
-                                        <td className="p-4 text-center">
-                                            <span className={`font-bold text-sm ${index < 3 ? 'text-amber-400' : 'text-slate-500'}`}>
+                                        <td className="p-3 sm:p-4 text-center">
+                                            <span className={`font-bold text-xs sm:text-sm ${index < 3 ? 'text-amber-400' : 'text-slate-500'}`}>
                                                 #{index + 1}
                                             </span>
                                         </td>
-                                        <td className="p-4 flex items-center gap-3">
-                                            <img src={student.avatar} alt={student.name} className="w-9 h-9 rounded-full bg-slate-800 object-cover border border-slate-700" />
-                                            <div>
-                                                <div className={`text-sm font-bold ${isCurrentUser ? 'text-blue-400' : 'text-white'}`}>
-                                                    {student.name} {isCurrentUser && '(Kamu)'}
+                                        <td className="p-3 sm:p-4">
+                                            <div className="flex items-center gap-2.5 sm:gap-3">
+                                                <img src={student.avatar} alt={student.name} className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-slate-800 object-cover border border-slate-700 shrink-0" />
+                                                <div className="min-w-0">
+                                                    <div className={`text-xs sm:text-sm font-bold truncate ${isCurrentUser ? 'text-blue-400' : 'text-white'}`}>
+                                                        {student.name} {isCurrentUser && '(Kamu)'}
+                                                    </div>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td className="p-4 text-center text-xs text-slate-400">{student.class}</td>
-                                        <td className="p-4 text-center">
+                                        <td className="p-3 sm:p-4 text-center text-xs text-slate-400">{student.class}</td>
+                                        <td className="p-3 sm:p-4 text-center">
                                             <LevelBadge level={student.level} size="sm" />
                                         </td>
-                                        <td className="p-4 text-right">
-                                            <div className="font-bold text-sm text-amber-400">{(student.exp || 0).toLocaleString()} <span className="text-[10px] text-slate-500 font-normal">EXP</span></div>
+                                        <td className="p-3 sm:p-4 text-right">
+                                            <div className="font-bold text-xs sm:text-sm text-amber-400">
+                                                {(student.exp || 0).toLocaleString()} <span className="text-[9px] sm:text-[10px] text-slate-500 font-normal">EXP</span>
+                                            </div>
                                         </td>
                                     </tr>
                                 );

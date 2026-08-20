@@ -10,6 +10,7 @@ class Quest extends Model
         'title',
         'description',
         'type',
+        'class',
         'category',
         'exp_reward',
         'difficulty',

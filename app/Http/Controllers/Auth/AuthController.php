@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use App\Models\User;
 
 class AuthController extends Controller
 {
@@ -21,9 +22,23 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        $loginField = filter_var($request->login, FILTER_VALIDATE_EMAIL) ? 'email' : 'nisn';
+        $loginInput = $request->login;
+        $isEmail = filter_var($loginInput, FILTER_VALIDATE_EMAIL);
 
-        if (Auth::attempt([$loginField => $request->login, 'password' => $request->password])) {
+        $user = null;
+        if ($isEmail) {
+            $user = \App\Models\User::where('email', $loginInput)->first();
+        } else {
+            // Check NISN or Name
+            $user = \App\Models\User::where('nisn', $loginInput)
+                ->orWhere('name', $loginInput)
+                ->first();
+        }
+
+        if ($user && Auth::attempt([
+            'id' => $user->id,
+            'password' => $request->password
+        ])) {
             $request->session()->regenerate();
 
             $intendedUrl = Auth::user()->role === 'admin' 

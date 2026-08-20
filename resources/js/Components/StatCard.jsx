@@ -37,16 +37,16 @@ export default function StatCard({ icon: Icon, label, value, color = 'blue' }) {
     }, { dependencies: [value], scope: cardRef });
 
     return (
-        <div ref={cardRef} className="glass-card p-5 flex items-center gap-4 transition-all hover:border-blue-500/40 hover:-translate-y-1">
-            <div className={`p-3 rounded-lg border ${style}`}>
-                <Icon className="w-6 h-6" />
+        <div ref={cardRef} className="glass-card p-3.5 sm:p-4 md:p-5 flex items-center gap-3 sm:gap-4 transition-all hover:border-blue-500/40 hover:-translate-y-0.5 min-w-0">
+            <div className={`p-2.5 sm:p-3 rounded-lg border shrink-0 ${style}`}>
+                <Icon className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
 
-            <div>
-                <p className="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-1">
+            <div className="min-w-0 flex-1">
+                <p className="text-slate-400 text-[10px] sm:text-xs font-semibold uppercase tracking-wider mb-0.5 sm:mb-1 truncate">
                     {label}
                 </p>
-                <div className="text-2xl font-bold text-white tracking-tight">
+                <div className="text-lg sm:text-xl md:text-2xl font-bold text-white tracking-tight truncate">
                     {typeof displayVal === 'number' ? displayVal.toLocaleString() : value}
                 </div>
             </div>

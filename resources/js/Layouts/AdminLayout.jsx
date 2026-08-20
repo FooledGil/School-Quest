@@ -25,14 +25,14 @@ export default function AdminLayout({ user: propUser, children }) {
     ];
 
     return (
-        <div className="flex h-screen bg-bg-secondary overflow-hidden text-gray-300 font-body">
+        <div className="flex h-screen h-dvh bg-bg-secondary overflow-hidden text-gray-300 font-body">
             <Sidebar links={links} isOpen={sidebarOpen} setIsOpen={setSidebarOpen} user={user} role="admin" />
 
-            <div className="flex-1 flex flex-col relative z-0 overflow-y-auto w-full">
-                <Navbar user={user} onMenuToggle={() => setSidebarOpen(true)} isAdmin />
+            <div className="flex-1 flex flex-col min-w-0 relative z-0 overflow-hidden w-full">
+                <Navbar user={user} onMenuToggle={() => setSidebarOpen(prev => !prev)} isAdmin />
 
-                <main className="flex-1 overflow-y-auto p-4 md:p-8 bg-[#0d121c]">
-                    <div className="max-w-7xl mx-auto animate-slide-up">
+                <main className="flex-1 overflow-y-auto p-3.5 sm:p-5 md:p-6 lg:p-8 bg-[#0d121c]">
+                    <div className="max-w-7xl mx-auto w-full animate-slide-up">
                         {children}
                     </div>
                 </main>

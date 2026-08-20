@@ -12,10 +12,13 @@ use Inertia\Inertia;
 
 class QuestController extends Controller
 {
-    public function index()
+    public function index(\App\Services\QuestGeneratorService $questService)
     {
         $user = Auth::user();
         $today = Carbon::today();
+
+        // Ensure daily quests are generated
+        $questService->generateForUser($user);
 
         // Get today's completions with their status
         $todayCompletions = $user->questCompletions()
@@ -23,9 +26,12 @@ class QuestController extends Controller
             ->get()
             ->keyBy('quest_id');
 
-        // Main quests (Daily)
+        // Main quests (Daily) - filtered for user's class
         $mainQuests = Quest::where('type', 'main')
             ->where('available_date', $today->toDateString())
+            ->where(function($q) use ($user) {
+                $q->whereNull('class')->orWhere('class', $user->class);
+            })
             ->get()
             ->map(function($q) use ($todayCompletions) {
                 $completion = $todayCompletions->get($q->id);

@@ -22,10 +22,10 @@ export default function ExpGainPopup({ amount, show }) {
     if (!show) return null;
 
     return (
-        <div ref={containerRef} className="fixed inset-0 flex items-center justify-center pointer-events-none z-50">
+        <div ref={containerRef} className="fixed inset-0 flex items-center justify-center pointer-events-none z-50 px-4">
             <div 
                 ref={textRef}
-                className="text-4xl md:text-5xl font-game text-amber-400 drop-shadow-[0_0_20px_rgba(245,158,11,0.8)] tracking-wider"
+                className="text-2xl sm:text-4xl md:text-5xl font-game text-amber-400 drop-shadow-[0_0_20px_rgba(245,158,11,0.8)] tracking-wider text-center"
             >
                 +{amount} EXP
             </div>

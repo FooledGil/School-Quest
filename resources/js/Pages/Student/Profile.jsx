@@ -69,18 +69,18 @@ export default function Profile({ user: propUser }) {
         <StudentLayout user={{ ...user, avatar, rank_name: rankName, next_level_exp: nextLevelExp }}>
             <Head title="Profile" />
 
-            <div ref={pageRef} className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div ref={pageRef} className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
                 {/* Profile Card */}
-                <div className="md:col-span-1">
-                    <div className="glass-card p-6 flex flex-col items-center text-center relative overflow-hidden shadow-lg">
-                        <div ref={avatarRef} className="w-24 h-24 rounded-full border-2 border-blue-500 p-0.5 bg-slate-900 shadow-md mb-3">
+                <div className="lg:col-span-1">
+                    <div className="glass-card p-5 sm:p-6 flex flex-col items-center text-center relative overflow-hidden shadow-lg">
+                        <div ref={avatarRef} className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-2 border-blue-500 p-0.5 bg-slate-900 shadow-md mb-3 shrink-0">
                             <img src={avatar} alt="Avatar" className="w-full h-full rounded-full object-cover" />
                         </div>
                         
-                        <h2 className="text-xl font-bold text-white mb-1">{user.name}</h2>
+                        <h2 className="text-lg sm:text-xl font-bold text-white mb-1 truncate max-w-full">{user.name}</h2>
                         <p className="text-blue-400 font-semibold text-xs mb-4">Kelas {user.class || '-'}</p>
                         
-                        <div className="w-full space-y-2.5 text-xs text-left bg-slate-900/60 p-3.5 rounded-lg border border-slate-800 mb-6">
+                        <div className="w-full space-y-2.5 text-xs text-left bg-slate-900/60 p-3 sm:p-3.5 rounded-lg border border-slate-800 mb-5 sm:mb-6">
                             <div className="flex justify-between">
                                 <span className="text-slate-400">NISN</span>
                                 <span className="text-white font-mono">{user.nisn || '-'}</span>
@@ -91,25 +91,25 @@ export default function Profile({ user: propUser }) {
                             </div>
                         </div>
 
-                        <div className="w-full mb-6">
+                        <div className="w-full mb-5 sm:mb-6">
                             <LevelBadge level={user.level || 1} rankName={rankName} size="lg" className="mx-auto" />
                         </div>
 
                         <ExpBar currentExp={user.exp || 0} requiredExp={nextLevelExp} className="w-full" />
-                        <p className="text-[11px] text-slate-500 mt-2">Level {(user.level || 1) + 1} membutuhkan {nextLevelExp.toLocaleString()} EXP</p>
+                        <p className="text-[10px] sm:text-[11px] text-slate-500 mt-2">Level {(user.level || 1) + 1} membutuhkan {nextLevelExp.toLocaleString()} EXP</p>
                     </div>
                 </div>
 
                 {/* Right Column */}
-                <div className="md:col-span-2 space-y-8">
+                <div className="lg:col-span-2 space-y-6 sm:space-y-8 min-w-0">
                     
                     {/* Achievements Collection */}
-                    <div className="glass-card p-6">
-                        <h3 className="text-lg font-bold text-white mb-4 border-b border-slate-800 pb-3">Galeri Pencapaian</h3>
+                    <div className="glass-card p-4 sm:p-6">
+                        <h3 className="text-base sm:text-lg font-bold text-white mb-4 border-b border-slate-800 pb-3">Galeri Pencapaian</h3>
                         {achievements.length > 0 ? (
-                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+                            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3 sm:gap-4 justify-items-center">
                                 {achievements.map(ach => (
-                                    <div key={ach.id} className="ach-badge-wrapper flex justify-center">
+                                    <div key={ach.id} className="ach-badge-wrapper flex justify-center w-full">
                                         <AchievementBadge achievement={ach} isUnlocked={ach.isUnlocked} />
                                     </div>
                                 ))}
@@ -120,17 +120,17 @@ export default function Profile({ user: propUser }) {
                     </div>
 
                     {/* Quest History */}
-                    <div className="glass-card p-6">
-                        <h3 className="text-lg font-bold text-white mb-4 border-b border-slate-800 pb-3">Aktivitas Terakhir</h3>
+                    <div className="glass-card p-4 sm:p-6">
+                        <h3 className="text-base sm:text-lg font-bold text-white mb-4 border-b border-slate-800 pb-3">Aktivitas Terakhir</h3>
                         {questHistory.length > 0 ? (
-                            <div className="space-y-3">
+                            <div className="space-y-2.5 sm:space-y-3">
                                 {questHistory.map((quest) => (
-                                    <div key={quest.id} className="activity-item flex items-center justify-between p-3 rounded-lg bg-slate-900/40 border border-slate-800/80">
-                                        <div>
-                                            <p className="font-bold text-white text-sm">{quest.title}</p>
-                                            <p className="text-xs text-slate-400">{quest.date}</p>
+                                    <div key={quest.id} className="activity-item flex items-center justify-between p-3 rounded-lg bg-slate-900/40 border border-slate-800/80 gap-3">
+                                        <div className="min-w-0">
+                                            <p className="font-bold text-white text-xs sm:text-sm truncate">{quest.title}</p>
+                                            <p className="text-[11px] text-slate-400">{quest.date}</p>
                                         </div>
-                                        <div className="text-amber-400 font-bold text-xs">
+                                        <div className="text-amber-400 font-bold text-xs shrink-0">
                                             +{quest.exp} EXP
                                         </div>
                                     </div>

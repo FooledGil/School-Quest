@@ -32,34 +32,38 @@ export default function PodiumDisplay({ topThree = [] }) {
     const podiumOrder = [topThree[1], topThree[0], topThree[2]];
 
     const podiumStyles = [
-        { height: 'h-28', color: 'bg-slate-800 border-slate-600 text-slate-300', badge: 'bg-slate-700 text-slate-200', rank: 2 },
-        { height: 'h-40', color: 'bg-blue-900/60 border-blue-500 text-amber-400', badge: 'bg-amber-500/20 border-amber-500/40 text-amber-400', rank: 1 },
-        { height: 'h-24', color: 'bg-slate-800 border-slate-700 text-amber-600', badge: 'bg-amber-900/30 text-amber-500', rank: 3 },
+        { height: 'h-20 sm:h-28', color: 'bg-slate-800 border-slate-600 text-slate-300', badge: 'bg-slate-700 text-slate-200', rank: 2 },
+        { height: 'h-28 sm:h-40', color: 'bg-blue-900/60 border-blue-500 text-amber-400', badge: 'bg-amber-500/20 border-amber-500/40 text-amber-400', rank: 1 },
+        { height: 'h-16 sm:h-24', color: 'bg-slate-800 border-slate-700 text-amber-600', badge: 'bg-amber-900/30 text-amber-500', rank: 3 },
     ];
 
     return (
-        <div ref={containerRef} className="flex items-end justify-center gap-4 pt-8 pb-2 overflow-hidden">
+        <div ref={containerRef} className="flex items-end justify-center gap-2 sm:gap-4 md:gap-6 pt-6 sm:pt-8 pb-2 overflow-hidden w-full max-w-md sm:max-w-lg mx-auto px-2">
             {podiumOrder.map((user, index) => {
                 const style = podiumStyles[index];
-                if (!user) return <div key={index} className="w-28"></div>;
+                if (!user) return <div key={index} className="w-20 sm:w-28"></div>;
 
                 return (
-                    <div key={user.id} className="podium-item w-28 md:w-36 flex flex-col items-center">
-                        <div className="flex flex-col items-center mb-3">
-                            <div className="relative mb-2">
-                                <img src={user.avatar} alt={user.name} className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-slate-800 border-2 border-slate-700 object-cover shadow-md" />
-                                <div className="absolute -bottom-1 -right-1">
-                                    <LevelBadge level={user.level} size="sm" />
+                    <div key={user.id} className="podium-item flex-1 max-w-[100px] sm:max-w-[130px] md:max-w-[150px] flex flex-col items-center min-w-0">
+                        <div className="flex flex-col items-center mb-2 sm:mb-3 w-full">
+                            <div className="relative mb-1.5 sm:mb-2 shrink-0">
+                                <img 
+                                    src={user.avatar} 
+                                    alt={user.name} 
+                                    className="w-11 h-11 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full bg-slate-800 border-2 border-slate-700 object-cover shadow-md" 
+                                />
+                                <div className="absolute -bottom-1 -right-1 transform scale-75 sm:scale-100 origin-bottom-right">
+                                    <LevelBadge level={user.level || 1} size="sm" />
                                 </div>
                             </div>
-                            <div className="text-center px-1">
-                                <p className="font-bold text-white text-xs md:text-sm truncate max-w-[110px]">{user.name}</p>
-                                <p className="text-[11px] text-amber-400 font-semibold mt-0.5">{(user.exp || 0).toLocaleString()} EXP</p>
+                            <div className="text-center px-0.5 w-full">
+                                <p className="font-bold text-white text-[11px] sm:text-xs md:text-sm truncate w-full">{user.name}</p>
+                                <p className="text-[10px] sm:text-[11px] text-amber-400 font-semibold mt-0.5 truncate">{(user.exp || 0).toLocaleString()} <span className="hidden sm:inline">EXP</span></p>
                             </div>
                         </div>
 
-                        <div className={`w-full ${style.height} ${style.color} rounded-t-xl border-t-2 border-x flex flex-col items-center justify-start pt-3 shadow-lg relative`}>
-                            <div className={`w-7 h-7 rounded-full border flex items-center justify-center font-bold text-xs ${style.badge}`}>
+                        <div className={`w-full ${style.height} ${style.color} rounded-t-xl border-t-2 border-x flex flex-col items-center justify-start pt-2 sm:pt-3 shadow-lg relative`}>
+                            <div className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full border flex items-center justify-center font-bold text-[10px] sm:text-xs ${style.badge}`}>
                                 #{style.rank}
                             </div>
                         </div>

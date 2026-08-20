@@ -28,16 +28,16 @@ export default function StudentLayout({ user: propUser, children }) {
     ];
 
     return (
-        <div className="flex h-screen bg-bg-primary overflow-hidden text-gray-300 font-body">
+        <div className="flex h-screen h-dvh bg-bg-primary overflow-hidden text-gray-300 font-body">
             {/* Sidebar */}
             <Sidebar links={links} isOpen={sidebarOpen} setIsOpen={setSidebarOpen} user={user} role="student" />
 
             {/* Main Content */}
-            <div className="flex-1 flex flex-col relative z-0 overflow-y-auto w-full">
-                <Navbar user={user} onMenuToggle={() => setSidebarOpen(true)} />
+            <div className="flex-1 flex flex-col min-w-0 relative z-0 overflow-hidden w-full">
+                <Navbar user={user} onMenuToggle={() => setSidebarOpen(prev => !prev)} />
 
-                <main className="flex-1 overflow-y-auto p-4 md:p-8 animate-fade-in">
-                    <div className="max-w-7xl mx-auto">
+                <main className="flex-1 overflow-y-auto p-3.5 sm:p-5 md:p-6 lg:p-8 animate-fade-in">
+                    <div className="max-w-7xl mx-auto w-full">
                         {children}
                     </div>
                 </main>

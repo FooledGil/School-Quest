@@ -61,12 +61,12 @@ export default function LevelUpModal({ newLevel, rankName, show, onClose }) {
     return (
         <div 
             ref={modalRef}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md transition-opacity" 
+            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md transition-opacity" 
             onClick={onClose}
         >
             <div 
                 ref={cardRef}
-                className="glass-card max-w-sm w-full p-8 flex flex-col items-center text-center relative overflow-hidden shadow-2xl border border-amber-500/30"
+                className="glass-card max-w-sm w-full p-6 sm:p-8 flex flex-col items-center text-center relative overflow-hidden shadow-2xl border border-amber-500/30"
                 onClick={e => e.stopPropagation()}
             >
                 {/* Rotating ray effect */}
@@ -75,23 +75,23 @@ export default function LevelUpModal({ newLevel, rankName, show, onClose }) {
                 <div className="relative z-10 w-full flex flex-col items-center">
                     <h2 
                         ref={titleRef}
-                        className="text-3xl md:text-4xl font-game text-amber-400 mb-6 drop-shadow-[0_0_15px_rgba(245,158,11,0.9)] tracking-wider"
+                        className="text-2xl sm:text-3xl md:text-4xl font-game text-amber-400 mb-4 sm:mb-6 drop-shadow-[0_0_15px_rgba(245,158,11,0.9)] tracking-wider"
                     >
                         LEVEL UP!
                     </h2>
                     
-                    <div ref={badgeRef} className="mb-6">
+                    <div ref={badgeRef} className="mb-4 sm:mb-6">
                         <LevelBadge level={newLevel} rankName={rankName} size="lg" />
                     </div>
                     
-                    <p ref={textRef} className="text-slate-200 mt-6 mb-6 font-bold text-base leading-relaxed">
+                    <p ref={textRef} className="text-slate-200 mt-4 sm:mt-6 mb-5 sm:mb-6 font-bold text-sm sm:text-base leading-relaxed">
                         Kamu mencapai peringkat baru! Terus selesaikan quest untuk menjadi seorang legenda.
                     </p>
                     
                     <button 
                         ref={buttonRef}
                         onClick={onClose}
-                        className="bg-amber-500 text-black font-game text-xs md:text-sm px-6 py-3 rounded-lg hover:bg-amber-400 transition-all transform hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(245,158,11,0.6)] cursor-pointer"
+                        className="w-full sm:w-auto bg-amber-500 text-black font-game text-xs sm:text-sm px-6 py-3 rounded-lg hover:bg-amber-400 transition-all transform hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(245,158,11,0.6)] cursor-pointer"
                     >
                         LUAR BIASA! ⚡
                     </button>

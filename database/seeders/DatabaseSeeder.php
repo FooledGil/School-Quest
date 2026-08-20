@@ -253,6 +253,45 @@ class DatabaseSeeder extends Seeder
             ['nisn' => '0108625892', 'name' => 'ZASKIYA AZZAHRA RIANDINI', 'class' => 'X-PM 3', 'exp' => 0],
             ['nisn' => '0111302611', 'name' => 'ZIPANA MAULIDINA', 'class' => 'X-PM 3', 'exp' => 0],
             ['nisn' => '0102180770', 'name' => 'ZIVANA NAJLA NURFAJRIA', 'class' => 'X-PM 3', 'exp' => 0],
+
+            // --- X-PPLG (From Image) ---
+            ['nisn' => '0089997511', 'name' => 'AGNI RAHAYU', 'gender' => 'P', 'class' => 'XII RPL', 'exp' => 0],
+            ['nisn' => '0077077182', 'name' => 'AHMAD REFAN', 'gender' => 'L', 'class' => 'XII RPL', 'exp' => 0],
+            ['nisn' => '0093469454', 'name' => 'AIRIN MAULINDA', 'gender' => 'P', 'class' => 'XII RPL', 'exp' => 0],
+            ['nisn' => '0093999188', 'name' => 'ALIYA KHOERUNISA', 'gender' => 'P', 'class' => 'XII RPL', 'exp' => 0],
+            ['nisn' => '0092771332', 'name' => 'ALYSSA SRI NURDEWI', 'gender' => 'P', 'class' => 'XII RPL', 'exp' => 0],
+            ['nisn' => '0089097891', 'name' => 'ANISA PARADINA AGUSTIN', 'gender' => 'P', 'class' => 'XII RPL', 'exp' => 0],
+            ['nisn' => '0093343832', 'name' => 'ANNIDA KHOERUNNISA', 'gender' => 'P', 'class' => 'XII RPL', 'exp' => 0],
+            ['nisn' => '0096776045', 'name' => 'BINTANG RIZKY KURNIA', 'gender' => 'L', 'class' => 'XII RPL', 'exp' => 0],
+            ['nisn' => '0097465682', 'name' => 'BULAN PERMATA WARDHANI', 'gender' => 'P', 'class' => 'XII RPL', 'exp' => 0],
+            ['nisn' => '0088755546', 'name' => 'BUTSAINA DZURWA MUMTAZA', 'gender' => 'P', 'class' => 'XII RPL', 'exp' => 0],
+            ['nisn' => '0082134630', 'name' => 'DENIA NUR FALAH', 'gender' => 'P', 'class' => 'XII RPL', 'exp' => 0],
+            ['nisn' => '0084953276', 'name' => 'DESI NUR LESTARI', 'gender' => 'P', 'class' => 'XII RPL', 'exp' => 0],
+            ['nisn' => '0096513104', 'name' => 'DESINTA NISRI KUSUMA', 'gender' => 'P', 'class' => 'XII RPL', 'exp' => 0],
+            ['nisn' => '0093953239', 'name' => 'FAUZAN KARIMA', 'gender' => 'L', 'class' => 'XII RPL', 'exp' => 0],
+            ['nisn' => '0084376279', 'name' => 'GIBRAN SYAHREZA', 'gender' => 'L', 'class' => 'XII RPL', 'exp' => 0],
+            ['nisn' => '0087655990', 'name' => 'HENDRI MAULANA YUSUP', 'gender' => 'L', 'class' => 'XII RPL', 'exp' => 0],
+            ['nisn' => '0088514532', 'name' => 'LUBNA FADHILAH DANIYAH', 'gender' => 'P', 'class' => 'XII RPL', 'exp' => 0],
+            ['nisn' => '0093548692', 'name' => 'MEILI RIZKINA PUTRI', 'gender' => 'P', 'class' => 'XII RPL', 'exp' => 0],
+            ['nisn' => '0084169869', 'name' => 'MITA', 'gender' => 'P', 'class' => 'XII RPL', 'exp' => 0],
+            ['nisn' => '0093724681', 'name' => 'MONI ASTRIYANI', 'gender' => 'P', 'class' => 'XII RPL', 'exp' => 0],
+            ['nisn' => '0098858266', 'name' => 'MUHAMAD AFDZAN SBASTIAN', 'gender' => 'L', 'class' => 'XII RPL', 'exp' => 0],
+            ['nisn' => '0083707851', 'name' => 'MUHAMAD FAHRI AL HIDAYAT', 'gender' => 'L', 'class' => 'XII RPL', 'exp' => 0],
+            ['nisn' => '0095384722', 'name' => 'MUHAMMAD NAFIS SHIDDIQ', 'gender' => 'L', 'class' => 'XII RPL', 'exp' => 0],
+            ['nisn' => '0096821016', 'name' => 'NATASYIA SAPUTRI', 'gender' => 'P', 'class' => 'XII RPL', 'exp' => 0],
+            ['nisn' => '0092748865', 'name' => 'NAYARA KHANSA ZENINA', 'gender' => 'P', 'class' => 'XII RPL', 'exp' => 0],
+            ['nisn' => '0089996896', 'name' => 'NAZWA FITRIA NABILA', 'gender' => 'P', 'class' => 'XII RPL', 'exp' => 0],
+            ['nisn' => '3084862933', 'name' => 'NUR AFNI HERAWATI', 'gender' => 'P', 'class' => 'XII RPL', 'exp' => 0],
+            ['nisn' => '0093451127', 'name' => 'OTNIEL GABRIEL SHANE COU L', 'gender' => 'L', 'class' => 'XII RPL', 'exp' => 0],
+            ['nisn' => '0091503709', 'name' => 'RAGIL AGUSTINO ANANDA SUR', 'gender' => 'L', 'class' => 'XII RPL', 'exp' => 0],
+            ['nisn' => '0083428672', 'name' => 'RAIHAN SHANDY PRATAMA', 'gender' => 'L', 'class' => 'XII RPL', 'exp' => 0],
+            ['nisn' => '0086052097', 'name' => 'RAZIFF AFKAR RUSLI', 'gender' => 'L', 'class' => 'XII RPL', 'exp' => 0],
+            ['nisn' => '0089311128', 'name' => 'RISTIAN DWIYANTO', 'gender' => 'L', 'class' => 'XII RPL', 'exp' => 0],
+            ['nisn' => '0093181066', 'name' => 'RIZAL ANDHIKA WIJAYA', 'gender' => 'L', 'class' => 'XII RPL', 'exp' => 0],
+            ['nisn' => '0098286473', 'name' => 'SINTA MEILINDA', 'gender' => 'P', 'class' => 'XII RPL', 'exp' => 0],
+            ['nisn' => '0095892129', 'name' => 'YASMIN KAMILA DEWI', 'gender' => 'P', 'class' => 'XII RPL', 'exp' => 0],
+            ['nisn' => '0099807995', 'name' => 'ZAHRA AGUSTIN PUTRI', 'gender' => 'P', 'class' => 'XII RPL', 'exp' => 0],
+
         ];
 
         $studentModels = [];
@@ -263,6 +302,7 @@ class DatabaseSeeder extends Seeder
                 'password' => $password,
                 'role' => 'student',
                 'class' => $s['class'],
+                'gender' => $s['gender'] ?? null,
                 'exp' => $s['exp'],
                 'level' => floor(sqrt($s['exp'] / 100)) + 1,
             ]);
@@ -270,6 +310,7 @@ class DatabaseSeeder extends Seeder
 
         // SUBJECTS
         $subjectsData = [
+            // Standard / Base Subjects
             ['name' => 'Matematika', 'code' => 'MAT', 'icon' => '📐', 'color' => '#ef4444'],
             ['name' => 'B.Indonesia', 'code' => 'BIN', 'icon' => '📖', 'color' => '#3b82f6'],
             ['name' => 'IPA', 'code' => 'IPA', 'icon' => '🔬', 'color' => '#10b981'],
@@ -280,14 +321,31 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Penjaskes', 'code' => 'PJK', 'icon' => '⚽', 'color' => '#f97316'],
             ['name' => 'Agama', 'code' => 'AGM', 'icon' => '🕌', 'color' => '#06b6d4'],
             ['name' => 'Prakarya', 'code' => 'PRK', 'icon' => '✂️', 'color' => '#64748b'],
+
+            // XII RPL Specific Subjects & Activities (SMKN 2 Purwakarta)
+            ['name' => 'Konsentrasi Keahlian RPL', 'code' => 'KK-RPL', 'icon' => '💻', 'color' => '#2563eb'],
+            ['name' => 'Mata Pelajaran Pilihan RPL', 'code' => 'MP-RPL', 'icon' => '⚡', 'color' => '#4f46e5'],
+            ['name' => 'Kreativitas, Inovasi, dan Kewirausahaan', 'code' => 'PKK', 'icon' => '💡', 'color' => '#eab308'],
+            ['name' => 'Bahasa Indonesia', 'code' => 'BIN-12', 'icon' => '📖', 'color' => '#0284c7'],
+            ['name' => 'Bimbingan Konseling', 'code' => 'BK', 'icon' => '🧭', 'color' => '#10b981'],
+            ['name' => 'Pendidikan Agama Islam dan Budi Pekerti', 'code' => 'PAI', 'icon' => '🕌', 'color' => '#14b8a6'],
+            ['name' => 'Bahasa Inggris', 'code' => 'ENG-12', 'icon' => '💬', 'color' => '#9333ea'],
+            ['name' => 'PSE', 'code' => 'PSE', 'icon' => '🌱', 'color' => '#ec4899'],
+            ['name' => 'Pendidikan Pancasila', 'code' => 'PPKN-12', 'icon' => '🤝', 'color' => '#f43f5e'],
+            ['name' => 'Bahasa Sunda', 'code' => 'BSN', 'icon' => '🎭', 'color' => '#84cc16'],
+            ['name' => 'Upacara Bendera', 'code' => 'UPC', 'icon' => '🇮🇩', 'color' => '#dc2626'],
+            ['name' => 'Apel Pagi', 'code' => 'APL-P', 'icon' => '🌅', 'color' => '#d97706'],
+            ['name' => 'Apel Sore', 'code' => 'APL-S', 'icon' => '🌇', 'color' => '#ea580c'],
+            ['name' => 'Kokurikuler', 'code' => 'KKR', 'icon' => '🌟', 'color' => '#0891b2'],
+            ['name' => 'ESKUL', 'code' => 'ESK', 'icon' => '🏆', 'color' => '#7c3aed'],
         ];
 
         $subjects = [];
         foreach ($subjectsData as $sd) {
-            $subjects[$sd['name']] = Subject::create($sd);
+            $subjects[$sd['name']] = Subject::firstOrCreate(['name' => $sd['name']], $sd);
         }
 
-        // SCHEDULES FOR ALL 5 CLASSES
+        // SCHEDULES FOR OTHER 5 CLASSES
         $classes = ['X-MPLB 1', 'X-MPLB 2', 'X-PM 1', 'X-PM 2', 'X-PM 3'];
         $scheduleData = [
             1 => [ // Senin
@@ -330,8 +388,72 @@ class DatabaseSeeder extends Seeder
             }
         }
 
-        // PIKET SCHEDULES FOR ALL 5 CLASSES
-        foreach ($classes as $classIndex => $c) {
+        // SCHEDULE FOR XII RPL (From Official Timetable SMKN 2 Purwakarta)
+        $rplSchedule = [
+            1 => [ // Senin
+                ['sub' => 'Upacara Bendera', 'start' => '06:30:00', 'end' => '07:00:00', 'teacher' => null],
+                ['sub' => 'Konsentrasi Keahlian RPL', 'start' => '07:00:00', 'end' => '09:00:00', 'teacher' => 'Cep Kusaeri, ST.'],
+                ['sub' => 'Konsentrasi Keahlian RPL', 'start' => '09:10:00', 'end' => '11:10:00', 'teacher' => 'Cep Kusaeri, ST.'],
+                ['sub' => 'Konsentrasi Keahlian RPL', 'start' => '12:10:00', 'end' => '12:50:00', 'teacher' => 'Cep Kusaeri, ST.'],
+                ['sub' => 'Kreativitas, Inovasi, dan Kewirausahaan', 'start' => '12:50:00', 'end' => '14:50:00', 'teacher' => 'Cep Kusaeri, ST.'],
+                ['sub' => 'Apel Sore', 'start' => '14:50:00', 'end' => '15:20:00', 'teacher' => null],
+                ['sub' => 'ESKUL', 'start' => '15:20:00', 'end' => '16:00:00', 'teacher' => null],
+            ],
+            2 => [ // Selasa
+                ['sub' => 'Apel Pagi', 'start' => '06:30:00', 'end' => '07:00:00', 'teacher' => null],
+                ['sub' => 'Konsentrasi Keahlian RPL', 'start' => '07:00:00', 'end' => '09:00:00', 'teacher' => 'Cep Kusaeri, ST.'],
+                ['sub' => 'Bahasa Indonesia', 'start' => '09:10:00', 'end' => '11:10:00', 'teacher' => 'Euis Nengsih, S.Pd.'],
+                ['sub' => 'Bimbingan Konseling', 'start' => '12:10:00', 'end' => '12:50:00', 'teacher' => 'Chandra Widya Nugraha, S.Psi.,Gr.'],
+                ['sub' => 'Pendidikan Agama Islam dan Budi Pekerti', 'start' => '12:50:00', 'end' => '14:50:00', 'teacher' => 'Haryati Nopiantie, S.Ag.'],
+                ['sub' => 'Apel Sore', 'start' => '14:50:00', 'end' => '15:20:00', 'teacher' => null],
+                ['sub' => 'ESKUL', 'start' => '15:20:00', 'end' => '16:00:00', 'teacher' => null],
+            ],
+            3 => [ // Rabu
+                ['sub' => 'Apel Pagi', 'start' => '06:30:00', 'end' => '07:00:00', 'teacher' => null],
+                ['sub' => 'Mata Pelajaran Pilihan RPL', 'start' => '07:00:00', 'end' => '09:00:00', 'teacher' => 'Cep Kusaeri, ST.'],
+                ['sub' => 'Mata Pelajaran Pilihan RPL', 'start' => '09:10:00', 'end' => '09:50:00', 'teacher' => 'Cep Kusaeri, ST.'],
+                ['sub' => 'Konsentrasi Keahlian RPL', 'start' => '09:50:00', 'end' => '11:10:00', 'teacher' => 'Cep Kusaeri, ST.'],
+                ['sub' => 'Konsentrasi Keahlian RPL', 'start' => '12:10:00', 'end' => '14:50:00', 'teacher' => 'Cep Kusaeri, ST.'],
+                ['sub' => 'Apel Sore', 'start' => '14:50:00', 'end' => '15:20:00', 'teacher' => null],
+                ['sub' => 'ESKUL', 'start' => '15:20:00', 'end' => '16:00:00', 'teacher' => null],
+            ],
+            4 => [ // Kamis
+                ['sub' => 'Bahasa Inggris', 'start' => '06:30:00', 'end' => '09:10:00', 'teacher' => 'Raden Roro Sri Kingkin Gunawi Ning, S.Pd.'],
+                ['sub' => 'Konsentrasi Keahlian RPL', 'start' => '09:20:00', 'end' => '11:10:00', 'teacher' => 'Cep Kusaeri, ST.'],
+                ['sub' => 'Konsentrasi Keahlian RPL', 'start' => '12:10:00', 'end' => '14:10:00', 'teacher' => 'Cep Kusaeri, ST.'],
+                ['sub' => 'PSE', 'start' => '14:10:00', 'end' => '14:50:00', 'teacher' => null],
+                ['sub' => 'Apel Sore', 'start' => '14:50:00', 'end' => '15:20:00', 'teacher' => null],
+                ['sub' => 'ESKUL', 'start' => '15:20:00', 'end' => '16:00:00', 'teacher' => null],
+            ],
+            5 => [ // Jumat
+                ['sub' => 'Kokurikuler', 'start' => '06:30:00', 'end' => '07:00:00', 'teacher' => null],
+                ['sub' => 'Pendidikan Pancasila', 'start' => '07:00:00', 'end' => '08:20:00', 'teacher' => 'Nina Marliana Purwantini, S.Pd.,Gr.'],
+                ['sub' => 'Bahasa Sunda', 'start' => '08:20:00', 'end' => '09:00:00', 'teacher' => 'Dina Amelia, S.Hum.,Gr.'],
+                ['sub' => 'Bahasa Sunda', 'start' => '09:10:00', 'end' => '09:50:00', 'teacher' => 'Dina Amelia, S.Hum.,Gr.'],
+                ['sub' => 'Kreativitas, Inovasi, dan Kewirausahaan', 'start' => '09:50:00', 'end' => '11:10:00', 'teacher' => 'Cep Kusaeri, ST.'],
+                ['sub' => 'Matematika', 'start' => '12:40:00', 'end' => '14:40:00', 'teacher' => 'Sellvi Octavia, S.Pd.'],
+                ['sub' => 'PSE', 'start' => '14:40:00', 'end' => '15:10:00', 'teacher' => null],
+                ['sub' => 'Apel Sore', 'start' => '15:10:00', 'end' => '15:40:00', 'teacher' => null],
+                ['sub' => 'ESKUL', 'start' => '15:40:00', 'end' => '16:00:00', 'teacher' => null],
+            ],
+        ];
+
+        foreach ($rplSchedule as $day => $lessons) {
+            foreach ($lessons as $l) {
+                Schedule::create([
+                    'day_of_week' => $day,
+                    'subject_id' => $subjects[$l['sub']]->id,
+                    'class' => 'XII RPL',
+                    'teacher' => $l['teacher'],
+                    'time_start' => $l['start'],
+                    'time_end' => $l['end'],
+                ]);
+            }
+        }
+
+        // PIKET SCHEDULES FOR ALL CLASSES (INCLUDING XII RPL)
+        $allClasses = ['X-MPLB 1', 'X-MPLB 2', 'X-PM 1', 'X-PM 2', 'X-PM 3', 'XII RPL'];
+        foreach ($allClasses as $classIndex => $c) {
             for ($day = 1; $day <= 5; $day++) {
                 $ps = PiketSchedule::create([
                     'day_of_week' => $day,
