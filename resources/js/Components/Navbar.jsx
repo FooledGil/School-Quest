@@ -1,5 +1,5 @@
 import React from 'react';
-import { Bars3Icon, BellIcon } from '@heroicons/react/24/outline';
+import { Bars3Icon } from '@heroicons/react/24/outline';
 import LevelBadge from './LevelBadge';
 import ExpBar from './ExpBar';
 
@@ -20,15 +20,6 @@ export default function Navbar({ user, onMenuToggle, isAdmin = false }) {
             </div>
 
             <div className="flex items-center gap-4 md:gap-6">
-                {/* Notifications */}
-                <button className="relative p-2 text-gray-400 hover:text-white transition-colors">
-                    <BellIcon className="w-6 h-6" />
-                    <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-accent-red rounded-full"></span>
-                </button>
-
-                {/* Divider */}
-                <div className="w-px h-8 bg-gray-800 hidden sm:block"></div>
-
                 {/* User Profile */}
                 <div className="flex items-center gap-3">
                     {!isAdmin && (

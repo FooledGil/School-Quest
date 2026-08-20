@@ -17,6 +17,7 @@ class User extends Authenticatable
         'password',
         'role',
         'avatar_seed',
+        'avatar',
         'exp',
         'level',
         'streak_days',
