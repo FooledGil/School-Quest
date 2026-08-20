@@ -45,7 +45,7 @@ function SubmissionCard({ submission, onApprove, onReject }) {
             <div className="flex items-center justify-between gap-2">
                 <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
                     <img 
-                        src={`https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(submission.student_avatar_seed)}`} 
+                        src={`https://api.dicebear.com/9.x/pixel-art/svg?seed=${encodeURIComponent(submission.student_avatar_seed)}`} 
                         alt="Avatar" 
                         className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-slate-800 shrink-0" 
                     />

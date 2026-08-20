@@ -5,7 +5,7 @@ import LevelBadge from '@/Components/LevelBadge';
 import ExpBar from '@/Components/ExpBar';
 
 export default function StudentShow({ student = {} }) {
-    const avatar = student.avatar || `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(student.avatar_seed || student.name || 'Student')}`;
+    const avatar = student.avatar || `https://api.dicebear.com/9.x/pixel-art/svg?seed=${encodeURIComponent(student.avatar_seed || student.name || 'Student')}`;
     const rankName = student.rank_name || 'Novice';
     const nextLevelExp = student.next_level_exp || (Math.pow(student.level || 1, 2) * 100);
 

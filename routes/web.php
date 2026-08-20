@@ -40,6 +40,7 @@ Route::middleware(['auth', 'student'])->group(function () {
     
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
     Route::post('/profile/avatar', [ProfileController::class, 'updateAvatar'])->name('profile.avatar');
+    Route::post('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
 });
 
 // Admin Routes

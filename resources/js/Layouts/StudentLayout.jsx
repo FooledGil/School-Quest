@@ -13,7 +13,7 @@ export default function StudentLayout({ user: propUser, children }) {
     const rawUser = auth?.user || propUser || {};
     const user = {
         ...rawUser,
-        avatar: rawUser.avatar || `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(rawUser.avatar_seed || rawUser.name || 'Student')}`,
+        avatar: rawUser.avatar || `https://api.dicebear.com/9.x/pixel-art/svg?seed=${encodeURIComponent(rawUser.avatar_seed || rawUser.name || 'Student')}`,
         rank_name: rawUser.rank_name || 'Novice',
         next_level_exp: rawUser.next_level_exp || (Math.pow(rawUser.level || 1, 2) * 100)
     };

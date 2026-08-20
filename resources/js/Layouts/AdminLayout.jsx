@@ -12,7 +12,7 @@ export default function AdminLayout({ user: propUser, children }) {
     const rawUser = auth?.user || propUser || {};
     const user = {
         ...rawUser,
-        avatar: rawUser.avatar || `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(rawUser.avatar_seed || rawUser.name || 'Admin')}`,
+        avatar: rawUser.avatar || `https://api.dicebear.com/9.x/pixel-art/svg?seed=${encodeURIComponent(rawUser.avatar_seed || rawUser.name || 'Admin')}`,
     };
 
     const pathname = typeof window !== 'undefined' ? window.location.pathname : '/admin/dashboard';

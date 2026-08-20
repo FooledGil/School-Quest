@@ -20,7 +20,7 @@ export default function Dashboard({ user: propUser, schedules = [], stats = {}, 
     const scheduleRef = useRef(null);
 
     const user = propUser || {};
-    const avatar = user.avatar || `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(user.avatar_seed || user.name || 'Alex')}`;
+    const avatar = user.avatar || `https://api.dicebear.com/9.x/pixel-art/svg?seed=${encodeURIComponent(user.avatar_seed || user.name || 'Alex')}`;
     const rankName = stats.rank || 'Novice';
     const nextLevelExp = stats.nextLevelExp || 100;
 

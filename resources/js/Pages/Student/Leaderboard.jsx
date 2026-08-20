@@ -17,7 +17,7 @@ export default function Leaderboard({ students = [] }) {
         class: s.class || 'Siswa',
         level: s.level || 1,
         exp: s.exp || 0,
-        avatar: s.avatar || `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(s.avatar_seed || s.name)}`,
+        avatar: s.avatar || `https://api.dicebear.com/9.x/pixel-art/svg?seed=${encodeURIComponent(s.avatar_seed || s.name)}`,
         rank_number: idx + 1
     }));
 
