@@ -5,6 +5,8 @@ import { HomeIcon, ClipboardDocumentListIcon, UsersIcon, ShieldCheckIcon } from 
 import Toast from '@/Components/Toast';
 import { usePage } from '@inertiajs/react';
 
+import { getAvatarUrl } from '@/Utils/avatar';
+
 export default function AdminLayout({ user: propUser, children }) {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const { auth, flash } = usePage().props;
@@ -12,7 +14,7 @@ export default function AdminLayout({ user: propUser, children }) {
     const rawUser = auth?.user || propUser || {};
     const user = {
         ...rawUser,
-        avatar: rawUser.avatar || `https://api.dicebear.com/9.x/pixel-art/svg?seed=${encodeURIComponent(rawUser.avatar_seed || rawUser.name || 'Admin')}`,
+        avatar: getAvatarUrl(rawUser),
     };
 
     const pathname = typeof window !== 'undefined' ? window.location.pathname : '/admin/dashboard';

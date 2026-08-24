@@ -13,6 +13,7 @@ class QuestCompletion extends Model
         'exp_earned',
         'status',
         'proof_text',
+        'proof_image',
         'rejection_reason',
         'validated_by',
         'validated_at',

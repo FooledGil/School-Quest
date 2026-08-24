@@ -4,12 +4,18 @@ import AdminLayout from '@/Layouts/AdminLayout';
 import { CheckCircleIcon, XCircleIcon, ClockIcon, DocumentTextIcon, UserIcon } from '@heroicons/react/24/solid';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
+import { getAvatarUrl } from '@/Utils/avatar';
 
 function SubmissionCard({ submission, onApprove, onReject }) {
     const [showRejectForm, setShowRejectForm] = useState(false);
     const [rejectionReason, setRejectionReason] = useState('');
     const [processing, setProcessing] = useState(false);
     const cardRef = useRef(null);
+
+    const studentAvatar = getAvatarUrl({
+        avatar: submission.student_avatar,
+        avatar_seed: submission.student_avatar_seed
+    });
 
     const difficultyStyles = {
         easy: 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10',
@@ -45,9 +51,9 @@ function SubmissionCard({ submission, onApprove, onReject }) {
             <div className="flex items-center justify-between gap-2">
                 <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
                     <img 
-                        src={`https://api.dicebear.com/9.x/pixel-art/svg?seed=${encodeURIComponent(submission.student_avatar_seed)}`} 
+                        src={studentAvatar} 
                         alt="Avatar" 
-                        className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-slate-800 shrink-0" 
+                        className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-slate-800 shrink-0 object-cover" 
                     />
                     <div className="min-w-0">
                         <p className="text-xs sm:text-sm font-bold text-white truncate">{submission.student_name}</p>
@@ -79,8 +85,17 @@ function SubmissionCard({ submission, onApprove, onReject }) {
                     <DocumentTextIcon className="w-3.5 h-3.5 shrink-0" />
                     Bukti Pengerjaan
                 </div>
+                
+                {submission.proof_image && (
+                    <div className="mb-2">
+                        <a href={submission.proof_image} target="_blank" rel="noopener noreferrer" className="block w-full max-w-sm rounded-lg overflow-hidden border border-slate-700 hover:border-blue-500 transition-colors">
+                            <img src={submission.proof_image} alt="Bukti Quest" className="w-full h-auto object-cover max-h-48" />
+                        </a>
+                    </div>
+                )}
+
                 <p className="text-xs sm:text-sm text-slate-300 leading-relaxed whitespace-pre-wrap break-words">
-                    {submission.proof_text || <span className="text-slate-600 italic">Tidak ada bukti teks</span>}
+                    {submission.proof_text || (!submission.proof_image && <span className="text-slate-600 italic">Tidak ada bukti teks/gambar</span>)}
                 </p>
             </div>
 

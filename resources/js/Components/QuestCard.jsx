@@ -1,13 +1,16 @@
 import React, { useRef, useState } from 'react';
-import { CheckCircleIcon, PlayIcon, ClockIcon, XCircleIcon, PaperAirplaneIcon } from '@heroicons/react/24/solid';
+import { CheckCircleIcon, PlayIcon, ClockIcon, XCircleIcon, PaperAirplaneIcon, PhotoIcon, CameraIcon } from '@heroicons/react/24/solid';
 import { router } from '@inertiajs/react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 
 export default function QuestCard({ quest = {}, onComplete, isCompleted, submissionStatus, rejectionReason }) {
     const cardRef = useRef(null);
+    const fileInputRef = useRef(null);
     const [showProofForm, setShowProofForm] = useState(false);
     const [proofText, setProofText] = useState('');
+    const [proofImage, setProofImage] = useState(null);
+    const [imagePreview, setImagePreview] = useState(null);
     const [submitting, setSubmitting] = useState(false);
 
     const difficultyStyles = {
@@ -40,17 +43,46 @@ export default function QuestCard({ quest = {}, onComplete, isCompleted, submiss
         }
     };
 
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            if (file.size > 5 * 1024 * 1024) {
+                alert('Ukuran gambar maksimal 5MB');
+                return;
+            }
+            setProofImage(file);
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImagePreview(reader.result);
+            };
+            reader.readAsDataURL(file);
+        } else {
+            setProofImage(null);
+            setImagePreview(null);
+        }
+    };
+
+    const removeImage = () => {
+        setProofImage(null);
+        setImagePreview(null);
+        if (fileInputRef.current) fileInputRef.current.value = '';
+    };
+
     const handleSubmitProof = (e) => {
         e.preventDefault();
-        if (!proofText.trim()) return;
+        if (!proofText.trim() && !proofImage) return;
         setSubmitting(true);
 
-        router.post(`/quests/${quest.id}/complete`, {
-            proof_text: proofText,
-        }, {
+        const formData = new FormData();
+        if (proofText.trim()) formData.append('proof_text', proofText);
+        if (proofImage) formData.append('proof_image', proofImage);
+
+        router.post(`/quests/${quest.id}/complete`, formData, {
             onSuccess: () => {
                 setShowProofForm(false);
                 setProofText('');
+                setProofImage(null);
+                setImagePreview(null);
                 setSubmitting(false);
             },
             onError: () => {
@@ -131,34 +163,87 @@ export default function QuestCard({ quest = {}, onComplete, isCompleted, submiss
 
             {/* Proof submission form */}
             {showProofForm && (
-                <form onSubmit={handleSubmitProof} className="mb-3 space-y-2">
+                <form onSubmit={handleSubmitProof} className="mb-3 space-y-2.5">
                     <label className="text-[10px] font-mono tracking-widest text-slate-400 uppercase font-semibold block">
                         Bukti Pengerjaan
                     </label>
                     <textarea
                         value={proofText}
                         onChange={(e) => setProofText(e.target.value)}
-                        placeholder="Jelaskan apa yang kamu kerjakan, atau tempel link tugas / screenshot..."
+                        placeholder="Jelaskan apa yang kamu kerjakan..."
                         className="w-full bg-[#0d0f15] border border-[#272b38] rounded-lg p-2.5 text-sm text-white placeholder-slate-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none resize-none transition-all duration-200"
-                        rows={3}
+                        rows={2}
                         maxLength={1000}
-                        required
-                        autoFocus
                     />
-                    <div className="flex flex-wrap items-center justify-between gap-2">
+                    
+                    {/* Hidden file input */}
+                    <input 
+                        ref={fileInputRef}
+                        type="file" 
+                        accept="image/*" 
+                        className="hidden" 
+                        onChange={handleImageChange}
+                    />
+
+                    {/* Image upload button OR image preview */}
+                    {!imagePreview ? (
+                        <button
+                            type="button"
+                            onClick={() => fileInputRef.current?.click()}
+                            className="w-full flex items-center justify-center gap-2.5 py-3 sm:py-2.5 px-4 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 hover:bg-blue-500/20 hover:border-blue-500/40 active:scale-[0.98] transition-all duration-200 cursor-pointer group"
+                        >
+                            <div className="w-8 h-8 sm:w-7 sm:h-7 rounded-lg bg-blue-500/15 flex items-center justify-center group-hover:bg-blue-500/25 transition-colors">
+                                <CameraIcon className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
+                            </div>
+                            <div className="text-left">
+                                <span className="text-xs sm:text-[11px] font-bold block leading-tight">Upload Gambar Bukti</span>
+                                <span className="text-[9px] sm:text-[9px] text-blue-400/60 font-medium">JPG, PNG · Max 5MB</span>
+                            </div>
+                        </button>
+                    ) : (
+                        <div className="relative rounded-xl overflow-hidden border border-blue-500/20 bg-[#0d0f15]">
+                            <img 
+                                src={imagePreview} 
+                                alt="Preview" 
+                                className="w-full h-28 sm:h-32 object-cover" 
+                            />
+                            {/* Gradient overlay at bottom */}
+                            <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-[#0b0f17]/90 to-transparent" />
+                            
+                            {/* File name & remove */}
+                            <div className="absolute bottom-0 left-0 right-0 flex items-center justify-between px-2.5 py-1.5">
+                                <div className="flex items-center gap-1.5 min-w-0">
+                                    <PhotoIcon className="w-3.5 h-3.5 text-blue-400 shrink-0" />
+                                    <span className="text-[10px] text-slate-300 font-medium truncate">
+                                        {proofImage?.name || 'gambar.jpg'}
+                                    </span>
+                                </div>
+                                <button
+                                    type="button"
+                                    onClick={removeImage}
+                                    className="shrink-0 flex items-center gap-1 bg-rose-500/80 hover:bg-rose-500 text-white text-[10px] font-bold py-1 px-2 rounded-md transition-colors cursor-pointer active:scale-95"
+                                >
+                                    <XCircleIcon className="w-3 h-3" />
+                                    Hapus
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
+                    <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
                         <span className="text-[10px] text-slate-500">{proofText.length}/1000</span>
                         <div className="flex gap-2 w-full sm:w-auto justify-end">
                             <button
                                 type="button"
-                                onClick={() => { setShowProofForm(false); setProofText(''); }}
-                                className="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
+                                onClick={() => { setShowProofForm(false); setProofText(''); removeImage(); }}
+                                className="px-3 py-2 sm:py-1.5 rounded-lg text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
                             >
                                 Batal
                             </button>
                             <button
                                 type="submit"
-                                disabled={submitting || !proofText.trim()}
-                                className="bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed text-white px-3.5 py-1.5 rounded-lg flex items-center justify-center gap-1.5 text-xs font-bold transition-colors shadow-sm cursor-pointer"
+                                disabled={submitting || (!proofText.trim() && !proofImage)}
+                                className="bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed text-white px-4 py-2 sm:py-1.5 rounded-lg flex items-center justify-center gap-1.5 text-xs font-bold transition-colors shadow-sm cursor-pointer active:scale-95"
                             >
                                 <PaperAirplaneIcon className="w-3.5 h-3.5" />
                                 {submitting ? 'Mengirim...' : 'Kirim Bukti'}

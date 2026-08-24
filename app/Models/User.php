@@ -24,6 +24,7 @@ class User extends Authenticatable
         'streak_days',
         'last_activity_date',
         'class',
+        'has_completed_onboarding',
     ];
 
     protected $hidden = [
@@ -36,6 +37,7 @@ class User extends Authenticatable
         return [
             'password' => 'hashed',
             'last_activity_date' => 'date',
+            'has_completed_onboarding' => 'boolean',
         ];
     }
 

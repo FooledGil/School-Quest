@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use App\Services\ExpService;
 
@@ -25,6 +26,38 @@ class ProfileController extends Controller
         ]);
     }
 
+    /**
+     * Upload custom local image avatar to storage
+     */
+    public function uploadAvatar(Request $request)
+    {
+        $request->validate([
+            'avatar_file' => 'required|image|mimes:jpeg,png,jpg,webp|max:3072',
+        ], [
+            'avatar_file.required' => 'Silakan pilih file gambar terlebih dahulu.',
+            'avatar_file.image' => 'File harus berupa gambar.',
+            'avatar_file.mimes' => 'Format file yang diperbolehkan: JPEG, PNG, JPG, WEBP.',
+            'avatar_file.max' => 'Ukuran file maksimal 3 MB.',
+        ]);
+
+        $user = Auth::user();
+
+        // Delete old custom avatar from storage if exists
+        $this->deleteOldStorageAvatar($user);
+
+        // Store new avatar file in public storage (storage/app/public/avatars)
+        $path = $request->file('avatar_file')->store('avatars', 'public');
+
+        $user->avatar = '/storage/' . $path;
+        $user->avatar_seed = null;
+        $user->save();
+
+        return back()->with('success', 'Foto avatar berhasil diunggah! 📸');
+    }
+
+    /**
+     * Select a DiceBear Pixel-Art Bot Seed
+     */
     public function updateAvatar(Request $request)
     {
         $request->validate([
@@ -32,13 +65,53 @@ class ProfileController extends Controller
         ]);
 
         $user = Auth::user();
+
+        // Delete old custom avatar from storage if exists
+        $this->deleteOldStorageAvatar($user);
+
         $user->avatar_seed = $request->avatar_seed;
-        $user->avatar = null; // Clear any custom avatar URL so the seed-based one is used
+        $user->avatar = null;
         $user->save();
 
-        return back()->with('success', 'Avatar berhasil diperbarui! 🎨');
+        return back()->with('success', 'Avatar pixel bot berhasil disimpan! 🎨');
     }
 
+    /**
+     * Reset avatar to default silhouette with question mark
+     */
+    public function resetAvatar(Request $request)
+    {
+        $user = Auth::user();
+
+        // Delete old custom avatar from storage if exists
+        $this->deleteOldStorageAvatar($user);
+
+        $user->avatar = null;
+        $user->avatar_seed = null;
+        $user->save();
+
+        return back()->with('success', 'Avatar telah dikembalikan ke siluet default! 👤');
+    }
+
+    /**
+     * Mark onboarding guide as completed for student
+     */
+    public function completeOnboarding(Request $request)
+    {
+        $user = Auth::user();
+        $user->has_completed_onboarding = true;
+        $user->save();
+
+        if ($request->wantsJson()) {
+            return response()->json(['status' => 'success', 'message' => 'Onboarding completed']);
+        }
+
+        return back()->with('success', 'Selamat datang di SchoolQuest! Petualanganmu dimulai sekarang. 🚀');
+    }
+
+    /**
+     * Update user password
+     */
     public function updatePassword(Request $request)
     {
         $request->validate([
@@ -61,5 +134,18 @@ class ProfileController extends Controller
         $user->save();
 
         return back()->with('success', 'Password berhasil diperbarui! 🔒');
+    }
+
+    /**
+     * Helper to remove old avatar image from public storage
+     */
+    private function deleteOldStorageAvatar($user)
+    {
+        if ($user->avatar && str_starts_with($user->avatar, '/storage/avatars/')) {
+            $relativeFilePath = str_replace('/storage/', '', $user->avatar);
+            if (Storage::disk('public')->exists($relativeFilePath)) {
+                Storage::disk('public')->delete($relativeFilePath);
+            }
+        }
     }
 }

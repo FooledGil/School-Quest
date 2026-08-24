@@ -19,8 +19,8 @@ class DatabaseSeeder extends Seeder
         $password = Hash::make('password');
 
         // ADMINS
-        User::create(['name' => 'Admin Sekolah', 'email' => 'admin@schoolquest.id', 'password' => Hash::make('admin123'), 'role' => 'admin']);
-        User::create(['name' => 'Guru Piket', 'email' => 'guru@schoolquest.id', 'password' => Hash::make('guru123'), 'role' => 'admin']);
+        User::create(['name' => 'Admin Sekolah', 'email' => 'admin@schoolquest.id', 'password' => Hash::make('admin123'), 'role' => 'admin', 'has_completed_onboarding' => true]);
+        User::create(['name' => 'Guru Piket', 'email' => 'guru@schoolquest.id', 'password' => Hash::make('guru123'), 'role' => 'admin', 'has_completed_onboarding' => true]);
 
         // STUDENTS FROM PDF (220 Students across 5 Classes)
         $students = [
@@ -303,6 +303,8 @@ class DatabaseSeeder extends Seeder
                 'role' => 'student',
                 'class' => $s['class'],
                 'gender' => $s['gender'] ?? null,
+                'avatar_seed' => null,
+                'has_completed_onboarding' => false,
                 'exp' => $s['exp'],
                 'level' => floor(sqrt($s['exp'] / 100)) + 1,
             ]);

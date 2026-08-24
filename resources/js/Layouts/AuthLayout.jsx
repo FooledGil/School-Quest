@@ -1,4 +1,6 @@
 import React from 'react';
+import ApiIcon from '@/Components/ApiIcon';
+import { ICON_API } from '@/Utils/iconApi';
 
 export default function AuthLayout({ children }) {
     return (
@@ -15,7 +17,11 @@ export default function AuthLayout({ children }) {
             <div className="z-10 w-full max-w-md auth-card-anim">
                 {/* Header Logo */}
                 <div className="text-center mb-5 sm:mb-6 flex flex-col items-center">
-                    <img src="/images/logo.png" alt="SchoolQuest Logo" className="w-20 sm:w-24 h-auto mb-2.5 sm:mb-3 drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)]" />
+                    <img 
+                        src="/images/logo.png" 
+                        alt="SchoolQuest Logo" 
+                        className="w-20 sm:w-24 h-auto mb-2.5 sm:mb-3 drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)]" 
+                    />
                     <h1 className="text-xl sm:text-2xl md:text-3xl font-game text-white tracking-wider mb-1.5 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
                         Schoolquest
                     </h1>

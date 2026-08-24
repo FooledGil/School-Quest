@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from '@/Components/Navbar';
 import Sidebar from '@/Components/Sidebar';
 import { HomeIcon, ListBulletIcon, TrophyIcon, UserIcon } from '@heroicons/react/24/outline';
 import Toast from '@/Components/Toast';
+import OnboardingModal from '@/Components/OnboardingModal';
+import { getAvatarUrl } from '@/Utils/avatar';
 import { usePage } from '@inertiajs/react';
 
 export default function StudentLayout({ user: propUser, children }) {
@@ -13,10 +15,27 @@ export default function StudentLayout({ user: propUser, children }) {
     const rawUser = auth?.user || propUser || {};
     const user = {
         ...rawUser,
-        avatar: rawUser.avatar || `https://api.dicebear.com/9.x/pixel-art/svg?seed=${encodeURIComponent(rawUser.avatar_seed || rawUser.name || 'Student')}`,
+        avatar: getAvatarUrl(rawUser),
         rank_name: rawUser.rank_name || 'Novice',
         next_level_exp: rawUser.next_level_exp || (Math.pow(rawUser.level || 1, 2) * 100)
     };
+
+    // Onboarding guide state: auto-open if student hasn't completed onboarding
+    const shouldShowInitialOnboarding = rawUser.role === 'student' && rawUser.nisn && !rawUser.has_completed_onboarding;
+    const [showOnboarding, setShowOnboarding] = useState(false);
+
+    useEffect(() => {
+        if (shouldShowInitialOnboarding) {
+            setShowOnboarding(true);
+        }
+    }, [shouldShowInitialOnboarding]);
+
+    // Listen for manual onboarding trigger event from any page/component
+    useEffect(() => {
+        const handleOpenTour = () => setShowOnboarding(true);
+        window.addEventListener('open-onboarding-tour', handleOpenTour);
+        return () => window.removeEventListener('open-onboarding-tour', handleOpenTour);
+    }, []);
 
     const pathname = typeof window !== 'undefined' ? window.location.pathname : '/dashboard';
 
@@ -42,6 +61,12 @@ export default function StudentLayout({ user: propUser, children }) {
                     </div>
                 </main>
             </div>
+
+            {/* Onboarding Guide Modal for First-time Login */}
+            <OnboardingModal 
+                isOpen={showOnboarding} 
+                onClose={() => setShowOnboarding(false)} 
+            />
 
             {/* Flash Messages */}
             {flash?.success && <Toast type="success" message={flash.success} />}

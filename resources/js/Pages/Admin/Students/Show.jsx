@@ -3,9 +3,10 @@ import { Head, Link } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import LevelBadge from '@/Components/LevelBadge';
 import ExpBar from '@/Components/ExpBar';
+import { getAvatarUrl } from '@/Utils/avatar';
 
 export default function StudentShow({ student = {} }) {
-    const avatar = student.avatar || `https://api.dicebear.com/9.x/pixel-art/svg?seed=${encodeURIComponent(student.avatar_seed || student.name || 'Student')}`;
+    const avatar = getAvatarUrl(student);
     const rankName = student.rank_name || 'Novice';
     const nextLevelExp = student.next_level_exp || (Math.pow(student.level || 1, 2) * 100);
 

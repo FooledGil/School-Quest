@@ -6,6 +6,8 @@ import LevelBadge from '@/Components/LevelBadge';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 
+import { getAvatarUrl } from '@/Utils/avatar';
+
 export default function Leaderboard({ students = [] }) {
     const tableBodyRef = useRef(null);
     const { auth } = usePage().props;
@@ -17,7 +19,7 @@ export default function Leaderboard({ students = [] }) {
         class: s.class || 'Siswa',
         level: s.level || 1,
         exp: s.exp || 0,
-        avatar: s.avatar || `https://api.dicebear.com/9.x/pixel-art/svg?seed=${encodeURIComponent(s.avatar_seed || s.name)}`,
+        avatar: getAvatarUrl(s),
         rank_number: idx + 1
     }));
 

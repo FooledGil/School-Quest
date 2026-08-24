@@ -25,10 +25,12 @@ class HandleInertiaRequests extends Middleware
                     'email' => $request->user()->email,
                     'role' => $request->user()->role,
                     'avatar_seed' => $request->user()->avatar_seed,
+                    'avatar' => $request->user()->avatar,
                     'exp' => $request->user()->exp,
                     'level' => $request->user()->level,
                     'class' => $request->user()->class,
                     'streak_days' => $request->user()->streak_days,
+                    'has_completed_onboarding' => (bool) $request->user()->has_completed_onboarding,
                 ] : null,
             ],
             'flash' => [

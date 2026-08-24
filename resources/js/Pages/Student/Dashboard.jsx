@@ -11,6 +11,8 @@ import { StarIcon, CheckBadgeIcon, FireIcon, TrophyIcon } from '@heroicons/react
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 
+import { getAvatarUrl } from '@/Utils/avatar';
+
 export default function Dashboard({ user: propUser, schedules = [], stats = {}, recentQuests = [], achievements = [] }) {
     const pageRef = useRef(null);
     const heroRef = useRef(null);
@@ -20,7 +22,7 @@ export default function Dashboard({ user: propUser, schedules = [], stats = {}, 
     const scheduleRef = useRef(null);
 
     const user = propUser || {};
-    const avatar = user.avatar || `https://api.dicebear.com/9.x/pixel-art/svg?seed=${encodeURIComponent(user.avatar_seed || user.name || 'Alex')}`;
+    const avatar = getAvatarUrl(user);
     const rankName = stats.rank || 'Novice';
     const nextLevelExp = stats.nextLevelExp || 100;
 

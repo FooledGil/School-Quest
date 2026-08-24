@@ -65,7 +65,8 @@ class QuestController extends Controller
         $today = Carbon::today();
 
         $request->validate([
-            'proof_text' => 'required|string|max:1000',
+            'proof_text' => 'nullable|string|max:1000|required_without:proof_image',
+            'proof_image' => 'nullable|image|max:5120|required_without:proof_text',
         ]);
 
         // Check if already submitted today (pending or approved)
@@ -86,6 +87,11 @@ class QuestController extends Controller
             ->where('status', 'rejected')
             ->delete();
 
+        $proofImagePath = null;
+        if ($request->hasFile('proof_image')) {
+            $proofImagePath = $request->file('proof_image')->store('quest_proofs', 'public');
+        }
+
         QuestCompletion::create([
             'user_id' => $user->id,
             'quest_id' => $quest->id,
@@ -93,6 +99,7 @@ class QuestController extends Controller
             'exp_earned' => $quest->exp_reward,
             'status' => 'pending',
             'proof_text' => $request->proof_text,
+            'proof_image' => $proofImagePath,
         ]);
 
         return back()->with('success', 'Bukti pengerjaan quest berhasil dikirim! Menunggu validasi admin.');

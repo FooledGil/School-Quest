@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from '@inertiajs/react';
 import { XMarkIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
+import ApiIcon from '@/Components/ApiIcon';
+import { ICON_API } from '@/Utils/iconApi';
 
 export default function Sidebar({ links, isOpen, setIsOpen, user, role }) {
     const handleLinkClick = () => {
@@ -76,6 +78,23 @@ export default function Sidebar({ links, isOpen, setIsOpen, user, role }) {
                         );
                     })}
                 </nav>
+
+                {/* Guide Button for Students */}
+                {role === 'student' && (
+                    <div className="px-3 pb-2">
+                        <button
+                            type="button"
+                            onClick={() => {
+                                handleLinkClick();
+                                window.dispatchEvent(new CustomEvent('open-onboarding-tour'));
+                            }}
+                            className="flex items-center gap-3 w-full px-3.5 py-2.5 rounded-lg text-xs font-semibold text-blue-400 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 hover:border-blue-500/40 transition-all cursor-pointer group"
+                        >
+                            <ApiIcon icon={ICON_API.guide} className="w-4 h-4 text-blue-400 group-hover:scale-110 transition-transform" />
+                            <span className="truncate">Panduan Petualangan</span>
+                        </button>
+                    </div>
+                )}
 
                 {/* Logout Button */}
                 <div className="p-4 border-t border-gray-800 shrink-0 bg-[#0b0f19]">
