@@ -58,13 +58,20 @@ export default function PodiumDisplay({ topThree = [] }) {
                             </div>
                             <div className="text-center px-0.5 w-full">
                                 <p className="font-bold text-white text-[11px] sm:text-xs md:text-sm truncate w-full">{user.name}</p>
-                                <p className="text-[10px] sm:text-[11px] text-amber-400 font-semibold mt-0.5 truncate">{(user.exp || 0).toLocaleString()} <span className="hidden sm:inline">EXP</span></p>
+                                <p className="font-mono font-bold text-slate-400 text-[10px] sm:text-[11px] truncate w-full">{user.class}</p>
                             </div>
                         </div>
 
-                        <div className={`w-full ${style.height} ${style.color} rounded-t-xl border-t-2 border-x flex flex-col items-center justify-start pt-2 sm:pt-3 shadow-lg relative`}>
-                            <div className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full border flex items-center justify-center font-bold text-[10px] sm:text-xs ${style.badge}`}>
+                        {/* Podium Block */}
+                        <div className={`w-full ${style.height} ${style.color} rounded-t-xl border-t-2 border-x-2 flex flex-col items-center justify-between p-2 shadow-lg relative select-none`}>
+                            {/* Rank Badge */}
+                            <div className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full border-2 flex items-center justify-center font-game text-[10px] sm:text-xs shadow-md ${style.badge}`}>
                                 #{style.rank}
+                            </div>
+
+                            {/* EXP Counter */}
+                            <div className="font-game text-[9px] sm:text-[10px] tracking-wider text-amber-400 drop-shadow-sm pb-1">
+                                {user.exp.toLocaleString()} <span className="text-[7px] sm:text-[8px] text-blue-300">EXP</span>
                             </div>
                         </div>
                     </div>

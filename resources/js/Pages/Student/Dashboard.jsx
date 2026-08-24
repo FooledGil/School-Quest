@@ -126,11 +126,11 @@ export default function Dashboard({ user: propUser, schedules = [], stats = {}, 
                         {/* Active Quests Preview */}
                         <section>
                             <div className="flex items-center justify-between mb-3 sm:mb-4">
-                                <h2 className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
-                                    <span className="text-blue-400">#</span> Quest Aktif
+                                <h2 className="font-game text-xs sm:text-sm text-white flex items-center gap-2 tracking-wider">
+                                    <span className="text-amber-400">⚔️</span> QUEST AKTIF
                                 </h2>
-                                <Link href="/quests" className="text-xs font-bold text-blue-400 hover:text-blue-300 transition-colors">
-                                    Lihat Semua &rarr;
+                                <Link href="/quests" className="font-game text-[10px] sm:text-xs text-blue-400 hover:text-blue-300 transition-colors uppercase tracking-wider">
+                                    SEMUA &rarr;
                                 </Link>
                             </div>
                             {recentQuests.length > 0 ? (
@@ -147,8 +147,10 @@ export default function Dashboard({ user: propUser, schedules = [], stats = {}, 
                         </section>
 
                         {/* Achievements Preview */}
-                        <section className="glass-card p-4 sm:p-6">
-                            <h2 className="text-base sm:text-lg font-bold text-white mb-4 sm:mb-6">Pencapaian (Achievements)</h2>
+                        <section className="glass-card p-4 sm:p-6 border-2">
+                            <h2 className="font-game text-xs sm:text-sm text-white mb-4 sm:mb-6 tracking-wider flex items-center gap-2">
+                                <span className="text-amber-400">🏆</span> PENCAPAIAN / ACHIEVEMENTS
+                            </h2>
                             <div ref={achievementsRef} className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3 sm:gap-4 justify-items-center">
                                 {achievements.slice(0, 5).map(ach => (
                                     <AchievementBadge key={ach.id} achievement={ach} isUnlocked={ach.isUnlocked} />
@@ -160,8 +162,10 @@ export default function Dashboard({ user: propUser, schedules = [], stats = {}, 
                     {/* Sidebar Area */}
                     <div className="space-y-6 sm:space-y-8 min-w-0">
                         {/* Schedule */}
-                        <section ref={scheduleRef} className="glass-card p-4 sm:p-6 border-t-2 border-t-blue-500">
-                            <h2 className="text-base sm:text-lg font-bold text-white mb-4 sm:mb-6 text-center">Jadwal Hari Ini</h2>
+                        <section ref={scheduleRef} className="glass-card p-4 sm:p-6 border-t-4 border-t-blue-500 border-2">
+                            <h2 className="font-game text-xs sm:text-sm text-white mb-4 sm:mb-6 text-center tracking-wider flex items-center justify-center gap-2">
+                                <span className="text-blue-400">📅</span> JADWAL HARI INI
+                            </h2>
                             <ScheduleTimeline schedule={schedules.map(s => ({
                                 subject: s.subject?.name || 'Pelajaran',
                                 room: s.teacher ? `${s.teacher} • ${s.class}` : s.class,

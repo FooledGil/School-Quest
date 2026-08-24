@@ -50,7 +50,10 @@ export default function Quests({ mainQuests = [], additionalQuests = [] }) {
             <Head title="Papan Quest" />
 
             <div className="mb-5 sm:mb-6">
-                <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white mb-1 tracking-tight">Papan Quest</h1>
+                <h1 className="font-game text-base sm:text-lg md:text-2xl text-white mb-1.5 tracking-wider drop-shadow-md flex items-center gap-2">
+                    <span>📜</span>
+                    <span>PAPAN QUEST</span>
+                </h1>
                 <p className="text-slate-400 text-xs sm:text-sm">Selesaikan quest harian & tambahan untuk meningkatkan EXP!</p>
             </div>
 
@@ -58,34 +61,34 @@ export default function Quests({ mainQuests = [], additionalQuests = [] }) {
             <div className="flex overflow-x-auto gap-4 sm:gap-6 mb-5 sm:mb-6 border-b border-slate-800 pb-px">
                 <button 
                     onClick={() => setTab('main')}
-                    className={`pb-3 px-1 font-bold text-xs sm:text-sm transition-colors relative cursor-pointer shrink-0 ${tab === 'main' ? 'text-blue-400' : 'text-slate-500 hover:text-slate-300'}`}
+                    className={`pb-3 px-1 font-game text-[9px] sm:text-[10px] tracking-wider uppercase transition-colors relative cursor-pointer shrink-0 ${tab === 'main' ? 'text-blue-400' : 'text-slate-500 hover:text-slate-300'}`}
                 >
-                    Main Quests ({mainQuests.length})
-                    {tab === 'main' && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-500 rounded-full"></div>}
+                    MAIN QUESTS ({mainQuests.length})
+                    {tab === 'main' && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-500 rounded-full shadow-[0_0_8px_rgba(59,130,246,0.8)]"></div>}
                 </button>
                 <button 
                     onClick={() => setTab('additional')}
-                    className={`pb-3 px-1 font-bold text-xs sm:text-sm transition-colors relative cursor-pointer shrink-0 ${tab === 'additional' ? 'text-blue-400' : 'text-slate-500 hover:text-slate-300'}`}
+                    className={`pb-3 px-1 font-game text-[9px] sm:text-[10px] tracking-wider uppercase transition-colors relative cursor-pointer shrink-0 ${tab === 'additional' ? 'text-blue-400' : 'text-slate-500 hover:text-slate-300'}`}
                 >
-                    Additional Quests ({additionalQuests.length})
-                    {tab === 'additional' && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-500 rounded-full"></div>}
+                    ADDITIONAL QUESTS ({additionalQuests.length})
+                    {tab === 'additional' && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-500 rounded-full shadow-[0_0_8px_rgba(59,130,246,0.8)]"></div>}
                 </button>
             </div>
 
             {/* Filters */}
-            <div className="flex flex-wrap items-center justify-between gap-3 mb-6 glass-card p-2.5 sm:p-3">
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-6 glass-card p-2.5 sm:p-3 border-2">
                 <div className="flex flex-wrap gap-1.5 sm:gap-2">
                     {['all', 'active', 'pending', 'completed'].map(f => (
                         <button
                             key={f}
                             onClick={() => setFilter(f)}
-                            className={`px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-bold uppercase transition-colors cursor-pointer ${
+                            className={`px-3 py-1.5 rounded-lg font-game text-[8px] sm:text-[9px] tracking-wider uppercase transition-all cursor-pointer ${
                                 filter === f 
-                                    ? 'bg-blue-600 text-white shadow-sm' 
+                                    ? 'bg-blue-600 text-white shadow-md shadow-blue-500/30' 
                                     : 'bg-transparent text-slate-400 hover:bg-slate-800'
                             }`}
                         >
-                            {f === 'all' ? 'Semua' : f === 'active' ? 'Aktif' : f === 'pending' ? `Pending${pendingCount > 0 ? ` (${pendingCount})` : ''}` : 'Selesai'}
+                            {f === 'all' ? 'SEMUA' : f === 'active' ? 'AKTIF' : f === 'pending' ? `PENDING${pendingCount > 0 ? ` (${pendingCount})` : ''}` : 'SELESAI'}
                         </button>
                     ))}
                 </div>

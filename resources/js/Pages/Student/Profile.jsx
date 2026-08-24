@@ -610,8 +610,11 @@ export default function Profile({ user: propUser }) {
                     )}
                     
                     {/* Achievements Collection */}
-                    <div className="glass-card p-4 sm:p-6">
-                        <h3 className="text-base sm:text-lg font-bold text-white mb-4 border-b border-slate-800 pb-3">Galeri Pencapaian</h3>
+                    <div className="glass-card p-4 sm:p-6 border-2">
+                        <h3 className="font-game text-xs sm:text-sm text-white mb-4 border-b-2 border-slate-800 pb-3 tracking-wider flex items-center gap-2">
+                            <span>🏆</span>
+                            <span>GALERI PENCAPAIAN</span>
+                        </h3>
                         {achievements.length > 0 ? (
                             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3 sm:gap-4 justify-items-center">
                                 {achievements.map(ach => (
@@ -626,17 +629,20 @@ export default function Profile({ user: propUser }) {
                     </div>
 
                     {/* Quest History */}
-                    <div className="glass-card p-4 sm:p-6">
-                        <h3 className="text-base sm:text-lg font-bold text-white mb-4 border-b border-slate-800 pb-3">Aktivitas Terakhir</h3>
+                    <div className="glass-card p-4 sm:p-6 border-2">
+                        <h3 className="font-game text-xs sm:text-sm text-white mb-4 border-b-2 border-slate-800 pb-3 tracking-wider flex items-center gap-2">
+                            <span>📜</span>
+                            <span>AKTIVITAS TERAKHIR</span>
+                        </h3>
                         {questHistory.length > 0 ? (
                             <div className="space-y-2.5 sm:space-y-3">
                                 {questHistory.map((quest) => (
-                                    <div key={quest.id} className="activity-item flex items-center justify-between p-3 rounded-lg bg-slate-900/40 border border-slate-800/80 gap-3">
+                                    <div key={quest.id} className="activity-item flex items-center justify-between p-3 rounded-lg bg-slate-900/60 border border-slate-800 gap-3">
                                         <div className="min-w-0">
                                             <p className="font-bold text-white text-xs sm:text-sm truncate">{quest.title}</p>
-                                            <p className="text-[11px] text-slate-400">{quest.date}</p>
+                                            <p className="font-mono text-[10px] text-slate-400">{quest.date}</p>
                                         </div>
-                                        <div className="text-amber-400 font-bold text-xs shrink-0">
+                                        <div className="text-amber-400 font-game text-[10px] sm:text-xs shrink-0">
                                             +{quest.exp} EXP
                                         </div>
                                     </div>

@@ -33,20 +33,23 @@ export default function ExpBar({ currentExp = 0, requiredExp = 100, className = 
 
     return (
         <div className={`w-full ${className}`}>
-            <div className="flex justify-between items-end mb-1 text-xs font-mono">
-                <span className="font-bold text-blue-400">EXP</span>
-                <span ref={counterRef} className="text-slate-300 font-medium">
-                    {displayExp.toLocaleString()} / {requiredExp.toLocaleString()}
+            <div className="flex justify-between items-center mb-1.5 select-none">
+                <span className="font-game text-[9px] sm:text-[10px] text-blue-400 font-bold tracking-wider flex items-center gap-1">
+                    <span>⚡</span>
+                    <span>EXP</span>
+                </span>
+                <span ref={counterRef} className="font-mono text-xs text-slate-300 font-bold tracking-wide">
+                    {displayExp.toLocaleString()} <span className="text-slate-500 font-normal">/</span> {requiredExp.toLocaleString()}
                 </span>
             </div>
 
-            <div className="h-3 w-full bg-slate-900 rounded-full overflow-hidden border border-slate-700/60 relative">
+            <div className="h-3.5 w-full bg-slate-950 rounded-full overflow-hidden border-2 border-slate-700/80 relative shadow-inner p-0.5">
                 <div
                     ref={barRef}
-                    className="h-full bg-gradient-to-r from-blue-600 to-blue-400 rounded-full relative"
+                    className="h-full bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-400 rounded-full relative"
                     style={{ width: '0%' }}
                 >
-                    <div className="absolute top-0 right-0 w-2 h-full bg-white/40 rounded-full"></div>
+                    <div className="absolute top-0 right-0 w-2 h-full bg-white/60 rounded-full animate-pulse"></div>
                 </div>
             </div>
         </div>

@@ -144,6 +144,7 @@ body {
     opacity: 1;
     transform: translateY(16px) scale(0.98);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -159,6 +160,7 @@ body {
     opacity: 0.2;
     transform: translateY(0);
   }
+
   100% {
     opacity: 0.6;
     transform: translateY(-6px);
@@ -174,6 +176,7 @@ body {
     opacity: 0.5;
     transform: translateY(4px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

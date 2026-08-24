@@ -39,24 +39,29 @@ export default function Leaderboard({ students = [] }) {
             <Head title="Leaderboard" />
 
             <div className="mb-5 sm:mb-6 text-center">
-                <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white mb-1 tracking-tight">Papan Peringkat</h1>
-                <p className="text-blue-400 font-bold text-[10px] sm:text-xs uppercase tracking-wider">Murid Berprestasi Dengan EXP Tertinggi</p>
+                <h1 className="font-game text-base sm:text-lg md:text-2xl text-white mb-1.5 tracking-wider drop-shadow-md flex items-center justify-center gap-2">
+                    <span>👑</span>
+                    <span>PAPAN PERINGKAT</span>
+                </h1>
+                <p className="font-mono text-blue-400 font-bold text-[10px] sm:text-xs uppercase tracking-widest">
+                    ▶ HALL OF FAME — TOP GUILD HEROES ◀
+                </p>
             </div>
 
             {normalizedStudents.length >= 3 && (
                 <PodiumDisplay topThree={normalizedStudents.slice(0, 3)} />
             )}
 
-            <div className="glass-card overflow-hidden mt-6 shadow-xl">
+            <div className="glass-card overflow-hidden mt-6 shadow-xl border-2">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse min-w-[480px]">
                         <thead>
-                            <tr className="bg-slate-900/80 border-b border-slate-800 text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider">
-                                <th className="p-3 sm:p-4 text-center w-14 sm:w-16">Peringkat</th>
-                                <th className="p-3 sm:p-4">Murid</th>
-                                <th className="p-3 sm:p-4 text-center">Kelas</th>
-                                <th className="p-3 sm:p-4 text-center">Level</th>
-                                <th className="p-3 sm:p-4 text-right">Total EXP</th>
+                            <tr className="bg-slate-950 border-b-2 border-slate-800 font-game text-[8px] sm:text-[9px] text-slate-400 uppercase tracking-wider">
+                                <th className="p-3 sm:p-4 text-center w-14 sm:w-16">RANK</th>
+                                <th className="p-3 sm:p-4">HERO / MURID</th>
+                                <th className="p-3 sm:p-4 text-center">KELAS</th>
+                                <th className="p-3 sm:p-4 text-center">LEVEL</th>
+                                <th className="p-3 sm:p-4 text-right">TOTAL EXP</th>
                             </tr>
                         </thead>
                         <tbody ref={tableBodyRef}>
