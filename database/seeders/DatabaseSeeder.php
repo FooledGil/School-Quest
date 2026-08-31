@@ -524,5 +524,7 @@ class DatabaseSeeder extends Seeder
                 'exp_bonus' => $a[5],
             ]);
         }
+
+        $this->call(ForumSeeder::class);
     }
 }

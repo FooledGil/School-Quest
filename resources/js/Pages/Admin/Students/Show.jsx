@@ -1,14 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Head, Link } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import LevelBadge from '@/Components/LevelBadge';
 import ExpBar from '@/Components/ExpBar';
+import PunishStudentModal from '@/Components/Admin/PunishStudentModal';
 import { getAvatarUrl } from '@/Utils/avatar';
+import { ShieldExclamationIcon } from '@heroicons/react/24/outline';
 
 export default function StudentShow({ student = {} }) {
     const avatar = getAvatarUrl(student);
     const rankName = student.rank_name || 'Novice';
-    const nextLevelExp = student.next_level_exp || (Math.pow(student.level || 1, 2) * 100);
+    const nextLevelExp = student.next_level_exp || 150;
+    const baseExp = student.current_level_base_exp || 0;
+    const [isPunishModalOpen, setIsPunishModalOpen] = useState(false);
 
     const questHistory = (student.quest_completions || []).map(qc => ({
         id: qc.id,
@@ -22,9 +26,20 @@ export default function StudentShow({ student = {} }) {
         <AdminLayout>
             <Head title={`Student: ${student.name}`} />
 
-            <div className="flex items-center gap-3 sm:gap-4 mb-5 sm:mb-6">
-                <Link href="/admin/students" className="text-gray-400 hover:text-white text-sm font-semibold">&larr; Kembali ke Daftar</Link>
-                <h1 className="text-xl sm:text-2xl font-bold text-white truncate">Profil Murid: {student.name}</h1>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5 sm:mb-6">
+                <div className="flex items-center gap-3 sm:gap-4">
+                    <Link href="/admin/students" className="text-gray-400 hover:text-white text-sm font-semibold">&larr; Kembali ke Daftar</Link>
+                    <h1 className="text-xl sm:text-2xl font-bold text-white truncate">Profil Murid: {student.name}</h1>
+                </div>
+
+                <button
+                    type="button"
+                    onClick={() => setIsPunishModalOpen(true)}
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-red-600/20 hover:bg-red-600 border border-red-500/40 text-red-300 hover:text-white text-xs font-bold transition-all shadow-md cursor-pointer self-start sm:self-auto"
+                >
+                    <ShieldExclamationIcon className="w-4 h-4" />
+                    <span>Hukum Siswa ⚖️</span>
+                </button>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
@@ -38,7 +53,7 @@ export default function StudentShow({ student = {} }) {
                         <LevelBadge level={student.level || 1} rankName={rankName} size="md" />
                     </div>
 
-                    <ExpBar currentExp={student.exp || 0} requiredExp={nextLevelExp} className="w-full mb-4" />
+                    <ExpBar currentExp={student.exp || 0} requiredExp={nextLevelExp} baseExp={baseExp} showPercent={true} className="w-full mb-4" />
 
                     <div className="w-full grid grid-cols-2 gap-2 mt-2 text-sm text-center">
                         <div className="bg-black/30 p-2.5 rounded-lg border border-gray-800">
@@ -50,6 +65,12 @@ export default function StudentShow({ student = {} }) {
                             <p className="font-bold text-emerald-400 text-sm sm:text-base mt-0.5">{student.streak_days || 0} Hari</p>
                         </div>
                     </div>
+
+                    {student.is_muted && (
+                        <div className="w-full mt-4 p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-center text-xs text-red-400 font-bold">
+                            🔇 Sedang di-mute hingga: {student.muted_until || 'Aktif'}
+                        </div>
+                    )}
                 </div>
 
                 {/* Right Column */}
@@ -90,6 +111,13 @@ export default function StudentShow({ student = {} }) {
 
                 </div>
             </div>
+
+            {/* Punish Student Modal */}
+            <PunishStudentModal
+                isOpen={isPunishModalOpen}
+                onClose={() => setIsPunishModalOpen(false)}
+                student={student}
+            />
         </AdminLayout>
     );
 }

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Navbar from '@/Components/Navbar';
 import Sidebar from '@/Components/Sidebar';
-import { HomeIcon, ClipboardDocumentListIcon, UsersIcon, ShieldCheckIcon } from '@heroicons/react/24/outline';
+import { HomeIcon, ClipboardDocumentListIcon, UsersIcon, ShieldCheckIcon, ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline';
 import Toast from '@/Components/Toast';
 import { usePage } from '@inertiajs/react';
 
@@ -23,6 +23,7 @@ export default function AdminLayout({ user: propUser, children }) {
         { name: 'Dashboard', href: '/admin/dashboard', icon: HomeIcon, active: pathname === '/admin/dashboard' },
         { name: 'Manage Quests', href: '/admin/quests', icon: ClipboardDocumentListIcon, active: pathname.startsWith('/admin/quests') },
         { name: 'Validasi Quest', href: '/admin/validations', icon: ShieldCheckIcon, active: pathname.startsWith('/admin/validations') },
+        { name: 'The Realm', href: '/admin/community', icon: ChatBubbleLeftRightIcon, active: pathname.startsWith('/admin/community'), badge: auth?.pending_reports_count > 0 ? auth.pending_reports_count : null },
         { name: 'Student Progress', href: '/admin/students', icon: UsersIcon, active: pathname.startsWith('/admin/students') },
     ];
 

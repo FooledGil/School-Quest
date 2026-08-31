@@ -1,12 +1,10 @@
 import React, { useRef, useState } from 'react';
 import { useForm } from '@inertiajs/react';
 import gsap from 'gsap';
-import LoginToggle from './LoginToggle';
 import LoginInput from './LoginInput';
 import RealmNotice from './RealmNotice';
 
 export default function LoginForm({ onLoginSuccess }) {
-    const [activeMode, setActiveMode] = useState('student');
     const [validationErrors, setValidationErrors] = useState({});
     
     const identityInputRef = useRef(null);
@@ -18,13 +16,6 @@ export default function LoginForm({ onLoginSuccess }) {
         login: '',
         password: '',
     });
-
-    const handleModeToggle = (mode) => {
-        setActiveMode(mode);
-        setValidationErrors({});
-        reset();
-        setData({ login: '', password: '' });
-    };
 
     // When pressing Enter on identity input, jump to password input if password is empty
     const handleIdentityKeyDown = (e) => {
@@ -59,9 +50,7 @@ export default function LoginForm({ onLoginSuccess }) {
         
         const newErrors = {};
         if (!data.login.trim()) {
-            newErrors.login = activeMode === 'student' 
-                ? 'NISN / Nama harus diisi!' 
-                : 'Email staf harus diisi!';
+            newErrors.login = 'NISN, Nama, atau Email harus diisi!';
         }
         if (!data.password) {
             newErrors.password = 'Password harus diisi!';
@@ -84,39 +73,35 @@ export default function LoginForm({ onLoginSuccess }) {
         post('/login', {
             onError: () => {
                 if (identityInputRef.current) triggerShakeAnimation(identityInputRef.current);
+                if (passwordInputRef.current) triggerShakeAnimation(passwordInputRef.current);
             }
         });
     };
 
-    const isStudent = activeMode === 'student';
-
     return (
         <div className="w-full flex flex-col justify-center max-w-md mx-auto">
             {/* Header: Centered Welcome Back with Retro Game Styling */}
-            <div className="text-center mb-4 sm:mb-5">
-                <div className="inline-flex items-center gap-2 mb-2 px-3 py-1 rounded-full bg-blue-950/60 border border-blue-500/30 text-[9px] font-mono text-blue-300 font-bold uppercase tracking-widest">
+            <div className="text-center mb-5 sm:mb-6">
+                <div className="inline-flex items-center gap-2 mb-2.5 px-3 py-1 rounded-full bg-blue-950/60 border border-blue-500/30 text-[9px] font-mono text-blue-300 font-bold uppercase tracking-widest">
                     <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                    <span>SCHOOLQUEST REALM</span>
+                    <span>SCHOOLQUEST REALM PORTAL</span>
                 </div>
                 <h1 className="font-game text-lg sm:text-xl md:text-2xl text-white tracking-wider drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)] leading-snug">
                     Welcome Back
                 </h1>
+                <p className="text-xs sm:text-sm text-slate-400 mt-1 font-body">
+                    Masuk ke realm untuk melanjutkan petualanganmu
+                </p>
             </div>
 
-            {/* Pill Toggle for SISWA / ADMIN */}
-            <LoginToggle 
-                activeMode={activeMode} 
-                onToggle={handleModeToggle} 
-            />
-
-            {/* Main Form */}
+            {/* Main Unified Form (Single Gateway for All Users) */}
             <form onSubmit={handleSubmit} className="space-y-4">
                 {/* Identity Input */}
                 <LoginInput
                     ref={identityInputRef}
                     id="identity-input"
-                    label={isStudent ? "IDENTITY ID / NISN" : "EMAIL ADDRESS"}
-                    type={isStudent ? "text" : "email"}
+                    label="IDENTIFIER / NISN / EMAIL"
+                    type="text"
                     value={data.login}
                     onChange={(e) => {
                         setData('login', e.target.value);
@@ -125,7 +110,7 @@ export default function LoginForm({ onLoginSuccess }) {
                         }
                     }}
                     onKeyDown={handleIdentityKeyDown}
-                    placeholder={isStudent ? "Masukkan NISN atau Nama" : "admin@schoolquest.id"}
+                    placeholder="Masukkan NISN, Nama, atau Email..."
                     icon={<span role="img" aria-label="id-card">🪪</span>}
                     error={validationErrors.login || errors.login}
                     autoFocus
@@ -176,7 +161,7 @@ export default function LoginForm({ onLoginSuccess }) {
             </form>
 
             {/* Realm Server & Adventurer Tips Widget */}
-            <RealmNotice activeMode={activeMode} />
+            <RealmNotice />
         </div>
     );
 }

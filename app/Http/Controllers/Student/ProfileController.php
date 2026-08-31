@@ -18,8 +18,8 @@ class ProfileController extends Controller
             $q->latest('completed_at')->take(10)->with('quest');
         }]);
 
-        $user->rank_name = ExpService::getRankName($user->level);
-        $user->next_level_exp = pow($user->level, 2) * 100;
+        $user->rank_name = $user->rank_name;
+        $user->next_level_exp = $user->next_level_exp;
 
         return Inertia::render('Student/Profile', [
             'user' => $user

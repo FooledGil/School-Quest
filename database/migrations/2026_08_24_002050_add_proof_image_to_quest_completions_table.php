@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('quest_completions', function (Blueprint $table) {
-            $table->string('proof_image')->nullable()->after('proof_text');
-        });
+        if (!Schema::hasColumn('quest_completions', 'proof_image')) {
+            Schema::table('quest_completions', function (Blueprint $table) {
+                $table->string('proof_image')->nullable()->after('proof_text');
+            });
+        }
     }
 
     /**

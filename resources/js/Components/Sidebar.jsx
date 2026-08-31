@@ -73,7 +73,12 @@ export default function Sidebar({ links, isOpen, setIsOpen, user, role }) {
                                 `}
                             >
                                 <Icon className={`w-5 h-5 shrink-0 ${isActive ? 'text-blue-400' : 'text-gray-400 group-hover:text-white'}`} />
-                                <span className="truncate">{link.name}</span>
+                                <span className="truncate flex-1">{link.name}</span>
+                                {link.badge && (
+                                    <span className="px-1.5 py-0.5 text-[9px] font-mono font-bold rounded-full bg-red-500 text-white shrink-0">
+                                        {link.badge}
+                                    </span>
+                                )}
                             </Link>
                         );
                     })}

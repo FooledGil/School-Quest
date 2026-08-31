@@ -23,7 +23,7 @@ const TIPS = [
     },
 ];
 
-export default function RealmNotice({ activeMode }) {
+export default function RealmNotice() {
     const [tipIndex, setTipIndex] = useState(0);
 
     // Auto rotate tips every 6 seconds
@@ -51,7 +51,7 @@ export default function RealmNotice({ activeMode }) {
                             REALM SMKN 2 PWK • ONLINE
                         </p>
                         <p className="text-[10px] text-slate-400 font-mono truncate">
-                            {activeMode === 'student' ? 'Siswa Portal • Gateway Active' : 'Admin & Guru Central Gate'}
+                            Unified Secure Gateway • Active
                         </p>
                     </div>
                 </div>

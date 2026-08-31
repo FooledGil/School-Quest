@@ -63,10 +63,15 @@ class DashboardController extends Controller
         $stats = [
             'exp' => $user->exp,
             'level' => $user->level,
-            'rank' => ExpService::getRankName($user->level),
+            'rank' => $user->rank_name,
             'streak' => $user->streak_days,
             'questsCompleted' => $user->questCompletions()->count(),
-            'nextLevelExp' => pow($user->level, 2) * 100,
+            'nextLevelExp' => $user->next_level_exp,
+            'currentLevelBaseExp' => $user->current_level_base_exp,
+            'expInLevel' => $user->exp_in_level,
+            'expNeededInLevel' => $user->exp_needed_in_level,
+            'expPercentage' => $user->exp_percentage,
+            'expRemaining' => $user->exp_remaining,
         ];
 
         return Inertia::render('Student/Dashboard', [

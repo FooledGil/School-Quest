@@ -27,7 +27,8 @@ export default function Profile({ user: propUser }) {
 
     const avatar = getAvatarUrl(user);
     const rankName = user.rank_name || 'Novice';
-    const nextLevelExp = user.next_level_exp || (Math.pow(user.level || 1, 2) * 100);
+    const nextLevelExp = user.next_level_exp || 150;
+    const baseExp = user.current_level_base_exp || 0;
 
     // Avatar Management States
     const [showAvatarStudio, setShowAvatarStudio] = useState(false);
@@ -232,8 +233,18 @@ export default function Profile({ user: propUser }) {
                             <LevelBadge level={user.level || 1} rankName={rankName} size="lg" className="mx-auto" />
                         </div>
 
-                        <ExpBar currentExp={user.exp || 0} requiredExp={nextLevelExp} className="w-full" />
-                        <p className="text-[10px] sm:text-[11px] text-slate-500 mt-2">Level {(user.level || 1) + 1} membutuhkan {nextLevelExp.toLocaleString()} EXP</p>
+                        <ExpBar 
+                            currentExp={user.exp || 0} 
+                            requiredExp={nextLevelExp} 
+                            baseExp={baseExp}
+                            showPercent={true}
+                            className="w-full" 
+                        />
+                        <p className="text-[10px] sm:text-[11px] text-slate-400 mt-2 font-medium">
+                            <strong className="text-amber-400 font-mono">
+                                {Math.max(0, nextLevelExp - (user.exp || 0)).toLocaleString()} EXP
+                            </strong> lagi untuk naik ke Level {(user.level || 1) + 1}
+                        </p>
                     </div>
 
                     {/* Quick Actions Panel */}

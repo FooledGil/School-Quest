@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Navbar from '@/Components/Navbar';
 import Sidebar from '@/Components/Sidebar';
-import { HomeIcon, ListBulletIcon, TrophyIcon, UserIcon } from '@heroicons/react/24/outline';
+import { HomeIcon, ListBulletIcon, TrophyIcon, UserIcon, ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline';
 import Toast from '@/Components/Toast';
 import OnboardingModal from '@/Components/OnboardingModal';
+import LevelUpModal from '@/Components/LevelUpModal';
+import SanctionAlertModal from '@/Components/SanctionAlertModal';
 import { getAvatarUrl } from '@/Utils/avatar';
 import { usePage } from '@inertiajs/react';
 
@@ -17,8 +19,16 @@ export default function StudentLayout({ user: propUser, children }) {
         ...rawUser,
         avatar: getAvatarUrl(rawUser),
         rank_name: rawUser.rank_name || 'Novice',
-        next_level_exp: rawUser.next_level_exp || (Math.pow(rawUser.level || 1, 2) * 100)
+        next_level_exp: rawUser.next_level_exp || 150,
+        current_level_base_exp: rawUser.current_level_base_exp || 0,
+        exp_in_level: rawUser.exp_in_level || (rawUser.exp || 0),
+        exp_needed_in_level: rawUser.exp_needed_in_level || 150,
+        exp_percentage: rawUser.exp_percentage || 0,
+        exp_remaining: rawUser.exp_remaining || 150,
     };
+
+    // Unacknowledged sanctions from admin
+    const unacknowledgedSanctions = auth?.unacknowledged_sanctions || [];
 
     // Onboarding guide state: auto-open if student hasn't completed onboarding
     const shouldShowInitialOnboarding = rawUser.role === 'student' && rawUser.nisn && !rawUser.has_completed_onboarding;
@@ -37,12 +47,48 @@ export default function StudentLayout({ user: propUser, children }) {
         return () => window.removeEventListener('open-onboarding-tour', handleOpenTour);
     }, []);
 
+    // Level Up Modal Detection
+    const [showLevelUpModal, setShowLevelUpModal] = useState(false);
+    const [levelUpData, setLevelUpData] = useState({ level: user.level || 1, rankName: user.rank_name || 'Novice' });
+    const prevLevelRef = useRef(user.level || 1);
+
+    // 1. Check flash message from backend
+    useEffect(() => {
+        if (flash?.level_up) {
+            setLevelUpData({
+                level: flash.new_level || user.level,
+                rankName: user.rank_name || 'Novice'
+            });
+            setShowLevelUpModal(true);
+        }
+    }, [flash?.level_up, flash?.new_level]);
+
+    // 2. Check client-side level progression changes
+    useEffect(() => {
+        if (user.id && user.level) {
+            const storageKey = `sq_last_level_${user.id}`;
+            const lastKnownLevel = parseInt(localStorage.getItem(storageKey), 10);
+
+            if (!isNaN(lastKnownLevel) && user.level > lastKnownLevel) {
+                setLevelUpData({
+                    level: user.level,
+                    rankName: user.rank_name || 'Novice'
+                });
+                setShowLevelUpModal(true);
+            }
+
+            localStorage.setItem(storageKey, user.level.toString());
+            prevLevelRef.current = user.level;
+        }
+    }, [user.level, user.id, user.rank_name]);
+
     const pathname = typeof window !== 'undefined' ? window.location.pathname : '/dashboard';
 
     const links = [
         { name: 'Dashboard', href: '/dashboard', icon: HomeIcon, active: pathname === '/dashboard' },
         { name: 'Quests', href: '/quests', icon: ListBulletIcon, active: pathname === '/quests' },
         { name: 'Leaderboard', href: '/leaderboard', icon: TrophyIcon, active: pathname === '/leaderboard' },
+        { name: 'The Realm', href: '/community', icon: ChatBubbleLeftRightIcon, active: pathname.startsWith('/community') },
         { name: 'Profile', href: '/profile', icon: UserIcon, active: pathname === '/profile' },
     ];
 
@@ -66,6 +112,19 @@ export default function StudentLayout({ user: propUser, children }) {
             <OnboardingModal 
                 isOpen={showOnboarding} 
                 onClose={() => setShowOnboarding(false)} 
+            />
+
+            {/* Epic Level Up Celebration Modal */}
+            <LevelUpModal
+                show={showLevelUpModal}
+                newLevel={levelUpData.level}
+                rankName={levelUpData.rankName}
+                onClose={() => setShowLevelUpModal(false)}
+            />
+
+            {/* Official Sanction Alert Modal */}
+            <SanctionAlertModal 
+                sanctions={unacknowledgedSanctions} 
             />
 
             {/* Flash Messages */}

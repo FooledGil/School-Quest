@@ -102,9 +102,16 @@ export default function Dashboard({ user: propUser, schedules = [], stats = {}, 
                             </div>
 
                             <div className="mt-3 sm:mt-4 max-w-2xl">
-                                <ExpBar currentExp={user.exp || 0} requiredExp={nextLevelExp} />
-                                <p className="text-[11px] sm:text-xs text-slate-400 mt-1.5 sm:mt-2 text-center sm:text-right">
-                                    {Math.max(0, nextLevelExp - (user.exp || 0))} EXP menuju level berikutnya
+                                <ExpBar 
+                                    currentExp={user.exp || 0} 
+                                    requiredExp={nextLevelExp} 
+                                    baseExp={user.current_level_base_exp || 0}
+                                    showPercent={true}
+                                />
+                                <p className="text-[11px] sm:text-xs text-slate-400 mt-1.5 sm:mt-2 text-center sm:text-right font-medium">
+                                    <strong className="text-amber-400 font-mono font-bold">
+                                        {Math.max(0, nextLevelExp - (user.exp || 0)).toLocaleString()} EXP
+                                    </strong> menuju level berikutnya
                                 </p>
                             </div>
                         </div>

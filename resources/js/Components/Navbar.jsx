@@ -27,7 +27,7 @@ export default function Navbar({ user, onMenuToggle, isAdmin = false }) {
                     {!isAdmin && (
                         <div className="hidden md:flex flex-col items-end mr-1 w-28 lg:w-36">
                             <span className="text-[11px] font-bold text-amber-400 mb-0.5 truncate max-w-full">{user.rank_name || 'Novice'}</span>
-                            <ExpBar currentExp={user.exp || 0} requiredExp={user.next_level_exp || 100} className="w-full" />
+                            <ExpBar currentExp={user.exp || 0} requiredExp={user.next_level_exp || 150} baseExp={user.current_level_base_exp || 0} className="w-full" />
                         </div>
                     )}
                     
