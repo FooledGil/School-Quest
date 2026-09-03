@@ -30,12 +30,21 @@ export default function StudentLayout({ user: propUser, children }) {
     // Unacknowledged sanctions from admin
     const unacknowledgedSanctions = auth?.unacknowledged_sanctions || [];
 
-    // Onboarding guide state: auto-open if student hasn't completed onboarding
+    // Onboarding guide state: auto-open if student hasn't completed onboarding OR arriving from post-login castle intro
     const shouldShowInitialOnboarding = rawUser.role === 'student' && rawUser.nisn && !rawUser.has_completed_onboarding;
     const [showOnboarding, setShowOnboarding] = useState(false);
 
     useEffect(() => {
-        if (shouldShowInitialOnboarding) {
+        // Check if user just entered through the castle intro animation
+        const fromIntro = typeof window !== 'undefined' ? sessionStorage.getItem('open_guide_after_intro') : null;
+        if (fromIntro === 'true') {
+            sessionStorage.removeItem('open_guide_after_intro');
+            // Brief timeout so the dashboard entrance animation settles cleanly first
+            const timer = setTimeout(() => {
+                setShowOnboarding(true);
+            }, 500);
+            return () => clearTimeout(timer);
+        } else if (shouldShowInitialOnboarding) {
             setShowOnboarding(true);
         }
     }, [shouldShowInitialOnboarding]);

@@ -41,11 +41,28 @@ class AuthController extends Controller
         ])) {
             $request->session()->regenerate();
 
-            $intendedUrl = Auth::user()->role === 'admin' 
+            $intendedUrl = Auth::user()->role === 'admin'
                 ? redirect()->intended('/admin/dashboard')->getTargetUrl()
                 : redirect()->intended('/dashboard')->getTargetUrl();
 
+            // Student + animation header → JSON response (frontend plays intro animation)
+            if (Auth::user()->role !== 'admin' && $request->header('X-Login-Animation')) {
+                return response()->json([
+                    'success' => true,
+                    'redirect' => $intendedUrl,
+                ]);
+            }
+
+            // Admin or no animation header → normal Inertia redirect
             return Inertia::location($intendedUrl);
+        }
+
+        // Error: support both JSON (animation flow) and Inertia (fallback)
+        if ($request->header('X-Login-Animation')) {
+            return response()->json([
+                'success' => false,
+                'errors' => ['login' => 'Kredensial tidak sesuai dengan data kami.'],
+            ], 422);
         }
 
         return back()->withErrors([

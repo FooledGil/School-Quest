@@ -205,3 +205,114 @@ body {
     transform: translateY(-30px);
   }
 }
+
+/* ─── Castle Intro Animation ─── */
+
+/* Fullscreen SVG state */
+.intro-fullscreen {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: none !important;
+  z-index: 50;
+  border-radius: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Gate interactive glow pulse — GPU-accelerated opacity & subtle scale (No heavy drop-shadow) */
+@keyframes gatePulse {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+/* "OPEN THE GATE" prompt text — Lightweight GPU transform & opacity */
+.gate-prompt {
+  font-family: 'Press Start 2P', cursive;
+  animation: gatePulseText 1.6s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes gatePulseText {
+  0%,
+  100% {
+    opacity: 0.85;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.04);
+  }
+}
+
+/* Golden light flash expanding */
+@keyframes lightExpand {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.1);
+  }
+
+  60% {
+    opacity: 0.95;
+    transform: translate(-50%, -50%) scale(2);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(30);
+  }
+}
+
+/* Skip intro button */
+.intro-skip-btn {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 100;
+  font-family: 'Press Start 2P', cursive;
+  font-size: 8px;
+  color: #94a3b8;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  letter-spacing: 1px;
+}
+
+.intro-skip-btn:hover {
+  color: #e2e8f0;
+  border-color: rgba(226, 232, 240, 0.5);
+  background: rgba(0, 0, 0, 0.75);
+  transform: scale(1.05);
+}
+
+/* Entering the Realm loading text */
+.entering-text {
+  font-family: 'Press Start 2P', cursive;
+  animation: enteringPulse 2s ease-in-out infinite;
+}
+
+@keyframes enteringPulse {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}

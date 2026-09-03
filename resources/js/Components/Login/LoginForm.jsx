@@ -1,10 +1,12 @@
 import React, { useRef, useState } from 'react';
-import { useForm } from '@inertiajs/react';
+import axios from 'axios';
 import gsap from 'gsap';
 import LoginInput from './LoginInput';
 import RealmNotice from './RealmNotice';
 
-export default function LoginForm({ onLoginSuccess }) {
+export default function LoginForm({ onLoginSuccess, animating = false }) {
+    const [data, setData] = useState({ login: '', password: '' });
+    const [processing, setProcessing] = useState(false);
     const [validationErrors, setValidationErrors] = useState({});
     
     const identityInputRef = useRef(null);
@@ -12,10 +14,10 @@ export default function LoginForm({ onLoginSuccess }) {
     const passwordInputInnerRef = useRef(null);
     const submitBtnRef = useRef(null);
 
-    const { data, setData, post, processing, errors, reset } = useForm({
-        login: '',
-        password: '',
-    });
+    // Update a single field in the form data
+    const updateField = (field, value) => {
+        setData(prev => ({ ...prev, [field]: value }));
+    };
 
     // When pressing Enter on identity input, jump to password input if password is empty
     const handleIdentityKeyDown = (e) => {
@@ -45,9 +47,12 @@ export default function LoginForm({ onLoginSuccess }) {
         );
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         
+        // Don't allow submission during animation
+        if (animating) return;
+
         const newErrors = {};
         if (!data.login.trim()) {
             newErrors.login = 'NISN, Nama, atau Email harus diisi!';
@@ -68,15 +73,29 @@ export default function LoginForm({ onLoginSuccess }) {
         }
 
         setValidationErrors({});
+        setProcessing(true);
 
-        // Submit to Laravel backend
-        post('/login', {
-            onError: () => {
+        try {
+            const response = await axios.post('/login', data, {
+                headers: { 'X-Login-Animation': 'true' }
+            });
+
+            if (response.data.success && onLoginSuccess) {
+                onLoginSuccess(response.data.redirect);
+            }
+        } catch (err) {
+            if (err.response?.status === 422) {
+                const serverErrors = err.response.data.errors || {};
+                setValidationErrors(serverErrors);
                 if (identityInputRef.current) triggerShakeAnimation(identityInputRef.current);
                 if (passwordInputRef.current) triggerShakeAnimation(passwordInputRef.current);
             }
-        });
+        } finally {
+            setProcessing(false);
+        }
     };
+
+    const isDisabled = processing || animating;
 
     return (
         <div className="w-full flex flex-col justify-center max-w-md mx-auto">
@@ -104,7 +123,7 @@ export default function LoginForm({ onLoginSuccess }) {
                     type="text"
                     value={data.login}
                     onChange={(e) => {
-                        setData('login', e.target.value);
+                        updateField('login', e.target.value);
                         if (validationErrors.login) {
                             setValidationErrors(prev => ({ ...prev, login: null }));
                         }
@@ -112,8 +131,9 @@ export default function LoginForm({ onLoginSuccess }) {
                     onKeyDown={handleIdentityKeyDown}
                     placeholder="Masukkan NISN, Nama, atau Email..."
                     icon={<span role="img" aria-label="id-card">🪪</span>}
-                    error={validationErrors.login || errors.login}
+                    error={validationErrors.login}
                     autoFocus
+                    disabled={isDisabled}
                 />
 
                 {/* Password Input */}
@@ -125,22 +145,23 @@ export default function LoginForm({ onLoginSuccess }) {
                     type="password"
                     value={data.password}
                     onChange={(e) => {
-                        setData('password', e.target.value);
+                        updateField('password', e.target.value);
                         if (validationErrors.password) {
                             setValidationErrors(prev => ({ ...prev, password: null }));
                         }
                     }}
                     placeholder="••••••••"
                     icon={<span role="img" aria-label="key">🔑</span>}
-                    error={validationErrors.password || errors.password}
+                    error={validationErrors.password}
                     allowPasswordToggle={true}
+                    disabled={isDisabled}
                 />
 
                 {/* Primary CTA Button: ENTER THE REALM with Game Font */}
                 <button
                     ref={submitBtnRef}
                     type="submit"
-                    disabled={processing}
+                    disabled={isDisabled}
                     className="w-full h-[54px] sm:h-[58px] rounded-xl sm:rounded-2xl font-game tracking-wider text-[11px] sm:text-xs text-slate-950 uppercase bg-gradient-to-b from-[#fbbf24] via-[#f59e0b] to-[#d97706] hover:from-[#fde68a] hover:to-[#f59e0b] active:from-[#d97706] active:to-[#b45309] shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 border-2 border-amber-300/50 transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] select-none mt-5"
                 >
                     {processing ? (
