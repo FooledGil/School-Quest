@@ -19,6 +19,8 @@ import {
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 
+import CastleHallScene from '@/Components/Community/CastleHallScene';
+
 export default function Community({ 
     threads = { data: [], links: [] }, 
     filters = { category: 'all', search: '', sort: 'latest' },
@@ -101,7 +103,7 @@ export default function Community({
                     threadsRef.current.children,
                     { y: 20, opacity: 0 },
                     { y: 0, opacity: 1, duration: 0.35, stagger: 0.05, ease: 'power2.out' },
-                    '-=0.15'
+                    '-=0.2'
                 );
             }
         }
@@ -114,46 +116,87 @@ export default function Community({
             <Head title="The Realm — Komunitas" />
 
             <div ref={pageRef} className="space-y-6 sm:space-y-8">
-                {/* Hero Header */}
-                <div className="anim-header glass-card p-6 sm:p-8 md:p-10 relative overflow-hidden bg-gradient-to-br from-slate-900/95 via-slate-900/70 to-blue-950/40 border-l-4 border-l-blue-500 shadow-xl border-2">
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
-                        <div className="space-y-3 max-w-2xl">
-                            <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-blue-500/10 border border-blue-500/20 text-blue-400 font-game text-[8px] sm:text-[9px] tracking-wider uppercase">
+                {/* Hero Header with Interactive Castle Hall Scene */}
+                <div className="anim-header glass-card p-5 sm:p-7 md:p-8 relative overflow-hidden bg-gradient-to-br from-slate-900/95 via-[#0e1626] to-[#0a101d] border-l-4 border-l-blue-500 shadow-2xl border-2">
+                    {/* Ambient Glows */}
+                    <div className="absolute top-0 right-1/3 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
+                    <div className="absolute -bottom-10 -left-10 w-60 h-60 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
+
+                    <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-6 relative z-10">
+                        {/* Left Column: Info & Action */}
+                        <div className="space-y-3.5 max-w-xl flex-1">
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 font-game text-[8px] sm:text-[9px] tracking-wider uppercase">
                                 <span>⚔️</span>
-                                <span>GUILD FORUM & COMMUNITY</span>
+                                <span>GUILD FORUM & COMMUNITY REALM</span>
                             </div>
 
-                            <h1 className="font-game text-base sm:text-xl md:text-2xl text-white tracking-wider drop-shadow-md flex items-center gap-3">
+                            <h1 className="font-game text-base sm:text-xl md:text-2xl text-white tracking-wider drop-shadow-md flex items-center gap-2.5">
                                 <span>🏰</span>
                                 <span>THE REALM</span>
                             </h1>
 
-                            <p className="text-slate-300 text-xs sm:text-sm md:text-base leading-relaxed sm:leading-loose font-body">
-                                Ruang berkumpul, berdiskusi, dan berbagi strategi bagi para petualang <strong className="text-blue-400">SchoolQuest</strong>. Tanyakan bantuan misi, bagikan pencapaianmu, atau usulkan ide baru!
+                            <p className="text-slate-300 text-xs sm:text-sm leading-relaxed font-body">
+                                Ruang berkumpul, berdiskusi, dan berbagi strategi bagi para petualang <strong className="text-blue-400">SchoolQuest</strong>. Tanyakan bantuan misi, diskusikan materi pelajaran, atau rayakan kemenangan bersama di balai kastil!
                             </p>
+
+                            {/* CTA Create Thread Button */}
+                            <div className="pt-1">
+                                {isMuted ? (
+                                    <button
+                                        type="button"
+                                        disabled
+                                        className="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl font-game text-xs text-slate-400 bg-slate-800 border border-slate-700 opacity-75 cursor-not-allowed tracking-wider shrink-0 w-full sm:w-auto shadow-inner"
+                                        title={`Anda sedang disenyapkan (Mute) ${muteRemaining ? `hingga ${muteRemaining}` : ''}`}
+                                    >
+                                        <LockClosedIcon className="w-4 h-4 text-red-400" />
+                                        <span>TERKUNCI (MUTE)</span>
+                                    </button>
+                                ) : (
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsModalOpen(true)}
+                                        className="inline-flex items-center justify-center gap-2.5 px-6 py-3 rounded-xl font-game text-xs text-slate-950 bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 hover:from-amber-300 hover:to-amber-400 border border-amber-300/60 shadow-lg shadow-amber-500/25 active:scale-95 transition-all cursor-pointer tracking-wider shrink-0 w-full sm:w-auto font-bold"
+                                    >
+                                        <PlusIcon className="w-4 h-4 stroke-[3]" />
+                                        <span>BUAT TOPIK BARU</span>
+                                    </button>
+                                )}
+                            </div>
                         </div>
 
-                        {/* CTA Create Thread Button */}
-                        {isMuted ? (
-                            <button
-                                type="button"
-                                disabled
-                                className="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl font-game text-xs text-slate-400 bg-slate-800 border border-slate-700 opacity-75 cursor-not-allowed tracking-wider shrink-0 w-full sm:w-auto shadow-inner"
-                                title={`Anda sedang disenyapkan (Mute) ${muteRemaining ? `hingga ${muteRemaining}` : ''}`}
-                            >
-                                <LockClosedIcon className="w-4 h-4 text-red-400" />
-                                <span>TERKUNCI (MUTE)</span>
-                            </button>
-                        ) : (
-                            <button
-                                type="button"
-                                onClick={() => setIsModalOpen(true)}
-                                className="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl font-game text-xs text-slate-950 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 border border-amber-300/50 shadow-lg shadow-amber-500/20 active:scale-95 transition-all cursor-pointer tracking-wider shrink-0 w-full sm:w-auto"
-                            >
-                                <PlusIcon className="w-4 h-4 stroke-[3]" />
-                                <span>BUAT TOPIK BARU</span>
-                            </button>
-                        )}
+                        {/* Right Column: Castle Great Hall Animated SVG Viewport */}
+                        <div className="w-full lg:w-[380px] xl:w-[440px] shrink-0">
+                            <div className="relative rounded-2xl overflow-hidden border-2 border-[#243552] bg-[#070b14] shadow-2xl group hover:border-blue-400/50 transition-colors">
+                                {/* Header Strip */}
+                                <div className="px-3 py-2 bg-[#090e1a] border-b border-slate-800/80 flex items-center justify-between">
+                                    <span className="inline-flex items-center gap-1.5 text-[9px] font-game text-amber-300 tracking-wider">
+                                        <span>🏰</span>
+                                        <span>CASTLE COMMON ROOM</span>
+                                    </span>
+                                    <span className="text-[9px] font-mono text-cyan-300 bg-cyan-950/60 border border-cyan-500/30 px-2 py-0.5 rounded">
+                                        LIVE TAVERN
+                                    </span>
+                                </div>
+
+                                {/* Animated Castle Hall Canvas */}
+                                <div className="w-full h-48 sm:h-56 bg-[#070b14] overflow-hidden flex items-center justify-center">
+                                    <CastleHallScene
+                                        idPrefix="community-hall"
+                                        className="w-full h-full object-contain transform scale-100 group-hover:scale-[1.02] transition-transform duration-700 ease-out"
+                                    />
+                                </div>
+
+                                {/* Bottom Interactive Caption */}
+                                <div className="p-2.5 bg-slate-900/95 border-t border-slate-800/80 flex items-center justify-between text-[10px] font-mono text-slate-400">
+                                    <span className="truncate flex items-center gap-1.5 text-slate-300">
+                                        <span>💬</span> Para petualang sedang berkumpul
+                                    </span>
+                                    <span className="text-amber-400 font-bold shrink-0">
+                                        {totalThreadsCount} Topik Aktif
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

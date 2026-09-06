@@ -316,3 +316,344 @@ body {
     opacity: 1;
   }
 }
+
+/* ─── High-Performance Lively SVG Fantasy Animations (GPU-Accelerated) ─── */
+
+/* 1. Arcane Sky Galleon / Airship */
+.svg-airship {
+  animation: airshipFloat 18s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes airshipFloat {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(24px, -6px, 0);
+  }
+  100% {
+    transform: translate3d(55px, -2px, 0);
+  }
+}
+
+.svg-airship-propeller {
+  transform-box: fill-box;
+  transform-origin: center center;
+  animation: propellerSpin 0.25s linear infinite;
+  will-change: transform;
+}
+
+@keyframes propellerSpin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.svg-crystal-core {
+  animation: corePulse 2s ease-in-out infinite alternate;
+}
+
+@keyframes corePulse {
+  0% {
+    opacity: 0.55;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* 2. Soaring Dragon / Wyvern */
+.svg-dragon-patrol {
+  animation: dragonFly 16s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes dragonFly {
+  0% {
+    transform: translate3d(-100px, 45px, 0) scale(0.65);
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.95;
+  }
+  85% {
+    opacity: 0.95;
+  }
+  100% {
+    transform: translate3d(560px, 15px, 0) scale(0.9);
+    opacity: 0;
+  }
+}
+
+.svg-dragon-wing {
+  transform-box: fill-box;
+  transform-origin: 50% 90%;
+  animation: dragonWingFlap 0.42s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes dragonWingFlap {
+  0% {
+    transform: scaleY(1) rotate(0deg);
+  }
+  100% {
+    transform: scaleY(-0.75) rotate(-6deg);
+  }
+}
+
+/* 3. Celestial Shooting Stars / Stardust Streaks */
+.svg-shooting-star-1 {
+  animation: shootingStar1 8s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes shootingStar1 {
+  0%, 75% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+  }
+  78% {
+    opacity: 1;
+  }
+  86% {
+    opacity: 0;
+    transform: translate3d(160px, 85px, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(160px, 85px, 0);
+  }
+}
+
+.svg-shooting-star-2 {
+  animation: shootingStar2 11s ease-in-out infinite 4s;
+  will-change: transform, opacity;
+}
+
+@keyframes shootingStar2 {
+  0%, 80% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+  }
+  83% {
+    opacity: 1;
+  }
+  91% {
+    opacity: 0;
+    transform: translate3d(140px, 75px, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(140px, 75px, 0);
+  }
+}
+
+/* 4. Arcane Runic Circle & Orbiting Crystals */
+.svg-rune-ring {
+  transform-box: fill-box;
+  transform-origin: center center;
+  animation: runeRotate 28s linear infinite;
+  will-change: transform;
+}
+
+@keyframes runeRotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.svg-crystal-float-1 {
+  animation: crystalBob1 3.2s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes crystalBob1 {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, -7px, 0);
+  }
+}
+
+.svg-crystal-float-2 {
+  animation: crystalBob2 2.8s ease-in-out infinite alternate 0.8s;
+  will-change: transform;
+}
+
+@keyframes crystalBob2 {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, -6px, 0);
+  }
+}
+
+.svg-crystal-float-3 {
+  animation: crystalBob3 3.5s ease-in-out infinite alternate 1.5s;
+  will-change: transform;
+}
+
+@keyframes crystalBob3 {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, -8px, 0);
+  }
+}
+
+/* Character Idle Breathing / Bob (Applied ONLY to inner <g>) */
+.svg-character-bob-1 {
+  animation: charBob1 3s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes charBob1 {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, -4px, 0);
+  }
+}
+
+.svg-character-bob-2 {
+  animation: charBob2 2.6s ease-in-out infinite alternate 0.7s;
+  will-change: transform;
+}
+
+@keyframes charBob2 {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, -3.5px, 0);
+  }
+}
+
+.svg-character-bob-3 {
+  animation: charBob3 3.4s ease-in-out infinite alternate 1.4s;
+  will-change: transform;
+}
+
+@keyframes charBob3 {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, -4px, 0);
+  }
+}
+
+/* 5. Gate Ancient Glowing Glyphs */
+.svg-gate-glyph {
+  animation: glyphPulse 2.4s ease-in-out infinite alternate;
+}
+
+@keyframes glyphPulse {
+  0% {
+    opacity: 0.35;
+  }
+  100% {
+    opacity: 0.95;
+  }
+}
+
+/* 6. Rampart Braziers & Wall Torches */
+.svg-brazier-fire {
+  transform-box: fill-box;
+  transform-origin: bottom center;
+  animation: brazierFlicker 0.28s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes brazierFlicker {
+  0% {
+    transform: scale(0.92, 0.94);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1.12, 1.18);
+    opacity: 1;
+  }
+}
+
+/* 7. Waterfall Splash Mist & Expanding Ripples */
+.svg-splash-ripple {
+  transform-box: fill-box;
+  transform-origin: center center;
+  animation: splashRipple 1.4s ease-out infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes splashRipple {
+  0% {
+    transform: scale(0.5);
+    opacity: 0.85;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+.svg-splash-foam {
+  animation: splashFoam 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes splashFoam {
+  0% {
+    opacity: 0.5;
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    opacity: 0.9;
+    transform: translate3d(0, -2px, 0);
+  }
+}
+
+/* 8. Tower Window Warm Glowing Lights */
+.svg-window-glow {
+  animation: windowFlicker 3s ease-in-out infinite alternate;
+}
+
+@keyframes windowFlicker {
+  0% {
+    opacity: 0.65;
+  }
+  50% {
+    opacity: 0.95;
+  }
+  100% {
+    opacity: 0.8;
+  }
+}
+
+/* 9. Floating Mana Motes & Stardust */
+.svg-mana-mote {
+  animation: moteRise 4s ease-in-out infinite alternate;
+  will-change: transform, opacity;
+}
+
+@keyframes moteRise {
+  0% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.95;
+  }
+  100% {
+    transform: translate3d(4px, -18px, 0);
+    opacity: 0.2;
+  }
+}

@@ -99,13 +99,9 @@ export default function LoginForm({ onLoginSuccess, animating = false }) {
 
     return (
         <div className="w-full flex flex-col justify-center max-w-md mx-auto">
-            {/* Header: Centered Welcome Back with Retro Game Styling */}
-            <div className="text-center mb-5 sm:mb-6">
-                <div className="inline-flex items-center gap-2 mb-2.5 px-3 py-1 rounded-full bg-blue-950/60 border border-blue-500/30 text-[9px] font-mono text-blue-300 font-bold uppercase tracking-widest">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                    <span>SCHOOLQUEST REALM PORTAL</span>
-                </div>
-                <h1 className="font-game text-lg sm:text-xl md:text-2xl text-white tracking-wider drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)] leading-snug">
+            {/* Header: Centered Welcome Back with Retro Game Styling (No AI-slop portal badge) */}
+            <div className="text-center mb-3 sm:mb-5">
+                <h1 className="font-game text-base sm:text-xl md:text-2xl text-white tracking-wider drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)] leading-snug">
                     Welcome Back
                 </h1>
                 <p className="text-xs sm:text-sm text-slate-400 mt-1 font-body">

@@ -7,7 +7,8 @@ import StatCard from '@/Components/StatCard';
 import ScheduleTimeline from '@/Components/ScheduleTimeline';
 import QuestCard from '@/Components/QuestCard';
 import AchievementBadge from '@/Components/AchievementBadge';
-import { StarIcon, CheckBadgeIcon, FireIcon, TrophyIcon } from '@heroicons/react/24/solid';
+import { StarIcon, CheckBadgeIcon, FireIcon, TrophyIcon, CalendarDaysIcon, CheckCircleIcon } from '@heroicons/react/24/solid';
+import { CrossedSwordsIcon } from '@/Components/Icons/SwordIcon';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 
@@ -38,94 +39,139 @@ export default function Dashboard({ user: propUser, schedules = [], stats = {}, 
                 );
             }
 
-            if (statsRef.current && statsRef.current.children.length > 0) {
+            if (statsRef.current) {
+                const statCards = statsRef.current.querySelectorAll('.stat-card');
                 tl.fromTo(
-                    statsRef.current.children,
-                    { y: 20, opacity: 0, scale: 0.95 },
-                    { y: 0, opacity: 1, scale: 1, duration: 0.4, stagger: 0.08, ease: 'back.out(1.2)' },
-                    '-=0.3'
-                );
-            }
-
-            if (questsRef.current && questsRef.current.children.length > 0) {
-                tl.fromTo(
-                    questsRef.current.children,
+                    statCards,
                     { y: 20, opacity: 0 },
-                    { y: 0, opacity: 1, duration: 0.4, stagger: 0.1, ease: 'power2.out' },
-                    '-=0.2'
+                    { y: 0, opacity: 1, duration: 0.4, stagger: 0.08, ease: 'power2.out' },
+                    "-=0.3"
                 );
             }
 
-            if (achievementsRef.current && achievementsRef.current.children.length > 0) {
+            if (questsRef.current) {
                 tl.fromTo(
-                    achievementsRef.current.children,
-                    { scale: 0.7, opacity: 0 },
-                    { scale: 1, opacity: 1, duration: 0.35, stagger: 0.07, ease: 'back.out(1.5)' },
-                    '-=0.2'
+                    questsRef.current,
+                    { y: 20, opacity: 0 },
+                    { y: 0, opacity: 1, duration: 0.4, ease: 'power2.out' },
+                    "-=0.2"
+                );
+            }
+
+            if (achievementsRef.current) {
+                tl.fromTo(
+                    achievementsRef.current,
+                    { y: 20, opacity: 0 },
+                    { y: 0, opacity: 1, duration: 0.4, ease: 'power2.out' },
+                    "-=0.2"
                 );
             }
 
             if (scheduleRef.current) {
                 tl.fromTo(
                     scheduleRef.current,
-                    { x: 30, opacity: 0 },
-                    { x: 0, opacity: 1, duration: 0.5, ease: 'power2.out' },
-                    '-=0.4'
+                    { y: 20, opacity: 0 },
+                    { y: 0, opacity: 1, duration: 0.4, ease: 'power2.out' },
+                    "-=0.3"
                 );
             }
         }
     }, { scope: pageRef });
 
     return (
-        <StudentLayout user={{ ...user, avatar, rank_name: rankName, next_level_exp: nextLevelExp }}>
+        <StudentLayout user={user}>
             <Head title="Dashboard" />
 
             <div ref={pageRef} className="space-y-6 sm:space-y-8">
                 {/* Hero Section */}
-                <div ref={heroRef} className="glass-card p-4 sm:p-6 md:p-8 relative overflow-hidden bg-slate-900/60 border-l-4 border-l-blue-500 shadow-xl">
+                <div ref={heroRef} className="glass-card p-4 sm:p-6 md:p-8 relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-900/80 to-blue-950/40 border-l-4 border-l-blue-500 shadow-xl border-2">
                     <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 relative z-10">
-                        <div className="relative group shrink-0">
-                            <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-2xl p-0.5 bg-gradient-to-br from-blue-500 to-indigo-600 shadow-md transform transition-transform group-hover:scale-105">
-                                <img src={avatar} alt={user.name} className="w-full h-full rounded-xl bg-slate-950 object-cover" />
+                        {/* Avatar Frame */}
+                        <div className="relative shrink-0">
+                            <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-2xl bg-gradient-to-b from-blue-500 to-indigo-700 p-1 shadow-lg shadow-blue-500/30">
+                                <div className="w-full h-full bg-slate-950 rounded-[14px] overflow-hidden flex items-center justify-center">
+                                    <img 
+                                        src={avatar} 
+                                        alt={user.name} 
+                                        className="w-full h-full object-cover"
+                                        style={{ imageRendering: 'pixelated' }} 
+                                    />
+                                </div>
+                            </div>
+                            <div className="absolute -bottom-2 -right-2">
+                                <LevelBadge level={user.level || 1} size="sm" />
                             </div>
                         </div>
 
+                        {/* User Info */}
                         <div className="flex-1 text-center sm:text-left min-w-0 w-full">
-                            <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-2 gap-2">
-                                <div className="min-w-0">
-                                    <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white mb-1 tracking-tight truncate">{user.name}</h1>
-                                    <p className="text-slate-400 font-medium text-xs sm:text-sm">Kelas {user.class || 'Siswa'} • <span className="text-amber-400 font-bold">{rankName}</span></p>
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+                                <div>
+                                    <h1 className="text-lg sm:text-xl md:text-2xl font-black text-white tracking-wide truncate">
+                                        {user.name}
+                                    </h1>
+                                    <p className="text-xs sm:text-sm text-slate-400 font-mono">
+                                        NISN: {user.nisn} • {user.class}
+                                    </p>
                                 </div>
-                                <div className="mt-1 sm:mt-0 shrink-0 self-center sm:self-auto">
-                                    <LevelBadge level={user.level || 1} size="md" />
+                                <div className="inline-flex items-center justify-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-bold self-center sm:self-auto">
+                                    <StarIcon className="w-3.5 h-3.5 text-amber-400" />
+                                    <span>{rankName}</span>
                                 </div>
                             </div>
 
-                            <div className="mt-3 sm:mt-4 max-w-2xl">
+                            {/* EXP Progression */}
+                            <div className="mt-3 sm:mt-4 max-w-xl">
                                 <ExpBar 
                                     currentExp={user.exp || 0} 
-                                    requiredExp={nextLevelExp} 
-                                    baseExp={user.current_level_base_exp || 0}
-                                    showPercent={true}
+                                    nextLevelExp={nextLevelExp} 
+                                    level={user.level || 1} 
                                 />
-                                <p className="text-[11px] sm:text-xs text-slate-400 mt-1.5 sm:mt-2 text-center sm:text-right font-medium">
-                                    <strong className="text-amber-400 font-mono font-bold">
-                                        {Math.max(0, nextLevelExp - (user.exp || 0)).toLocaleString()} EXP
-                                    </strong> menuju level berikutnya
-                                </p>
                             </div>
                         </div>
                     </div>
+
+                    {/* Ambient Background Glow */}
+                    <div className="absolute -top-24 -right-24 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
                 </div>
 
                 {/* Stats Grid */}
                 <div ref={statsRef} className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-                    <StatCard icon={StarIcon} label="Total EXP" value={user.exp || 0} color="blue" />
-                    <StatCard icon={CheckBadgeIcon} label="Quests Done" value={stats.questsCompleted || 0} color="emerald" />
-                    <StatCard icon={FireIcon} label="Day Streak" value={stats.streak || 0} color="gold" />
-                    <StatCard icon={TrophyIcon} label="Rank Level" value={`Lvl ${user.level || 1}`} color="purple" />
+                    <div className="stat-card">
+                        <StatCard 
+                            title="Total EXP" 
+                            value={stats.totalExp || 0} 
+                            icon={StarIcon} 
+                            color="amber" 
+                        />
+                    </div>
+                    <div className="stat-card">
+                        <StatCard 
+                            title="Quest Selesai" 
+                            value={stats.completedQuests || 0} 
+                            icon={CheckBadgeIcon} 
+                            color="emerald" 
+                        />
+                    </div>
+                    <div className="stat-card">
+                        <StatCard 
+                            title="Daily Streak" 
+                            value={`${stats.streak || 0} Hari`} 
+                            icon={FireIcon} 
+                            color="rose" 
+                        />
+                    </div>
+                    <div className="stat-card">
+                        <StatCard 
+                            title="Peringkat" 
+                            value={`#${stats.rankPosition || '-'}`} 
+                            icon={TrophyIcon} 
+                            color="blue" 
+                        />
+                    </div>
                 </div>
 
+                {/* Main Grid: Left Quests/Achievements, Right Schedule */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
                     {/* Main Content Area */}
                     <div className="lg:col-span-2 space-y-6 sm:space-y-8 min-w-0">
@@ -134,7 +180,8 @@ export default function Dashboard({ user: propUser, schedules = [], stats = {}, 
                         <section>
                             <div className="flex items-center justify-between mb-3 sm:mb-4">
                                 <h2 className="font-game text-xs sm:text-sm text-white flex items-center gap-2 tracking-wider">
-                                    <span className="text-amber-400">⚔️</span> QUEST AKTIF
+                                    <CrossedSwordsIcon className="w-4 h-4 text-amber-400" />
+                                    <span>QUEST AKTIF</span>
                                 </h2>
                                 <Link href="/quests" className="font-game text-[10px] sm:text-xs text-blue-400 hover:text-blue-300 transition-colors uppercase tracking-wider">
                                     SEMUA &rarr;
@@ -147,8 +194,9 @@ export default function Dashboard({ user: propUser, schedules = [], stats = {}, 
                                     ))}
                                 </div>
                             ) : (
-                                <div className="glass-card p-6 text-center text-slate-400 text-sm">
-                                    Semua quest hari ini telah diselesaikan! 🎉
+                                <div className="glass-card p-6 text-center text-slate-400 text-sm flex items-center justify-center gap-2">
+                                    <CheckCircleIcon className="w-5 h-5 text-emerald-400 shrink-0" />
+                                    <span>Semua quest hari ini telah diselesaikan!</span>
                                 </div>
                             )}
                         </section>
@@ -156,7 +204,8 @@ export default function Dashboard({ user: propUser, schedules = [], stats = {}, 
                         {/* Achievements Preview */}
                         <section className="glass-card p-4 sm:p-6 border-2">
                             <h2 className="font-game text-xs sm:text-sm text-white mb-4 sm:mb-6 tracking-wider flex items-center gap-2">
-                                <span className="text-amber-400">🏆</span> PENCAPAIAN / ACHIEVEMENTS
+                                <TrophyIcon className="w-4 h-4 text-amber-400" />
+                                <span>PENCAPAIAN / ACHIEVEMENTS</span>
                             </h2>
                             <div ref={achievementsRef} className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3 sm:gap-4 justify-items-center">
                                 {achievements.slice(0, 5).map(ach => (
@@ -171,14 +220,15 @@ export default function Dashboard({ user: propUser, schedules = [], stats = {}, 
                         {/* Schedule */}
                         <section ref={scheduleRef} className="glass-card p-4 sm:p-6 border-t-4 border-t-blue-500 border-2">
                             <h2 className="font-game text-xs sm:text-sm text-white mb-4 sm:mb-6 text-center tracking-wider flex items-center justify-center gap-2">
-                                <span className="text-blue-400">📅</span> JADWAL HARI INI
+                                <CalendarDaysIcon className="w-4 h-4 text-blue-400" />
+                                <span>JADWAL HARI INI</span>
                             </h2>
                             <ScheduleTimeline schedule={schedules.map(s => ({
                                 subject: s.subject?.name || 'Pelajaran',
                                 room: s.teacher ? `${s.teacher} • ${s.class}` : s.class,
                                 startTime: s.time_start?.substring(0, 5) || '07:30',
                                 endTime: s.time_end?.substring(0, 5) || '09:00',
-                                icon: s.subject?.icon || '📚'
+                                icon: s.subject?.icon || 'book'
                             }))} />
                         </section>
                     </div>

@@ -4,8 +4,9 @@ import { router } from '@inertiajs/react';
 import gsap from 'gsap';
 import CastleScene from './CastleScene';
 
-export default function CastleIntroModal({ initialRect, redirectUrl = '/dashboard' }) {
+export default function CastleIntroModal({ initialRect, redirectUrl = '/dashboard', onClose }) {
     const [phase, setPhase] = useState('expanding'); // expanding → waiting → opening → transitioning
+    const isAdmin = redirectUrl?.includes('/admin');
 
     const backdropRef = useRef(null);
     const wrapperRef = useRef(null);
@@ -34,21 +35,29 @@ export default function CastleIntroModal({ initialRect, redirectUrl = '/dashboar
         if (offscreenTlRef.current) offscreenTlRef.current.kill();
         gsap.killTweensOf('*');
         setPhase('transitioning');
-        // Set flag so onboarding guide automatically opens on dashboard
-        if (typeof window !== 'undefined') {
+        // Only set student guide flag if not an admin route
+        if (typeof window !== 'undefined' && !isAdmin) {
             sessionStorage.setItem('open_guide_after_intro', 'true');
         }
-        router.visit(redirectUrl);
-    }, [redirectUrl]);
+        if (onClose) {
+            onClose();
+        } else {
+            router.visit(redirectUrl);
+        }
+    }, [redirectUrl, isAdmin, onClose]);
 
     // ─── Main Animation Sequence ───
     useEffect(() => {
         // Handle reduced motion preference
         if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-            if (typeof window !== 'undefined') {
+            if (typeof window !== 'undefined' && !isAdmin) {
                 sessionStorage.setItem('open_guide_after_intro', 'true');
             }
-            router.visit(redirectUrl);
+            if (onClose) {
+                onClose();
+            } else {
+                router.visit(redirectUrl);
+            }
             return;
         }
 
@@ -265,11 +274,15 @@ export default function CastleIntroModal({ initialRect, redirectUrl = '/dashboar
         const doorTl = gsap.timeline({
             onComplete: () => {
                 setPhase('transitioning');
-                // Flag to auto-open the guide modal immediately upon reaching the dashboard
-                if (typeof window !== 'undefined') {
+                // Flag to auto-open the guide modal immediately upon reaching the dashboard (students only)
+                if (typeof window !== 'undefined' && !isAdmin) {
                     sessionStorage.setItem('open_guide_after_intro', 'true');
                 }
-                router.visit(redirectUrl);
+                if (onClose) {
+                    onClose();
+                } else {
+                    router.visit(redirectUrl);
+                }
             },
         });
         masterTlRef.current = doorTl;
@@ -307,7 +320,7 @@ export default function CastleIntroModal({ initialRect, redirectUrl = '/dashboar
                 duration: 1.1,
                 ease: 'power2.in',
             }, '-=0.2');
-    }, [redirectUrl]);
+    }, [redirectUrl, isAdmin, onClose]);
 
     // Render directly into document.body to guarantee 100% true viewport fullscreen
     if (typeof document === 'undefined') return null;
@@ -358,7 +371,7 @@ export default function CastleIntroModal({ initialRect, redirectUrl = '/dashboar
                 aria-live="polite"
             >
                 <span className="entering-text text-[10px] sm:text-xs text-cyan-200 tracking-widest drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
-                    Entering the Realm...
+                    {isAdmin ? 'Entering Grand Citadel Command...' : 'Entering the Realm...'}
                 </span>
             </div>
 
@@ -373,7 +386,7 @@ export default function CastleIntroModal({ initialRect, redirectUrl = '/dashboar
                         onClick={startPhase4}
                         className="gate-prompt text-xs sm:text-sm text-amber-200 tracking-wider pointer-events-auto cursor-pointer px-5 py-2.5 rounded-xl bg-[#090e18] border border-amber-400/60 hover:border-amber-300 hover:scale-105 active:scale-95 transition-all shadow-[0_0_15px_rgba(251,191,36,0.35)]"
                     >
-                        ⚔️ OPEN THE GATE ⚔️
+                        {isAdmin ? '🛡️ ENTER GRAND CITADEL 🛡️' : '⚔️ OPEN THE GATE ⚔️'}
                     </button>
                 </div>
             )}

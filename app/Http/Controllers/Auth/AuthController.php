@@ -45,15 +45,15 @@ class AuthController extends Controller
                 ? redirect()->intended('/admin/dashboard')->getTargetUrl()
                 : redirect()->intended('/dashboard')->getTargetUrl();
 
-            // Student + animation header → JSON response (frontend plays intro animation)
-            if (Auth::user()->role !== 'admin' && $request->header('X-Login-Animation')) {
+            // Return JSON response when animation header is present (both admin & student)
+            if ($request->header('X-Login-Animation')) {
                 return response()->json([
                     'success' => true,
                     'redirect' => $intendedUrl,
                 ]);
             }
 
-            // Admin or no animation header → normal Inertia redirect
+            // Fallback normal Inertia redirect (e.g. no animation requested)
             return Inertia::location($intendedUrl);
         }
 

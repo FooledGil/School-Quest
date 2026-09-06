@@ -5,6 +5,7 @@ import LevelBadge from '@/Components/LevelBadge';
 import ExpBar from '@/Components/ExpBar';
 import AchievementBadge from '@/Components/AchievementBadge';
 import ApiIcon from '@/Components/ApiIcon';
+import { TrophyIcon, ClockIcon, XMarkIcon, CheckIcon } from '@heroicons/react/24/solid';
 import { getAvatarUrl, getPixelBotUrl } from '@/Utils/avatar';
 import { ICON_API } from '@/Utils/iconApi';
 import gsap from 'gsap';
@@ -330,10 +331,10 @@ export default function Profile({ user: propUser }) {
                                 <button 
                                     type="button"
                                     onClick={() => setShowAvatarStudio(false)} 
-                                    className="text-slate-400 hover:text-white text-sm p-1.5 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer"
+                                    className="text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer"
                                     title="Tutup Studio"
                                 >
-                                    ✕
+                                    <XMarkIcon className="w-4 h-4" />
                                 </button>
                             </div>
 
@@ -498,7 +499,9 @@ export default function Profile({ user: propUser }) {
                                                     loading="lazy"
                                                 />
                                                 {selectedBotSeed === seed && (
-                                                    <div className="absolute top-0.5 right-0.5 w-3.5 h-3.5 bg-blue-500 rounded-full flex items-center justify-center text-white text-[8px]">✓</div>
+                                                    <div className="absolute top-0.5 right-0.5 w-3.5 h-3.5 bg-blue-500 rounded-full flex items-center justify-center text-white">
+                                                        <CheckIcon className="w-2.5 h-2.5 stroke-[3]" />
+                                                    </div>
                                                 )}
                                             </button>
                                         ))}
@@ -554,9 +557,10 @@ export default function Profile({ user: propUser }) {
                                 <button 
                                     type="button"
                                     onClick={() => { setShowPasswordSection(false); passwordForm.clearErrors(); }} 
-                                    className="text-slate-400 hover:text-white text-sm px-3 py-1 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer"
+                                    className="text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer"
+                                    title="Tutup"
                                 >
-                                    ✕
+                                    <XMarkIcon className="w-4 h-4" />
                                 </button>
                             </div>
 
@@ -623,7 +627,7 @@ export default function Profile({ user: propUser }) {
                     {/* Achievements Collection */}
                     <div className="glass-card p-4 sm:p-6 border-2">
                         <h3 className="font-game text-xs sm:text-sm text-white mb-4 border-b-2 border-slate-800 pb-3 tracking-wider flex items-center gap-2">
-                            <span>🏆</span>
+                            <TrophyIcon className="w-4 h-4 text-amber-400" />
                             <span>GALERI PENCAPAIAN</span>
                         </h3>
                         {achievements.length > 0 ? (
@@ -642,7 +646,7 @@ export default function Profile({ user: propUser }) {
                     {/* Quest History */}
                     <div className="glass-card p-4 sm:p-6 border-2">
                         <h3 className="font-game text-xs sm:text-sm text-white mb-4 border-b-2 border-slate-800 pb-3 tracking-wider flex items-center gap-2">
-                            <span>📜</span>
+                            <ClockIcon className="w-4 h-4 text-blue-400" />
                             <span>AKTIVITAS TERAKHIR</span>
                         </h3>
                         {questHistory.length > 0 ? (

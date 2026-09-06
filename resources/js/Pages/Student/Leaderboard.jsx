@@ -3,6 +3,7 @@ import { Head, usePage } from '@inertiajs/react';
 import StudentLayout from '@/Layouts/StudentLayout';
 import PodiumDisplay from '@/Components/PodiumDisplay';
 import LevelBadge from '@/Components/LevelBadge';
+import { TrophyIcon } from '@heroicons/react/24/solid';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 
@@ -40,11 +41,11 @@ export default function Leaderboard({ students = [] }) {
 
             <div className="mb-5 sm:mb-6 text-center">
                 <h1 className="font-game text-base sm:text-lg md:text-2xl text-white mb-1.5 tracking-wider drop-shadow-md flex items-center justify-center gap-2">
-                    <span>👑</span>
+                    <TrophyIcon className="w-6 h-6 text-amber-400" />
                     <span>PAPAN PERINGKAT</span>
                 </h1>
                 <p className="font-mono text-blue-400 font-bold text-[10px] sm:text-xs uppercase tracking-widest">
-                    ▶ HALL OF FAME — TOP GUILD HEROES ◀
+                    HALL OF FAME — TOP GUILD HEROES
                 </p>
             </div>
 

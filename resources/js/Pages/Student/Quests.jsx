@@ -2,11 +2,15 @@ import React, { useRef, useState } from 'react';
 import { Head } from '@inertiajs/react';
 import StudentLayout from '@/Layouts/StudentLayout';
 import QuestCard from '@/Components/QuestCard';
+import { ClipboardDocumentListIcon } from '@heroicons/react/24/solid';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 
+import GuildHallScene from '@/Components/Quests/GuildHallScene';
+
 export default function Quests({ mainQuests = [], additionalQuests = [] }) {
     const gridRef = useRef(null);
+    const heroRef = useRef(null);
     const [tab, setTab] = useState('main');
     const [filter, setFilter] = useState('all');
 
@@ -25,36 +29,116 @@ export default function Quests({ mainQuests = [], additionalQuests = [] }) {
     }));
 
     const filteredQuests = normalizedQuests.filter(q => {
-        if (filter === 'active' && (q.isCompleted || q.submissionStatus === 'pending')) return false;
-        if (filter === 'completed' && !q.isCompleted) return false;
-        if (filter === 'pending' && q.submissionStatus !== 'pending') return false;
+        if (filter === 'active') return !q.isCompleted && q.submissionStatus !== 'pending';
+        if (filter === 'pending') return q.submissionStatus === 'pending';
+        if (filter === 'completed') return q.isCompleted;
         return true;
     });
 
     useGSAP(() => {
-        if (gridRef.current && filteredQuests.length > 0) {
+        if (heroRef.current) {
+            gsap.fromTo(
+                heroRef.current,
+                { y: -16, opacity: 0 },
+                { y: 0, opacity: 1, duration: 0.45, ease: 'power2.out' }
+            );
+        }
+
+        if (gridRef.current) {
             const cards = gridRef.current.children;
             gsap.fromTo(
                 cards,
-                { y: 20, opacity: 0, scale: 0.96 },
-                { y: 0, opacity: 1, scale: 1, duration: 0.4, stagger: 0.07, ease: 'power2.out' }
+                { y: 20, opacity: 0 },
+                { y: 0, opacity: 1, duration: 0.35, stagger: 0.05, ease: 'power2.out' }
             );
         }
     }, { dependencies: [tab, filter], scope: gridRef });
 
     // Count pending submissions
     const pendingCount = normalizedQuests.filter(q => q.submissionStatus === 'pending').length;
+    const completedCount = normalizedQuests.filter(q => q.isCompleted).length;
 
     return (
         <StudentLayout>
-            <Head title="Papan Quest" />
+            <Head title="Papan Quest Petualang" />
 
-            <div className="mb-5 sm:mb-6">
-                <h1 className="font-game text-base sm:text-lg md:text-2xl text-white mb-1.5 tracking-wider drop-shadow-md flex items-center gap-2">
-                    <span>📜</span>
-                    <span>PAPAN QUEST</span>
-                </h1>
-                <p className="text-slate-400 text-xs sm:text-sm">Selesaikan quest harian & tambahan untuk meningkatkan EXP!</p>
+            {/* ─── Adventurers Guildhall & Quest Notice Board Hero Banner ─── */}
+            <div 
+                ref={heroRef}
+                className="glass-card p-5 sm:p-7 md:p-8 relative overflow-hidden bg-gradient-to-br from-slate-900/95 via-[#13110e] to-[#0a0704] border-l-4 border-l-amber-500 shadow-2xl border-2 mb-6 sm:mb-8"
+            >
+                {/* Ambient Warm Hearth Glow */}
+                <div className="absolute top-0 right-1/3 w-80 h-80 bg-amber-600/10 rounded-full blur-3xl pointer-events-none" />
+                <div className="absolute -bottom-10 -left-10 w-60 h-60 bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
+
+                <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-6 relative z-10">
+                    {/* Left Column: Guild Header Info */}
+                    <div className="space-y-3.5 max-w-xl flex-1">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 font-game text-[8px] sm:text-[9px] tracking-wider uppercase">
+                            <span>📜</span>
+                            <span>ADVENTURERS GUILDHQ • NOTICE BOARD</span>
+                        </div>
+
+                        <div>
+                            <h1 className="font-game text-base sm:text-xl md:text-2xl text-white tracking-wider drop-shadow-md flex items-center gap-2.5">
+                                <ClipboardDocumentListIcon className="w-6 h-6 text-amber-400 shrink-0" />
+                                <span>PAPAN QUEST PETUALANG</span>
+                            </h1>
+                            <p className="text-slate-300 text-xs sm:text-sm leading-relaxed font-body mt-2">
+                                Selamat datang di Balai Petualang! Pilih misi harian & tantangan ekstra dari papan buletin, selesaikan tugas belajarmu, lalu kumpulkan EXP untuk menaikkan pangkat rank petualangmu.
+                            </p>
+                        </div>
+
+                        {/* Quick Guild Metric Badges */}
+                        <div className="flex flex-wrap items-center gap-2.5 pt-1">
+                            <span className="px-3 py-1 rounded-lg bg-slate-900/80 border border-slate-800 text-[11px] font-mono text-slate-300">
+                                Total: <strong className="text-white">{currentRawQuests.length}</strong> Quest
+                            </span>
+                            <span className="px-3 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-[11px] font-mono text-emerald-400">
+                                Selesai: <strong>{completedCount}</strong>
+                            </span>
+                            {pendingCount > 0 && (
+                                <span className="px-3 py-1 rounded-lg bg-amber-500/10 border border-amber-500/30 text-[11px] font-mono text-amber-400">
+                                    Pending: <strong>{pendingCount}</strong>
+                                </span>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Right Column: Interactive Adventurers Guild Scene Viewport */}
+                    <div className="w-full lg:w-[380px] xl:w-[440px] shrink-0">
+                        <div className="relative rounded-2xl overflow-hidden border-2 border-amber-600/30 bg-[#0c0703] shadow-2xl group hover:border-amber-500/60 transition-colors">
+                            {/* Top Header Strip */}
+                            <div className="px-3 py-2 bg-[#140b04] border-b border-amber-950/80 flex items-center justify-between">
+                                <span className="inline-flex items-center gap-1.5 text-[9px] font-game text-amber-300 tracking-wider">
+                                    <span>📜</span>
+                                    <span>GUILD NOTICE BOARD</span>
+                                </span>
+                                <span className="text-[9px] font-mono text-amber-300/90 bg-amber-950/60 border border-amber-500/30 px-2 py-0.5 rounded">
+                                    BOUNTY ROOM
+                                </span>
+                            </div>
+
+                            {/* Animated Guild Hall Canvas */}
+                            <div className="w-full h-48 sm:h-56 bg-[#140b04] overflow-hidden flex items-center justify-center">
+                                <GuildHallScene
+                                    idPrefix="quests-guild"
+                                    className="w-full h-full object-contain transform scale-100 group-hover:scale-[1.02] transition-transform duration-700 ease-out"
+                                />
+                            </div>
+
+                            {/* Bottom Info Strip */}
+                            <div className="p-2.5 bg-[#140b04]/95 border-t border-amber-950/80 flex items-center justify-between text-[10px] font-mono text-amber-200/80">
+                                <span className="truncate flex items-center gap-1.5">
+                                    <span>⚔️</span> Papan pengumuman quest aktif
+                                </span>
+                                <span className="text-amber-400 font-bold shrink-0">
+                                    {tab === 'main' ? 'Main Quests' : 'Extra Quests'}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             {/* Main Tabs */}
@@ -109,7 +193,7 @@ export default function Quests({ mainQuests = [], additionalQuests = [] }) {
                 </div>
             ) : (
                 <div className="glass-card p-8 sm:p-12 text-center border-dashed border-slate-800 flex flex-col items-center justify-center">
-                    <div className="text-3xl sm:text-4xl mb-3 opacity-60">📜</div>
+                    <ClipboardDocumentListIcon className="w-10 h-10 mb-3 text-slate-500 opacity-60" />
                     <h3 className="text-base sm:text-lg font-bold text-slate-300 mb-1">Belum Ada Quest</h3>
                     <p className="text-slate-500 text-xs">Tidak ada quest untuk kriteria filter ini.</p>
                 </div>

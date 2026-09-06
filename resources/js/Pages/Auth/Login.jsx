@@ -101,7 +101,7 @@ export default function Login() {
     return (
         <main
             ref={containerRef}
-            className="min-h-screen min-h-dvh w-full flex items-center justify-center relative overflow-hidden bg-[#070b14] text-slate-100 font-body p-3 sm:p-5 md:p-8 selection:bg-blue-500 selection:text-white"
+            className="min-h-screen min-h-dvh w-full flex flex-col justify-center items-center relative overflow-x-hidden overflow-y-auto bg-[#070b14] text-slate-100 font-body p-3 sm:p-5 md:p-8 selection:bg-blue-500 selection:text-white"
             role="main"
         >
             <Head title="Welcome Back - SchoolQuest" />
@@ -122,16 +122,16 @@ export default function Login() {
                 aria-hidden="true"
             />
 
-            {/* Main Center Card */}
+            {/* Main Center Card (Responsive on all screen sizes) */}
             <div
                 ref={cardRef}
-                className="relative z-10 w-full max-w-[1150px] bg-[#141b2b] border-[3px] border-[#222e46] rounded-2xl sm:rounded-3xl lg:rounded-[32px] p-4 sm:p-6 lg:p-7 shadow-[0_25px_70px_-15px_rgba(0,0,0,0.9)] flex flex-col-reverse lg:flex-row gap-6 lg:gap-8 items-stretch overflow-hidden"
+                className="relative z-10 w-full max-w-[1100px] my-auto bg-[#141b2b] border-2 sm:border-[3px] border-[#222e46] rounded-2xl sm:rounded-3xl lg:rounded-[32px] p-3.5 sm:p-6 lg:p-7 shadow-[0_25px_70px_-15px_rgba(0,0,0,0.9)] flex flex-col lg:flex-row gap-4 sm:gap-6 lg:gap-8 items-stretch"
                 style={{ opacity: 0 }}
             >
-                {/* Left Section: Login Form */}
+                {/* Left Section: Login Form (order-last on mobile so banner sits neatly on top, order-first on desktop) */}
                 <div
                     ref={leftPanelRef}
-                    className="w-full lg:w-[52%] flex flex-col justify-center py-2 px-1 sm:px-3 lg:px-4"
+                    className="w-full lg:w-[52%] flex flex-col justify-center py-1 sm:py-2 px-1 sm:px-3 lg:px-4 order-last lg:order-first"
                 >
                     <LoginForm
                         onLoginSuccess={handleLoginSuccess}
@@ -139,10 +139,10 @@ export default function Login() {
                     />
                 </div>
 
-                {/* Right Section: Fantasy Pixel Art Illustration */}
+                {/* Right Section: Fantasy Pixel Art Illustration (Compact hero banner on mobile, full-height on desktop) */}
                 <div
                     ref={rightPanelRef}
-                    className="w-full lg:w-[48%] flex items-center justify-center"
+                    className="w-full lg:w-[48%] flex items-center justify-center order-first lg:order-last shrink-0"
                     style={{ opacity: 0 }}
                 >
                     <FantasyPanel ref={fantasyPanelRef} />

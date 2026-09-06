@@ -214,7 +214,7 @@ const FantasyPanel = forwardRef(function FantasyPanel({ className = '' }, ref) {
     return (
         <div
             ref={containerRef}
-            className={`relative w-full h-full min-h-[380px] lg:min-h-[500px] rounded-2xl lg:rounded-3xl overflow-hidden border-2 border-[#22304c] shadow-2xl bg-[#141b2d] flex items-center justify-center select-none group cursor-pointer ${className}`}
+            className={`relative w-full h-36 sm:h-44 md:h-52 lg:h-full lg:min-h-[500px] rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden border-2 border-[#22304c] shadow-xl bg-[#141b2d] flex items-center justify-center select-none group cursor-pointer ${className}`}
         >
             <div ref={castleRef} className="w-full h-full">
                 <CastleScene

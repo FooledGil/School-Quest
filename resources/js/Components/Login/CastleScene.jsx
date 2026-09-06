@@ -101,10 +101,92 @@ const CastleScene = forwardRef(function CastleScene(
                     <stop offset="50%" stopColor="#38bdf8" />
                     <stop offset="100%" stopColor="#0284c7" />
                 </linearGradient>
+
+                {/* Celestial Shooting Star Gradient */}
+                <linearGradient id={p('shootingStarGrad')} x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                    <stop offset="50%" stopColor="#67e8f9" stopOpacity="0.8" />
+                    <stop offset="100%" stopColor="#38bdf8" stopOpacity="0" />
+                </linearGradient>
+
+                {/* Arcane Airship Gradients */}
+                <linearGradient id={p('airshipHull')} x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stopColor="#64748b" />
+                    <stop offset="50%" stopColor="#334155" />
+                    <stop offset="100%" stopColor="#1e293b" />
+                </linearGradient>
+                <linearGradient id={p('airshipSail')} x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#38bdf8" />
+                    <stop offset="50%" stopColor="#0284c7" />
+                    <stop offset="100%" stopColor="#1e40af" />
+                </linearGradient>
+
+                {/* Arcane Crystal & Runic Gold Gradients */}
+                <linearGradient id={p('crystalGrad')} x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#f0f9ff" />
+                    <stop offset="40%" stopColor="#38bdf8" />
+                    <stop offset="100%" stopColor="#0284c7" />
+                </linearGradient>
+                <linearGradient id={p('runeGold')} x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#fef08a" stopOpacity="0.95" />
+                    <stop offset="50%" stopColor="#fbbf24" stopOpacity="0.8" />
+                    <stop offset="100%" stopColor="#38bdf8" stopOpacity="0.9" />
+                </linearGradient>
             </defs>
 
             {/* Sky Background */}
             <rect width="480" height="480" fill={u('castleSky')} />
+
+            {/* Celestial Shooting Stars / Meteors */}
+            <g className="svg-shooting-star-1" style={{ pointerEvents: 'none' }}>
+                <line x1="90" y1="20" x2="135" y2="44" stroke={u('shootingStarGrad')} strokeWidth="2.2" strokeLinecap="round" />
+                <circle cx="135" cy="44" r="2" fill="#ffffff" />
+            </g>
+            <g className="svg-shooting-star-2" style={{ pointerEvents: 'none' }}>
+                <line x1="250" y1="18" x2="290" y2="40" stroke={u('shootingStarGrad')} strokeWidth="2" strokeLinecap="round" />
+                <circle cx="290" cy="40" r="1.6" fill="#ffffff" />
+            </g>
+
+            {/* Pixel Arcane Airship / Sky Galleon */}
+            <g transform="translate(60, 68)" style={{ pointerEvents: 'none' }}>
+                <g className="svg-airship">
+                    {/* Magic Envelope / Gasbag */}
+                    <ellipse cx="36" cy="14" rx="28" ry="11" fill={u('airshipSail')} />
+                    <path d="M 12 14 Q 36 6 60 14" stroke="#93c5fd" strokeWidth="1" fill="none" opacity="0.6" />
+                    <path d="M 16 18 Q 36 24 56 18" stroke="#1e3a8a" strokeWidth="1" fill="none" opacity="0.6" />
+                    {/* Rigging cables */}
+                    <line x1="20" y1="23" x2="25" y2="28" stroke="#cbd5e1" strokeWidth="0.7" />
+                    <line x1="36" y1="25" x2="36" y2="28" stroke="#cbd5e1" strokeWidth="0.7" />
+                    <line x1="52" y1="23" x2="47" y2="28" stroke="#cbd5e1" strokeWidth="0.7" />
+                    {/* Wooden Gondola Hull */}
+                    <polygon points="22,28 50,28 46,36 26,36" fill={u('airshipHull')} />
+                    <rect x="29" y="30" width="3" height="3" rx="0.5" fill="#fef08a" className="svg-window-glow" />
+                    <rect x="35" y="30" width="3" height="3" rx="0.5" fill="#fef08a" className="svg-window-glow" />
+                    <rect x="41" y="30" width="3" height="3" rx="0.5" fill="#fef08a" className="svg-window-glow" />
+                    {/* Glowing Mana Core Engine */}
+                    <circle cx="24" cy="32" r="2.2" fill="#38bdf8" className="svg-crystal-core" />
+                    {/* Rear Propeller Spinning */}
+                    <g transform="translate(19, 32)" className="svg-airship-propeller">
+                        <line x1="-3" y1="-3" x2="3" y2="3" stroke="#f1f5f9" strokeWidth="1" />
+                        <line x1="-3" y1="3" x2="3" y2="-3" stroke="#f1f5f9" strokeWidth="1" />
+                        <circle cx="0" cy="0" r="1" fill="#38bdf8" />
+                    </g>
+                    {/* Gold Pennant Flag */}
+                    <polygon points="64,14 70,11 64,17" fill="#fbbf24" />
+                </g>
+            </g>
+
+            {/* Majestic Soaring Wyvern / Dragon Patrol */}
+            <g className="svg-dragon-patrol" style={{ pointerEvents: 'none' }}>
+                <polygon points="24,18 36,21 44,22 48,20 42,24 32,25 22,22 14,24 8,28 12,24 18,20" fill="#0f172a" />
+                <polygon points="46,18 49,20 45,21" fill="#1e293b" />
+                <circle cx="46" cy="20.5" r="0.8" fill="#38bdf8" />
+                <path className="svg-dragon-wing" d="M 28 20 Q 36 2 48 8 L 40 18 L 34 16 Z" fill="#1e293b" />
+                <path className="svg-dragon-wing" d="M 26 23 Q 34 38 44 32 L 36 24 Z" fill="#1e293b" opacity="0.85" />
+                {/* Trailing Mana Embers */}
+                <circle cx="10" cy="26" r="1.2" fill="#38bdf8" opacity="0.7" />
+                <circle cx="4" cy="29" r="0.8" fill="#bae6fd" opacity="0.5" />
+            </g>
 
             {/* Animated Clouds */}
             <g ref={cloudsRef} fill="#ffffff" opacity="0.88">
@@ -113,7 +195,7 @@ const CastleScene = forwardRef(function CastleScene(
                 <path d="M 330 110 h 80 v 16 h -80 z M 345 96 h 50 v 14 h -50 z" />
             </g>
 
-            {/* Soaring Birds / Dragon Silhouette */}
+            {/* Soaring Birds / Distant Flock */}
             <g ref={birdsRef} fill="#1e293b" opacity="0.75">
                 <g transform="translate(0, 0)">
                     <polygon points="12,12 18,14 12,16 6,14" fill="#0f172a" />
@@ -164,6 +246,39 @@ const CastleScene = forwardRef(function CastleScene(
             <polygon points="218,140 242,95 266,140" fill={u('castleRoof')} />
             <line x1="242" y1="95" x2="242" y2="82" stroke="#e2e8f0" strokeWidth="2" />
 
+            {/* Arcane Runic Circle around High Spire Apex (242, 115) */}
+            <g className="svg-rune-ring" style={{ pointerEvents: 'none' }}>
+                <circle cx="242" cy="115" r="32" stroke={u('runeGold')} strokeWidth="1" strokeDasharray="4 3 8 2" fill="none" opacity="0.75" />
+                <circle cx="242" cy="115" r="26" stroke="#38bdf8" strokeWidth="0.8" strokeDasharray="6 4" fill="none" opacity="0.6" />
+                {/* Ancient Cardinal Rune Nodes */}
+                <polygon points="242,81 244,85 240,85" fill="#fef08a" />
+                <polygon points="274,115 270,117 270,113" fill="#38bdf8" />
+                <polygon points="242,149 240,145 244,145" fill="#fef08a" />
+                <polygon points="210,115 214,113 214,117" fill="#38bdf8" />
+            </g>
+
+            {/* Orbiting Floating Mana Crystals around Spire */}
+            <g transform="translate(206, 104)" style={{ pointerEvents: 'none' }}>
+                <g className="svg-crystal-float-1">
+                    <polygon points="6,0 12,8 6,16 0,8" fill={u('crystalGrad')} />
+                    <polygon points="6,2 10,8 6,14" fill="#e0f2fe" opacity="0.85" />
+                    <circle cx="6" cy="8" r="8" fill="#38bdf8" opacity="0.25" />
+                </g>
+            </g>
+            <g transform="translate(266, 116)" style={{ pointerEvents: 'none' }}>
+                <g className="svg-crystal-float-2">
+                    <polygon points="5,0 10,6 5,12 0,6" fill={u('crystalGrad')} />
+                    <polygon points="5,1 8,6 5,11" fill="#e0f2fe" opacity="0.85" />
+                    <circle cx="5" cy="6" r="6" fill="#38bdf8" opacity="0.25" />
+                </g>
+            </g>
+            <g transform="translate(237, 68)" style={{ pointerEvents: 'none' }}>
+                <g className="svg-crystal-float-3">
+                    <polygon points="4,0 8,5 4,10 0,5" fill="#fbbf24" />
+                    <polygon points="4,1 7,5 4,9" fill="#fef08a" opacity="0.85" />
+                </g>
+            </g>
+
             {/* Castle Main Gate Building */}
             <rect x="180" y="210" width="124" height="85" fill={u('castleWall')} />
             <rect x="242" y="210" width="62" height="85" fill={u('castleWallShadow')} />
@@ -181,9 +296,30 @@ const CastleScene = forwardRef(function CastleScene(
             {/* Outer Left Bastion Turret */}
             <rect x="135" y="235" width="26" height="60" fill={u('castleWall')} />
             <polygon points="130,235 148,205 166,235" fill={u('castleRoof')} />
+            {/* Left Rampart Brazier */}
+            <g transform="translate(144, 197)" style={{ pointerEvents: 'none' }}>
+                <rect x="2" y="6" width="4" height="4" fill="#334155" />
+                <polygon points="0,6 8,6 6,3 2,3" fill="#64748b" />
+                <g className="svg-brazier-fire">
+                    <polygon points="4,-1 1,4 7,4" fill="#ea580c" />
+                    <polygon points="4,0 2,4 6,4" fill="#f59e0b" />
+                    <circle cx="4" cy="2" r="1" fill="#fef08a" />
+                </g>
+            </g>
+
             {/* Outer Right Bastion Turret */}
             <rect x="323" y="240" width="26" height="55" fill={u('castleWallShadow')} />
             <polygon points="318,240 336,210 354,240" fill={u('castleRoof')} />
+            {/* Right Rampart Brazier */}
+            <g transform="translate(332, 202)" style={{ pointerEvents: 'none' }}>
+                <rect x="2" y="6" width="4" height="4" fill="#334155" />
+                <polygon points="0,6 8,6 6,3 2,3" fill="#64748b" />
+                <g className="svg-brazier-fire">
+                    <polygon points="4,-1 1,4 7,4" fill="#ea580c" />
+                    <polygon points="4,0 2,4 6,4" fill="#f59e0b" />
+                    <circle cx="4" cy="2" r="1" fill="#fef08a" />
+                </g>
+            </g>
 
             {/* Animated Fluttering Flags */}
             <g ref={flagsRef}>
@@ -210,12 +346,21 @@ const CastleScene = forwardRef(function CastleScene(
                 <circle cx="242" cy="180" r="6" fill="#e0f2fe" />
             </g>
 
-            {/* Arch Windows */}
+            {/* Arch Windows with Inhabited Warm Light Glow */}
             <rect x="238" y="225" width="8" height="15" rx="3" fill="#0f172a" />
+            <rect x="240" y="227" width="4" height="11" rx="1.5" fill="#fef08a" className="svg-window-glow" />
+
             <rect x="200" y="235" width="6" height="12" rx="2" fill="#0f172a" />
+            <rect x="201.5" y="237" width="3" height="8" rx="1" fill="#fef08a" className="svg-window-glow" style={{ animationDelay: '0.7s' }} />
+
             <rect x="278" y="235" width="6" height="12" rx="2" fill="#0f172a" />
+            <rect x="279.5" y="237" width="3" height="8" rx="1" fill="#67e8f9" className="svg-window-glow" style={{ animationDelay: '1.4s' }} />
+
             <rect x="170" y="210" width="5" height="10" rx="2" fill="#0f172a" />
+            <rect x="171" y="212" width="3" height="6" rx="1" fill="#fde047" className="svg-window-glow" style={{ animationDelay: '2.1s' }} />
+
             <rect x="306" y="215" width="5" height="10" rx="2" fill="#0f172a" />
+            <rect x="307" y="217" width="3" height="6" rx="1" fill="#fef08a" className="svg-window-glow" style={{ animationDelay: '0.4s' }} />
 
             {/* ═══════════════════════════════════════════════════════════════ */}
             {/* GRAND MEDIEVAL ARCHED DOUBLE GATE                           */}
@@ -306,6 +451,20 @@ const CastleScene = forwardRef(function CastleScene(
                 style={{ pointerEvents: 'none' }}
             />
 
+            {/* Ancient Glowing Gate Glyphs on Stone Arch */}
+            <g className="svg-gate-glyph" style={{ pointerEvents: 'none' }}>
+                {/* Left Arch Glyphs */}
+                <path d="M 230 284 L 232 281 L 230 279" stroke="#38bdf8" strokeWidth="0.9" strokeLinecap="round" fill="none" opacity="0.85" />
+                <circle cx="231" cy="275" r="0.8" fill="#67e8f9" />
+                <path d="M 233 269 Q 236 265 238 267" stroke="#38bdf8" strokeWidth="0.8" fill="none" opacity="0.85" />
+                {/* Right Arch Glyphs */}
+                <path d="M 254 284 L 252 281 L 254 279" stroke="#38bdf8" strokeWidth="0.9" strokeLinecap="round" fill="none" opacity="0.85" />
+                <circle cx="253" cy="275" r="0.8" fill="#67e8f9" />
+                <path d="M 251 269 Q 248 265 246 267" stroke="#38bdf8" strokeWidth="0.8" fill="none" opacity="0.85" />
+                {/* Keystone Crest Rune */}
+                <polygon points="242,251 244,254 240,254" fill="#fde047" opacity="0.9" />
+            </g>
+
             {/* 7. Large invisible click target covering the gate area */}
             <rect
                 ref={gateClickzoneRef}
@@ -322,7 +481,19 @@ const CastleScene = forwardRef(function CastleScene(
             <polygon points="215,295 269,295 285,340 199,340" fill="#64748b" />
             <rect x="195" y="325" width="94" height="8" fill="#475569" />
 
-            {/* Torch Stand & Animated Fire */}
+            {/* Left Bridge Torch Stand & Animated Fire */}
+            <g transform="translate(182, 305)" style={{ pointerEvents: 'none' }}>
+                <rect x="4" y="10" width="4" height="24" fill="#334155" />
+                <rect x="2" y="6" width="8" height="5" fill="#64748b" />
+                <g className="svg-brazier-fire">
+                    <ellipse cx="6" cy="2" rx="5" ry="7" fill="#ea580c" />
+                    <ellipse cx="6" cy="1" rx="3.5" ry="5" fill="#f59e0b" />
+                    <circle cx="6" cy="0" r="2" fill="#fef08a" />
+                    <circle cx="6" cy="2" r="10" fill="#f59e0b" opacity="0.3" />
+                </g>
+            </g>
+
+            {/* Right Bridge Torch Stand & Animated Fire */}
             <g transform="translate(295, 305)">
                 <rect x="4" y="10" width="4" height="24" fill="#334155" />
                 <rect x="2" y="6" width="8" height="5" fill="#64748b" />
@@ -342,6 +513,19 @@ const CastleScene = forwardRef(function CastleScene(
                 <line x1="327" y1="330" x2="327" y2="350" stroke="#ffffff" strokeWidth="1.5" opacity="0.8" />
                 <line x1="331" y1="345" x2="331" y2="370" stroke="#e0f2fe" strokeWidth="1.5" opacity="0.8" />
                 <line x1="325" y1="365" x2="325" y2="390" stroke="#bae6fd" strokeWidth="1.5" opacity="0.8" />
+            </g>
+
+            {/* Waterfall Splash Mist & Dynamic Expanding Ripples */}
+            <g transform="translate(329, 396)" style={{ pointerEvents: 'none' }}>
+                <ellipse cx="0" cy="0" rx="14" ry="4" stroke="#bae6fd" strokeWidth="1.5" fill="none" className="svg-splash-ripple" />
+                <ellipse cx="0" cy="0" rx="9" ry="2.5" stroke="#e0f2fe" strokeWidth="1.2" fill="none" className="svg-splash-ripple" style={{ animationDelay: '0.7s' }} />
+                {/* Foaming froth */}
+                <circle cx="-3" cy="-1" r="2.5" fill="#ffffff" className="svg-splash-foam" />
+                <circle cx="0" cy="-2" r="3" fill="#ffffff" className="svg-splash-foam" style={{ animationDelay: '0.3s' }} />
+                <circle cx="3" cy="-1" r="2.2" fill="#e0f2fe" className="svg-splash-foam" style={{ animationDelay: '0.5s' }} />
+                {/* Mist droplets */}
+                <circle cx="-5" cy="-5" r="1" fill="#bae6fd" opacity="0.75" className="svg-mana-mote" />
+                <circle cx="4" cy="-6" r="1.1" fill="#bae6fd" opacity="0.75" className="svg-mana-mote" style={{ animationDelay: '1.2s' }} />
             </g>
 
             <path d="M 320 395 Q 330 385 340 395" stroke="#bae6fd" strokeWidth="3" fill="none" opacity="0.8" />
@@ -371,6 +555,12 @@ const CastleScene = forwardRef(function CastleScene(
                 <circle cx="160" cy="290" r="2" fill="#a5f3fc" opacity="0.9" />
                 <circle cx="390" cy="230" r="2" fill="#38bdf8" opacity="0.8" />
                 <circle cx="240" cy="330" r="1.5" fill="#facc15" opacity="0.85" />
+                {/* Additional lively fireflies & mana motes */}
+                <circle cx="190" cy="360" r="1.8" fill="#86efac" className="svg-mana-mote" style={{ animationDelay: '0.5s' }} />
+                <circle cx="310" cy="280" r="1.6" fill="#fef08a" className="svg-mana-mote" style={{ animationDelay: '1.2s' }} />
+                <circle cx="270" cy="370" r="2" fill="#38bdf8" className="svg-mana-mote" style={{ animationDelay: '1.8s' }} />
+                <circle cx="120" cy="330" r="1.4" fill="#fde047" className="svg-mana-mote" style={{ animationDelay: '2.5s' }} />
+                <circle cx="420" cy="350" r="1.8" fill="#67e8f9" className="svg-mana-mote" style={{ animationDelay: '3.1s' }} />
             </g>
 
             {/* Dark Green Pine Forest Framing */}
