@@ -1,8 +1,7 @@
 class ApiConstants {
-  // Default base URL. For Android Emulator use 10.0.2.2, for Linux desktop/Web use localhost.
-  // Can be adjusted dynamically via Settings if connecting to LAN server (e.g. 192.168.x.x).
-  static String baseUrl = 'http://localhost:8000/api';
-  static String storageBaseUrl = 'http://localhost:8000';
+  // Default base URL diarahkan langsung ke live hosting server SchoolQuest agar database sama persis dengan web live.
+  static String baseUrl = 'https://sk0011jb6j.skipper.my.id/index.php/api';
+  static String storageBaseUrl = 'https://sk0011jb6j.skipper.my.id';
 
   // Auth endpoints
   static const String login = '/auth/login';

@@ -59,10 +59,10 @@ class _CommunityScreenState extends State<CommunityScreen> {
               right: 20,
               bottom: MediaQuery.of(context).viewInsets.bottom + 20,
             ),
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               color: AppColors.bgCard,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-              border: Border(top: BorderSide(color: AppColors.border)),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+              border: Border.all(color: AppColors.border),
             ),
             child: SingleChildScrollView(
               child: Column(

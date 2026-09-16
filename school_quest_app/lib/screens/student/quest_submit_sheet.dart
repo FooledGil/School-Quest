@@ -99,10 +99,10 @@ class _QuestSubmitSheetState extends State<QuestSubmitSheet> {
         right: 20,
         bottom: MediaQuery.of(context).viewInsets.bottom + 24,
       ),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: AppColors.bgCard,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-        border: Border(top: BorderSide(color: AppColors.border, width: 1.2)),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        border: Border.all(color: AppColors.border, width: 1.2),
       ),
       child: SingleChildScrollView(
         child: Column(

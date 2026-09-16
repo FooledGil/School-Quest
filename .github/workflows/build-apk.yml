@@ -1,0 +1,77 @@
+name: Build Android APK
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - 'school_quest_app/**'
+      - '.github/workflows/build-apk.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-apk:
+    name: Build Android Release APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Flutter SDK
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Install Dependencies
+        working-directory: school_quest_app
+        run: flutter pub get
+
+      - name: Build Release APK
+        working-directory: school_quest_app
+        run: flutter build apk --release
+
+      - name: Upload APK to Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: SchoolQuest-APK
+          path: school_quest_app/build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 30
+
+      - name: Publish to GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          APK_PATH="school_quest_app/build/app/outputs/flutter-apk/app-release.apk"
+          TAG_NAME="v1.0.0-app"
+
+          # Hapus release & tag lama jika ada agar link unduh selalu versi terbaru
+          gh release delete "$TAG_NAME" -y || true
+          git tag -d "$TAG_NAME" || true
+          git push origin ":refs/tags/$TAG_NAME" || true
+
+          # Buat Release baru dengan file APK langsung terlampir
+          gh release create "$TAG_NAME" "$APK_PATH" \
+            --title "SchoolQuest Android APK (Versi Terbaru)" \
+            --notes "### 🎒 SchoolQuest Mobile App for Android
+
+            - **Versi**: 1.0.0
+            - **Database**: Terhubung otomatis ke live hosting (https://sk0011jb6j.skipper.my.id)
+            - **Platform**: Android 5.0+ (Universal APK)
+
+            **Cara Pasang di HP Android:**
+            1. Download file \`app-release.apk\` di bawah.
+            2. Buka file yang terdownload di HP Anda.
+            3. Jika ada peringatan keamanan, pilih **'Izinkan dari sumber ini'** / **'Install anyway'**.
+            4. Buka aplikasi SchoolQuest dan login dengan NISN siswa atau admin."

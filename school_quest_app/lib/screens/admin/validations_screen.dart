@@ -233,7 +233,7 @@ class _ValidationsScreenState extends State<ValidationsScreen> with SingleTicker
                             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                             margin: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
-                              color: Colors.black74,
+                              color: Colors.black87,
                               borderRadius: BorderRadius.circular(6),
                             ),
                             child: const Row(

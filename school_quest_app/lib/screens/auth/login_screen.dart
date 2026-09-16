@@ -77,7 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Gunakan localhost untuk Desktop/Linux, atau 10.0.2.2 untuk Android Emulator, atau IP LAN.',
+              'Server saat ini terhubung langsung ke web hosting SchoolQuest. Anda juga dapat mengubahnya ke localhost jika ingin testing offline.',
               style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
             ),
             const SizedBox(height: 12),
@@ -279,10 +279,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   runSpacing: 8,
                   alignment: WrapAlignment.center,
                   children: [
-                    _demoChip('Admin', 'admin@schoolquest.test', 'password'),
-                    _demoChip('Guru', 'guru@schoolquest.test', 'password'),
-                    _demoChip('Siswa RPL', '0087654321', 'password'),
-                    _demoChip('Siswa MPLB', '0081234567', 'password'),
+                    _demoChip('Admin', 'admin@schoolquest.id', 'admin123'),
+                    _demoChip('Guru', 'guru@schoolquest.id', 'guru123'),
+                    _demoChip('Aisyah (Siswa)', '0117148583', 'password'),
+                    _demoChip('Keisya (Siswa)', '0103322092', 'password'),
                   ],
                 ),
               ],

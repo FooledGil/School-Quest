@@ -54,10 +54,10 @@ class _AdminStudentsScreenState extends State<AdminStudentsScreen> {
           return Container(
             padding: const EdgeInsets.all(20),
             height: MediaQuery.of(context).size.height * 0.8,
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               color: AppColors.bgCard,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-              border: Border(top: BorderSide(color: AppColors.border)),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+              border: Border.all(color: AppColors.border),
             ),
             child: SingleChildScrollView(
               child: Column(

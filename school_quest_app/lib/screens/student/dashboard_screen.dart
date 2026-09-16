@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/constants/app_colors.dart';
-import '../../providers/auth_provider.dart';
 import '../../providers/student_dashboard_provider.dart';
 import '../../widgets/avatar_widget.dart';
 import '../../widgets/exp_progress_bar.dart';
@@ -458,7 +457,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Widget _buildAchievementsGrid(StudentDashboardProvider dashboard) {
     if (dashboard.achievements.isEmpty) {
-      return const SizedBox.shrink();sekarang setelah semua ini aku ingin membuat hal yang sama tapi berbentuk aplikasi yang isinta tetap sama persis dengan versi web nya jangan ada yang diubah, dan juga  pembuatan nya menggunakan flutter dan bacakend nya tetap laravel dan database nya juga sama seperti versi web nya
+      return const SizedBox.shrink();
     }
 
     return GlassCard(
