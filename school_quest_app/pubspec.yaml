@@ -1,0 +1,43 @@
+name: school_quest_app
+description: "A companion Flutter mobile & desktop application for SchoolQuest gamified learning platform."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.2.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # State Management & DI
+  provider: ^6.1.2
+
+  # Networking & REST API
+  http: ^1.2.1
+  http_parser: ^4.0.2
+
+  # Local Persistence (Sanctum Tokens & User Prefs)
+  shared_preferences: ^2.2.3
+
+  # UI, Fonts & Aesthetics
+  google_fonts: ^6.2.1
+  cached_network_image: ^3.3.1
+  flutter_svg: ^2.0.10+1
+  intl: ^0.19.0
+
+  # Hardware & Media Access
+  image_picker: ^1.1.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.2
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/icons/
