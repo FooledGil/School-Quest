@@ -20,6 +20,8 @@ class User extends Authenticatable
         'avatar_seed',
         'avatar',
         'exp',
+        'weekly_exp',
+        'weekly_reset_at',
         'level',
         'streak_days',
         'last_activity_date',
@@ -39,6 +41,7 @@ class User extends Authenticatable
         return [
             'password' => 'hashed',
             'last_activity_date' => 'date',
+            'weekly_reset_at' => 'datetime',
             'has_completed_onboarding' => 'boolean',
             'muted_until' => 'datetime',
             'is_banned' => 'boolean',

@@ -17,6 +17,7 @@ class SanctionService
         $oldExp = $user->exp ?: 0;
         $newExp = max(0, $oldExp - $expToDeduct);
         $user->exp = $newExp;
+        $user->weekly_exp = max(0, ($user->weekly_exp ?: 0) - $expToDeduct);
         $user->level = ExpService::calculateLevel($newExp);
         $user->save();
 

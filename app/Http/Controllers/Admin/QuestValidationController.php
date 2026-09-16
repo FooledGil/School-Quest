@@ -76,14 +76,18 @@ class QuestValidationController extends Controller
             'validated_at' => now(),
         ]);
 
-        // Now give the EXP
-        $expService->addExp($user, $completion->exp_earned);
+        // Now give the EXP with Catch-Up multiplier support
+        $result = $expService->addExp($user, $completion->exp_earned);
 
         $user->refresh();
         $newLevel = $user->level;
 
+        $bonusMsg = ($result['bonus_exp'] ?? 0) > 0 
+            ? " (Termasuk +{$result['bonus_exp']} EXP {$result['catch_up']['title']}!)" 
+            : "";
+
         $flashData = [
-            'success' => "Quest \"{$completion->quest->title}\" untuk {$user->name} telah di-approve! +{$completion->exp_earned} EXP diberikan.",
+            'success' => "Quest \"{$completion->quest->title}\" untuk {$user->name} telah di-approve! +{$result['exp_gained']} EXP{$bonusMsg} diberikan.",
         ];
 
         return back()->with($flashData);

@@ -110,12 +110,109 @@ class ExpService
     }
 
     /**
-     * Add EXP to a user, recalculate level, update streak, check achievements, and return status.
+     * Ensure the user's weekly EXP is reset if entering a new week.
      */
-    public function addExp(User $user, int $expAmount): array
+    public static function ensureWeeklyCycle(User $user): void
     {
+        $startOfWeek = Carbon::now()->startOfWeek();
+
+        if (!$user->weekly_reset_at || Carbon::parse($user->weekly_reset_at)->lt($startOfWeek)) {
+            $user->weekly_exp = 0;
+            $user->weekly_reset_at = $startOfWeek;
+        }
+    }
+
+    /**
+     * Reset weekly EXP for all students whose cycle has expired.
+     */
+    public static function resetWeeklyAllStudents(): int
+    {
+        $startOfWeek = Carbon::now()->startOfWeek();
+
+        return User::where('role', 'student')
+            ->where(function ($query) use ($startOfWeek) {
+                $query->whereNull('weekly_reset_at')
+                      ->orWhere('weekly_reset_at', '<', $startOfWeek);
+            })
+            ->update([
+                'weekly_exp' => 0,
+                'weekly_reset_at' => $startOfWeek,
+            ]);
+    }
+
+    /**
+     * Calculate Underdog / Challenger Surge catch-up multiplier for students trailing behind.
+     * Prevents early-bird top students from completely dominating the leaderboard.
+     */
+    public static function getCatchUpMultiplier(User $user): array
+    {
+        self::ensureWeeklyCycle($user);
+
+        // Fetch top 3 weekly scores among students
+        $topThreeWeekly = User::where('role', 'student')
+            ->where('id', '!=', $user->id)
+            ->orderByDesc('weekly_exp')
+            ->take(3)
+            ->pluck('weekly_exp')
+            ->toArray();
+
+        $topThreshold = !empty($topThreeWeekly) ? end($topThreeWeekly) : 0;
+        $userWeekly = $user->weekly_exp ?: 0;
+        $gap = max(0, $topThreshold - $userWeekly);
+
+        // Tier 1: Substantial gap from Top 3 (gap >= 100 EXP) -> +25% bonus
+        if ($topThreshold >= 100 && $gap >= 100) {
+            return [
+                'has_boost' => true,
+                'multiplier' => 1.25,
+                'bonus_percentage' => 25,
+                'title' => 'Challenger Surge',
+                'reason' => 'Bonus +25% EXP aktif! Kejar ketertinggalan menuju Top 3!',
+                'gap_to_top3' => $gap,
+            ];
+        }
+
+        // Tier 2: Moderate gap (gap >= 50 EXP) -> +15% bonus
+        if ($topThreshold >= 50 && $gap >= 50) {
+            return [
+                'has_boost' => true,
+                'multiplier' => 1.15,
+                'bonus_percentage' => 15,
+                'title' => 'Underdog Boost',
+                'reason' => 'Bonus +15% EXP aktif! Peluang mengejar peringkat atas!',
+                'gap_to_top3' => $gap,
+            ];
+        }
+
+        return [
+            'has_boost' => false,
+            'multiplier' => 1.0,
+            'bonus_percentage' => 0,
+            'title' => 'Normal',
+            'reason' => 'Perolehan EXP standar.',
+            'gap_to_top3' => $gap,
+        ];
+    }
+
+    /**
+     * Add EXP to a user, recalculate level, update weekly exp, streak, check achievements, and return status.
+     */
+    public function addExp(User $user, int $expAmount, bool $applyCatchUp = true): array
+    {
+        self::ensureWeeklyCycle($user);
+
+        $catchUp = $applyCatchUp 
+            ? self::getCatchUpMultiplier($user) 
+            : ['has_boost' => false, 'multiplier' => 1.0, 'bonus_percentage' => 0];
+
+        $bonusExp = $catchUp['has_boost'] 
+            ? (int) round($expAmount * ($catchUp['multiplier'] - 1.0)) 
+            : 0;
+        $totalExpGained = $expAmount + $bonusExp;
+
         $oldLevel = $user->level ?: 1;
-        $user->exp = max(0, ($user->exp ?: 0) + $expAmount);
+        $user->exp = max(0, ($user->exp ?: 0) + $totalExpGained);
+        $user->weekly_exp = max(0, ($user->weekly_exp ?: 0) + $totalExpGained);
         $newLevel = self::calculateLevel($user->exp);
         $user->level = $newLevel;
 
@@ -136,7 +233,11 @@ class ExpService
             'level_up' => $finalLevel > $oldLevel,
             'old_level' => $oldLevel,
             'new_level' => $finalLevel,
-            'exp_gained' => $expAmount,
+            'exp_base' => $expAmount,
+            'bonus_exp' => $bonusExp,
+            'exp_gained' => $totalExpGained,
+            'weekly_exp' => $user->weekly_exp,
+            'catch_up' => $catchUp,
             'rank_name' => self::getRankName($finalLevel),
         ];
     }
