@@ -2,8 +2,9 @@ import React, { useRef, useState } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 
-export default function StatCard({ icon: Icon, label, value, color = 'blue' }) {
+export default function StatCard({ icon: Icon, label, title, value, color = 'blue' }) {
     const cardRef = useRef(null);
+    const displayLabel = label || title || '';
     const [displayVal, setDisplayVal] = useState(typeof value === 'number' ? 0 : value);
 
     const iconColors = {
@@ -11,6 +12,8 @@ export default function StatCard({ icon: Icon, label, value, color = 'blue' }) {
         cyan: 'text-blue-400 bg-blue-500/10 border-blue-500/20',
         purple: 'text-indigo-400 bg-indigo-500/10 border-indigo-500/20',
         gold: 'text-amber-400 bg-amber-500/10 border-amber-500/20',
+        amber: 'text-amber-400 bg-amber-500/10 border-amber-500/20',
+        rose: 'text-rose-400 bg-rose-500/10 border-rose-500/20',
         emerald: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20',
     };
 
@@ -44,7 +47,7 @@ export default function StatCard({ icon: Icon, label, value, color = 'blue' }) {
 
             <div className="min-w-0 flex-1">
                 <p className="font-mono text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-0.5 sm:mb-1 truncate">
-                    {label}
+                    {displayLabel}
                 </p>
                 <div className="text-lg sm:text-xl font-game text-white tracking-wider truncate drop-shadow-sm">
                     {typeof displayVal === 'number' ? displayVal.toLocaleString() : value}

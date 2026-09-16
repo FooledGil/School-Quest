@@ -76,7 +76,9 @@ export default function LoginForm({ onLoginSuccess, animating = false }) {
         setProcessing(true);
 
         try {
-            const response = await axios.post('/login', data, {
+            const loginUrl = window.location.pathname.includes('index.php') ? '/index.php/login' : '/login';
+            const response = await axios.post(loginUrl, data, {
+                baseURL: '/',
                 headers: { 'X-Login-Animation': 'true' }
             });
 

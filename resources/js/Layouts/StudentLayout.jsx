@@ -91,14 +91,16 @@ export default function StudentLayout({ user: propUser, children }) {
         }
     }, [user.level, user.id, user.rank_name]);
 
+    const isIndexPhp = typeof window !== 'undefined' && window.location.pathname.includes('/index.php');
+    const prefix = isIndexPhp ? '/index.php' : '';
     const pathname = typeof window !== 'undefined' ? window.location.pathname : '/dashboard';
 
     const links = [
-        { name: 'Dashboard', href: '/dashboard', icon: HomeIcon, active: pathname === '/dashboard' },
-        { name: 'Quests', href: '/quests', icon: ListBulletIcon, active: pathname === '/quests' },
-        { name: 'Leaderboard', href: '/leaderboard', icon: TrophyIcon, active: pathname === '/leaderboard' },
-        { name: 'The Realm', href: '/community', icon: ChatBubbleLeftRightIcon, active: pathname.startsWith('/community') },
-        { name: 'Profile', href: '/profile', icon: UserIcon, active: pathname === '/profile' },
+        { name: 'Dashboard', href: `${prefix}/dashboard`, icon: HomeIcon, active: pathname === `${prefix}/dashboard` || pathname === '/dashboard' },
+        { name: 'Quests', href: `${prefix}/quests`, icon: ListBulletIcon, active: pathname === `${prefix}/quests` || pathname === '/quests' },
+        { name: 'Leaderboard', href: `${prefix}/leaderboard`, icon: TrophyIcon, active: pathname === `${prefix}/leaderboard` || pathname === '/leaderboard' },
+        { name: 'The Realm', href: `${prefix}/community`, icon: ChatBubbleLeftRightIcon, active: pathname.startsWith(`${prefix}/community`) || pathname.startsWith('/community') },
+        { name: 'Profile', href: `${prefix}/profile`, icon: UserIcon, active: pathname === `${prefix}/profile` || pathname === '/profile' },
     ];
 
     return (

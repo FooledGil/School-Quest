@@ -4,11 +4,13 @@ import { useGSAP } from '@gsap/react';
 
 export default function ExpBar({ 
     currentExp = 0, 
-    requiredExp = 100, 
+    requiredExp, 
+    nextLevelExp,
     baseExp = null,
     showPercent = false,
     className = '' 
 }) {
+    const targetRequiredExp = requiredExp ?? nextLevelExp ?? 150;
     const barRef = useRef(null);
     const counterRef = useRef(null);
     const [displayExp, setDisplayExp] = useState(0);
@@ -16,11 +18,11 @@ export default function ExpBar({
     // Calculate level percentage
     let percentage = 0;
     if (baseExp !== null && baseExp !== undefined) {
-        const delta = Math.max(1, requiredExp - baseExp);
+        const delta = Math.max(1, targetRequiredExp - baseExp);
         const progress = Math.max(0, currentExp - baseExp);
         percentage = Math.min(100, Math.max(0, (progress / delta) * 100));
     } else {
-        percentage = Math.min(100, Math.max(0, (currentExp / Math.max(1, requiredExp)) * 100));
+        percentage = Math.min(100, Math.max(0, (currentExp / Math.max(1, targetRequiredExp)) * 100));
     }
 
     useGSAP(() => {
@@ -43,7 +45,7 @@ export default function ExpBar({
                 }
             });
         }
-    }, { dependencies: [currentExp, requiredExp, baseExp, percentage] });
+    }, { dependencies: [currentExp, targetRequiredExp, baseExp, percentage] });
 
     return (
         <div className={`w-full ${className}`}>
@@ -58,7 +60,7 @@ export default function ExpBar({
                     )}
                 </span>
                 <span ref={counterRef} className="font-mono text-xs text-slate-300 font-bold tracking-wide">
-                    {displayExp.toLocaleString()} <span className="text-slate-500 font-normal">/</span> {requiredExp.toLocaleString()}
+                    {displayExp.toLocaleString()} <span className="text-slate-500 font-normal">/</span> {targetRequiredExp.toLocaleString()}
                 </span>
             </div>
 

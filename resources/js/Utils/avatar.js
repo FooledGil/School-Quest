@@ -9,7 +9,13 @@ export function getAvatarUrl(user) {
     
     // 1. Direct avatar URL (uploaded image in storage, e.g., /storage/avatars/xxx.jpg)
     if (user.avatar && typeof user.avatar === 'string' && user.avatar.trim() !== '') {
-        return user.avatar;
+        let path = user.avatar.trim();
+        if (path.startsWith('http://')) {
+            path = path.replace(/^http:\/\//i, 'https://');
+        } else if (!path.startsWith('/') && !path.startsWith('https://')) {
+            path = '/' + path;
+        }
+        return path;
     }
     
     // 2. Pixel bot avatar seed

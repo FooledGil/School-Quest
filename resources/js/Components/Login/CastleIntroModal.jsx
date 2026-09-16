@@ -39,10 +39,11 @@ export default function CastleIntroModal({ initialRect, redirectUrl = '/dashboar
         if (typeof window !== 'undefined' && !isAdmin) {
             sessionStorage.setItem('open_guide_after_intro', 'true');
         }
+        const dest = (redirectUrl || '/dashboard').replace(/^http:\/\//i, window.location.protocol + '//');
         if (onClose) {
             onClose();
         } else {
-            router.visit(redirectUrl);
+            window.location.href = dest;
         }
     }, [redirectUrl, isAdmin, onClose]);
 
@@ -53,10 +54,11 @@ export default function CastleIntroModal({ initialRect, redirectUrl = '/dashboar
             if (typeof window !== 'undefined' && !isAdmin) {
                 sessionStorage.setItem('open_guide_after_intro', 'true');
             }
+            const dest = (redirectUrl || '/dashboard').replace(/^http:\/\//i, window.location.protocol + '//');
             if (onClose) {
                 onClose();
             } else {
-                router.visit(redirectUrl);
+                window.location.href = dest;
             }
             return;
         }
@@ -278,10 +280,11 @@ export default function CastleIntroModal({ initialRect, redirectUrl = '/dashboar
                 if (typeof window !== 'undefined' && !isAdmin) {
                     sessionStorage.setItem('open_guide_after_intro', 'true');
                 }
+                const dest = (redirectUrl || '/dashboard').replace(/^http:\/\//i, window.location.protocol + '//');
                 if (onClose) {
                     onClose();
                 } else {
-                    router.visit(redirectUrl);
+                    window.location.href = dest;
                 }
             },
         });

@@ -90,6 +90,15 @@ class QuestController extends Controller
         $proofImagePath = null;
         if ($request->hasFile('proof_image')) {
             $proofImagePath = $request->file('proof_image')->store('quest_proofs', 'public');
+
+            // Mirror to root storage for Nginx access
+            $rootStorage = dirname(base_path()) . '/storage/' . $proofImagePath;
+            $localFile = storage_path('app/public/' . $proofImagePath);
+            if (file_exists($localFile) && !file_exists($rootStorage)) {
+                @mkdir(dirname($rootStorage), 0777, true);
+                @copy($localFile, $rootStorage);
+                @chmod($rootStorage, 0666);
+            }
         }
 
         QuestCompletion::create([
