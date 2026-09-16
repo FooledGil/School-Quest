@@ -50,6 +50,7 @@ jobs:
           retention-days: 30
 
       - name: Publish to GitHub Release
+        continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
