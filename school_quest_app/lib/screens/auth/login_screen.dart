@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import '../../core/constants/api_constants.dart';
 import '../../core/constants/app_colors.dart';
@@ -167,46 +166,23 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
 
-                // Castle Scene Preview Emblem (Framed SVG)
+                // Official SchoolQuest Logo (identical to web)
                 Container(
-                  width: 140,
-                  height: 140,
+                  width: 96,
+                  height: 96,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(24),
-                    border: Border.all(color: AppColors.gold.withOpacity(0.5), width: 1.5),
-                    color: AppColors.surfaceDeep,
+                    shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.gold.withOpacity(0.2),
-                        blurRadius: 20,
+                        color: AppColors.manaCyan.withOpacity(0.25),
+                        blurRadius: 24,
                         spreadRadius: 2,
                       ),
                     ],
                   ),
-                  clipBehavior: Clip.antiAlias,
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      SvgPicture.asset(
-                        'assets/svg/castle_scene.svg',
-                        fit: BoxFit.cover,
-                        placeholderBuilder: (context) => const Center(
-                          child: CircularProgressIndicator(color: AppColors.manaCyan),
-                        ),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Colors.transparent,
-                              AppColors.surfaceDeep.withOpacity(0.5),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
+                  child: Image.asset(
+                    'assets/images/app_logo.png',
+                    fit: BoxFit.contain,
                   ),
                 ),
 

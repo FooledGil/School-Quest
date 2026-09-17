@@ -31,12 +31,19 @@ class ApiConstants {
   static String resolveImageUrl(String? path) {
     if (path == null || path.isEmpty) return '';
     if (path.startsWith('http://') || path.startsWith('https://')) {
-      return path;
+      return path.replaceAll('/index.php/storage/', '/storage/');
     }
-    if (path.startsWith('/')) {
-      return '$storageBaseUrl$path';
+    var clean = path.replaceAll('/index.php/storage/', '/storage/');
+    if (clean.startsWith('/index.php/')) {
+      clean = clean.replaceFirst('/index.php/', '/');
     }
-    return '$storageBaseUrl/$path';
+    // If it's a storage asset missing the /storage/ prefix (e.g. avatars/... or quest_proofs/...)
+    if (!clean.startsWith('/storage/') && !clean.startsWith('storage/')) {
+      clean = clean.startsWith('/') ? '/storage$clean' : '/storage/$clean';
+    } else if (!clean.startsWith('/')) {
+      clean = '/$clean';
+    }
+    return '$storageBaseUrl$clean';
   }
 
   /// DiceBear Pixel Art Bot URL generator (identical to web app)

@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../core/constants/api_constants.dart';
@@ -6,6 +7,7 @@ import '../core/constants/app_colors.dart';
 class AvatarWidget extends StatelessWidget {
   final String? avatar;
   final String? avatarSeed;
+  final File? localFile;
   final double size;
   final double borderWidth;
   final Color? borderColor;
@@ -16,6 +18,7 @@ class AvatarWidget extends StatelessWidget {
     super.key,
     this.avatar,
     this.avatarSeed,
+    this.localFile,
     this.size = 48,
     this.borderWidth = 1.5,
     this.borderColor,
@@ -27,7 +30,7 @@ class AvatarWidget extends StatelessWidget {
     if (avatar != null && avatar!.isNotEmpty) {
       return ApiConstants.resolveImageUrl(avatar);
     }
-    if (avatarSeed != null && avatarSeed!.isNotEmpty) {
+    if (avatarSeed != null && avatarSeed!.isNotEmpty && avatarSeed != 'default') {
       return ApiConstants.getDiceBearAvatar(avatarSeed!);
     }
     return '';
@@ -38,6 +41,33 @@ class AvatarWidget extends StatelessWidget {
     final url = _imageUrl;
     final border = borderColor ?? AppColors.borderPixel;
     final radius = isCircle ? BorderRadius.circular(size / 2) : BorderRadius.circular(size * 0.25);
+
+    Widget imageContent;
+    if (localFile != null && localFile!.existsSync()) {
+      imageContent = Image.file(
+        localFile!,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => _fallbackSilhouette(),
+      );
+    } else if (url.isNotEmpty) {
+      imageContent = CachedNetworkImage(
+        imageUrl: url,
+        fit: BoxFit.cover,
+        placeholder: (context, url) => Center(
+          child: SizedBox(
+            width: size * 0.35,
+            height: size * 0.35,
+            child: const CircularProgressIndicator(
+              strokeWidth: 2,
+              color: AppColors.manaCyan,
+            ),
+          ),
+        ),
+        errorWidget: (context, url, error) => _fallbackSilhouette(),
+      );
+    } else {
+      imageContent = _fallbackSilhouette();
+    }
 
     Widget avatarBox = Container(
       width: size,
@@ -58,23 +88,7 @@ class AvatarWidget extends StatelessWidget {
         borderRadius: isCircle
             ? BorderRadius.circular(size / 2)
             : BorderRadius.circular((size * 0.25) - borderWidth),
-        child: url.isNotEmpty
-            ? CachedNetworkImage(
-                imageUrl: url,
-                fit: BoxFit.cover,
-                placeholder: (context, url) => Center(
-                  child: SizedBox(
-                    width: size * 0.35,
-                    height: size * 0.35,
-                    child: const CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: AppColors.manaCyan,
-                    ),
-                  ),
-                ),
-                errorWidget: (context, url, error) => _fallbackSilhouette(),
-              )
-            : _fallbackSilhouette(),
+        child: imageContent,
       ),
     );
 
@@ -126,14 +140,16 @@ class AvatarWidget extends StatelessWidget {
 
   Widget _fallbackSilhouette() {
     return Image.asset(
-      'assets/images/hero_avatar.png',
+      'assets/images/default_avatar.png',
       fit: BoxFit.cover,
       errorBuilder: (context, error, stackTrace) => Container(
-        color: AppColors.surfaceCard,
-        child: Icon(
-          Icons.person_outline,
-          size: size * 0.55,
-          color: AppColors.textMuted,
+        color: AppColors.surfaceDeep,
+        child: Center(
+          child: Icon(
+            Icons.help_outline_rounded,
+            size: size * 0.55,
+            color: AppColors.manaCyan,
+          ),
         ),
       ),
     );

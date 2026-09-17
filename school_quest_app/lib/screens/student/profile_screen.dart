@@ -26,6 +26,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final ApiClient _apiClient = ApiClient();
   bool _isLoading = false;
   UserModel? _profileUser;
+  File? _localAvatarFile;
   List<AchievementModel> _achievements = [];
   List<dynamic> _recentCompletions = [];
 
@@ -61,8 +62,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
         'avatar_seed': seed,
       });
       if (response['status'] == 'success') {
+        setState(() {
+          _localAvatarFile = null;
+        });
         await _loadProfile();
         if (mounted) {
+          final auth = Provider.of<AuthProvider>(context, listen: false);
+          await auth.checkAuth();
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Avatar PixelBot berhasil diperbarui! 🎨'), backgroundColor: AppColors.emerald),
           );
@@ -71,27 +77,145 @@ class _ProfileScreenState extends State<ProfileScreen> {
     } catch (_) {}
   }
 
-  Future<void> _uploadCustomPhoto() async {
+  void _showPhotoOptionsSheet() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppColors.surfaceDeep,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 36,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.white24,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 18),
+              const Text(
+                'Foto Profil Petualang',
+                style: TextStyle(
+                  fontFamily: 'Outfit',
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+              const SizedBox(height: 6),
+              const Text(
+                'Pilih foto baru dari kamera atau galeri perangkat Anda',
+                style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
+              ),
+              const SizedBox(height: 20),
+              ListTile(
+                leading: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: AppColors.manaCyan.withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(Icons.camera_alt_rounded, color: AppColors.manaCyan),
+                ),
+                title: const Text('Ambil dari Kamera', style: TextStyle(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+                subtitle: const Text('Buka kamera dan ambil foto langsung', style: TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                onTap: () {
+                  Navigator.pop(ctx);
+                  _uploadCustomPhoto(ImageSource.camera);
+                },
+              ),
+              ListTile(
+                leading: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: AppColors.gold.withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(Icons.photo_library_rounded, color: AppColors.gold),
+                ),
+                title: const Text('Pilih dari Galeri', style: TextStyle(fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+                subtitle: const Text('Pilih gambar dari galeri foto HP', style: TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                onTap: () {
+                  Navigator.pop(ctx);
+                  _uploadCustomPhoto(ImageSource.gallery);
+                },
+              ),
+              ListTile(
+                leading: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: AppColors.ruby.withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(Icons.refresh_rounded, color: AppColors.ruby),
+                ),
+                title: const Text('Reset ke Siluet Default', style: TextStyle(fontWeight: FontWeight.w600, color: AppColors.ruby)),
+                subtitle: const Text('Gunakan kembali siluet misteri bertanda tanya (?)', style: TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                onTap: () {
+                  Navigator.pop(ctx);
+                  _resetAvatar();
+                },
+              ),
+              const SizedBox(height: 10),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _uploadCustomPhoto([ImageSource? source]) async {
+    final imageSource = source ?? ImageSource.gallery;
     final picker = ImagePicker();
-    final picked = await picker.pickImage(source: ImageSource.gallery, imageQuality: 85);
+    final picked = await picker.pickImage(
+      source: imageSource,
+      maxWidth: 1200,
+      maxHeight: 1200,
+      imageQuality: 85,
+    );
     if (picked == null) return;
+
+    final file = File(picked.path);
+    setState(() {
+      _localAvatarFile = file;
+    });
 
     try {
       final response = await _apiClient.multipart(
         ApiConstants.studentAvatarUpload,
         fileField: 'avatar_file',
-        file: File(picked.path),
+        file: file,
       );
       if (response['status'] == 'success') {
         await _loadProfile();
         if (mounted) {
+          final auth = Provider.of<AuthProvider>(context, listen: false);
+          await auth.checkAuth();
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Foto profil berhasil diunggah! 📸'), backgroundColor: AppColors.emerald),
+          );
+        }
+      } else {
+        if (mounted) {
+          setState(() {
+            _localAvatarFile = null;
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(response['message'] ?? 'Gagal mengunggah foto.'), backgroundColor: AppColors.ruby),
           );
         }
       }
     } catch (e) {
       if (mounted) {
+        setState(() {
+          _localAvatarFile = null;
+        });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Gagal mengunggah foto: $e'), backgroundColor: AppColors.ruby),
         );
@@ -103,8 +227,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     try {
       final response = await _apiClient.post(ApiConstants.studentAvatarReset);
       if (response['status'] == 'success') {
+        setState(() {
+          _localAvatarFile = null;
+        });
         await _loadProfile();
         if (mounted) {
+          final auth = Provider.of<AuthProvider>(context, listen: false);
+          await auth.checkAuth();
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Avatar dikembalikan ke siluet default! 👤'), backgroundColor: AppColors.emerald),
           );
@@ -213,13 +342,45 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       borderColor: AppColors.primaryLight.withOpacity(0.5),
                       child: Column(
                         children: [
-                          AvatarWidget(
-                            avatar: user.avatar,
-                            avatarSeed: user.avatarSeed,
-                            size: 90,
-                            borderWidth: 2.5,
-                            borderColor: AppColors.manaCyan,
-                            level: user.level,
+                          GestureDetector(
+                            onTap: _showPhotoOptionsSheet,
+                            child: Stack(
+                              clipBehavior: Clip.none,
+                              children: [
+                                AvatarWidget(
+                                  avatar: user.avatar,
+                                  avatarSeed: user.avatarSeed,
+                                  localFile: _localAvatarFile,
+                                  size: 96,
+                                  borderWidth: 2.5,
+                                  borderColor: AppColors.manaCyan,
+                                  level: user.level,
+                                ),
+                                Positioned(
+                                  bottom: -2,
+                                  right: -2,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(6),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.manaCyan,
+                                      shape: BoxShape.circle,
+                                      border: Border.all(color: AppColors.surfaceDeep, width: 2),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.5),
+                                          blurRadius: 4,
+                                        ),
+                                      ],
+                                    ),
+                                    child: const Icon(
+                                      Icons.camera_alt_rounded,
+                                      size: 14,
+                                      color: AppColors.surfaceDeep,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                           const SizedBox(height: 12),
                           Text(
@@ -316,9 +477,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             children: [
                               Expanded(
                                 child: OutlinedButton.icon(
-                                  onPressed: _uploadCustomPhoto,
-                                  icon: const Icon(Icons.upload_outlined, size: 16),
-                                  label: const Text('Unggah Foto', style: TextStyle(fontSize: 12)),
+                                  onPressed: _showPhotoOptionsSheet,
+                                  icon: const Icon(Icons.add_a_photo_outlined, size: 16),
+                                  label: const Text('Ganti Foto', style: TextStyle(fontSize: 12)),
                                 ),
                               ),
                               const SizedBox(width: 10),
