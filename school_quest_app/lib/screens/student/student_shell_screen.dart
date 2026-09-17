@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../core/constants/app_colors.dart';
+import '../../providers/quests_provider.dart';
 import 'dashboard_screen.dart';
 import 'quests_screen.dart';
 import 'leaderboard_screen.dart';
@@ -26,48 +28,132 @@ class _StudentShellScreenState extends State<StudentShellScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Check quests count for badge
+    final questsProvider = Provider.of<QuestsProvider>(context, listen: false);
+    final activeQuestCount = questsProvider.mainQuests.length;
+
     return Scaffold(
-      backgroundColor: AppColors.bgDark,
+      backgroundColor: AppColors.surfaceCanvas,
       body: IndexedStack(
         index: _currentIndex,
         children: _screens,
       ),
       bottomNavigationBar: Container(
         decoration: const BoxDecoration(
-          border: Border(top: BorderSide(color: AppColors.border, width: 0.8)),
+          color: AppColors.surfaceCard,
+          border: Border(
+            top: BorderSide(color: AppColors.borderPixel, width: 1),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black45,
+              blurRadius: 16,
+              offset: Offset(0, -4),
+            ),
+          ],
         ),
-        child: BottomNavigationBar(
-          currentIndex: _currentIndex,
-          onTap: (index) {
-            setState(() {
-              _currentIndex = index;
-            });
-          },
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.dashboard_outlined),
-              activeIcon: Icon(Icons.dashboard),
-              label: 'Beranda',
+        child: SafeArea(
+          child: SizedBox(
+            height: 62,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _buildNavItem(
+                  index: 0,
+                  icon: Icons.explore_outlined,
+                  activeIcon: Icons.explore,
+                  label: 'Beranda',
+                ),
+                _buildNavItem(
+                  index: 1,
+                  icon: Icons.history_edu_outlined,
+                  activeIcon: Icons.history_edu,
+                  label: 'Misi',
+                  badgeCount: activeQuestCount > 0 ? activeQuestCount : null,
+                ),
+                _buildNavItem(
+                  index: 2,
+                  icon: Icons.military_tech_outlined,
+                  activeIcon: Icons.military_tech,
+                  label: 'Peringkat',
+                ),
+                _buildNavItem(
+                  index: 3,
+                  icon: Icons.shield_outlined,
+                  activeIcon: Icons.shield,
+                  label: 'The Realm',
+                ),
+                _buildNavItem(
+                  index: 4,
+                  icon: Icons.person_outline,
+                  activeIcon: Icons.person,
+                  label: 'Profil',
+                ),
+              ],
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.sports_martial_arts_outlined),
-              activeIcon: Icon(Icons.sports_martial_arts),
-              label: 'Quests',
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNavItem({
+    required int index,
+    required IconData icon,
+    required IconData activeIcon,
+    required String label,
+    int? badgeCount,
+  }) {
+    final isSelected = _currentIndex == index;
+    final color = isSelected ? AppColors.gold : AppColors.textMuted;
+
+    return Expanded(
+      child: InkWell(
+        onTap: () => setState(() => _currentIndex = index),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Icon(
+                  isSelected ? activeIcon : icon,
+                  color: color,
+                  size: 24,
+                ),
+                if (badgeCount != null)
+                  Positioned(
+                    top: -4,
+                    right: -10,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryContainer,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      constraints: const BoxConstraints(minWidth: 16, minHeight: 14),
+                      child: Text(
+                        '$badgeCount',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 9,
+                          fontWeight: FontWeight.w900,
+                          color: AppColors.onPrimaryContainer,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.emoji_events_outlined),
-              activeIcon: Icon(Icons.emoji_events),
-              label: 'Peringkat',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.forum_outlined),
-              activeIcon: Icon(Icons.forum),
-              label: 'The Realm',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.account_circle_outlined),
-              activeIcon: Icon(Icons.account_circle),
-              label: 'Profil',
+            const SizedBox(height: 3),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                color: color,
+                letterSpacing: 0.2,
+              ),
             ),
           ],
         ),

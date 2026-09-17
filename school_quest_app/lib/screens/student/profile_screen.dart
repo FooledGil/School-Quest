@@ -217,8 +217,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             avatar: user.avatar,
                             avatarSeed: user.avatarSeed,
                             size: 90,
-                            borderWidth: 3,
-                            borderColor: AppColors.primaryLight,
+                            borderWidth: 2.5,
+                            borderColor: AppColors.manaCyan,
+                            level: user.level,
                           ),
                           const SizedBox(height: 12),
                           Text(

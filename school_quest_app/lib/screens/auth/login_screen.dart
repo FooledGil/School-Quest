@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import '../../core/constants/api_constants.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/network/api_client.dart';
 import '../../providers/auth_provider.dart';
+import '../../widgets/castle_intro_overlay.dart';
 import '../../widgets/glass_card.dart';
 import '../student/student_shell_screen.dart';
 import '../admin/admin_shell_screen.dart';
@@ -45,15 +47,25 @@ class _LoginScreenState extends State<LoginScreen> {
     if (!mounted) return;
 
     if (success) {
-      if (auth.isAdmin) {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const AdminShellScreen()),
-        );
-      } else {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const StudentShellScreen()),
-        );
-      }
+      // ── Trigger Cinematic Castle Intro Zoom-in Transition ──
+      Navigator.of(context).push(
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) => CastleIntroOverlay(
+            onComplete: () {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (_) => auth.isAdmin
+                      ? const AdminShellScreen()
+                      : const StudentShellScreen(),
+                ),
+              );
+            },
+          ),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(opacity: animation, child: child);
+          },
+        ),
+      );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -70,14 +82,32 @@ class _LoginScreenState extends State<LoginScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: AppColors.bgCard,
-        title: const Text('Pengaturan Server API'),
+        backgroundColor: AppColors.surfaceCard,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: const BorderSide(color: AppColors.borderPixel),
+        ),
+        title: const Row(
+          children: [
+            Icon(Icons.settings_ethernet, color: AppColors.manaCyan, size: 20),
+            SizedBox(width: 8),
+            Text(
+              'Pengaturan Server API',
+              style: TextStyle(
+                fontFamily: 'Outfit',
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: AppColors.textPrimary,
+              ),
+            ),
+          ],
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Server saat ini terhubung langsung ke web hosting SchoolQuest. Anda juga dapat mengubahnya ke localhost jika ingin testing offline.',
+              'Server saat ini terhubung langsung ke SchoolQuest API. Anda dapat mengubahnya ke URL lokal atau server pengujian.',
               style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
             ),
             const SizedBox(height: 12),
@@ -90,9 +120,13 @@ class _LoginScreenState extends State<LoginScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Batal'),
+            child: const Text('Batal', style: TextStyle(color: AppColors.textMuted)),
           ),
           ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primaryContainer,
+              foregroundColor: AppColors.onPrimaryContainer,
+            ),
             onPressed: () async {
               await ApiClient().setCustomBaseUrl(controller.text.trim());
               if (mounted) Navigator.pop(ctx);
@@ -115,15 +149,15 @@ class _LoginScreenState extends State<LoginScreen> {
     final auth = Provider.of<AuthProvider>(context);
 
     return Scaffold(
-      backgroundColor: AppColors.bgDark,
+      backgroundColor: AppColors.surfaceCanvas,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+            padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 16),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Top Settings Button
+                // Top Settings & Server Button
                 Align(
                   alignment: Alignment.topRight,
                   child: IconButton(
@@ -133,33 +167,54 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
 
-                // Brand Emblem
+                // Castle Scene Preview Emblem (Framed SVG)
                 Container(
-                  padding: const EdgeInsets.all(18),
+                  width: 140,
+                  height: 140,
                   decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: const LinearGradient(
-                      colors: [AppColors.primary, AppColors.secondary],
-                    ),
+                    borderRadius: BorderRadius.circular(24),
+                    border: Border.all(color: AppColors.gold.withOpacity(0.5), width: 1.5),
+                    color: AppColors.surfaceDeep,
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.primary.withOpacity(0.4),
+                        color: AppColors.gold.withOpacity(0.2),
                         blurRadius: 20,
                         spreadRadius: 2,
                       ),
                     ],
                   ),
-                  child: const Icon(
-                    Icons.shield,
-                    size: 48,
-                    color: Colors.white,
+                  clipBehavior: Clip.antiAlias,
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      SvgPicture.asset(
+                        'assets/svg/castle_scene.svg',
+                        fit: BoxFit.cover,
+                        placeholderBuilder: (context) => const Center(
+                          child: CircularProgressIndicator(color: AppColors.manaCyan),
+                        ),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.transparent,
+                              AppColors.surfaceDeep.withOpacity(0.5),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
 
-                const SizedBox(height: 16),
+                const SizedBox(height: 18),
                 const Text(
                   'SCHOOLQUEST',
                   style: TextStyle(
+                    fontFamily: 'Outfit',
                     fontSize: 26,
                     fontWeight: FontWeight.w900,
                     letterSpacing: 2,
@@ -168,19 +223,20 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 4),
                 const Text(
-                  'Masuk ke Gerbang Petualangan Belajar',
+                  'Gerbang Petualangan Belajar & Gamifikasi',
                   style: TextStyle(
+                    fontFamily: 'Outfit',
                     fontSize: 13,
                     color: AppColors.textSecondary,
                   ),
                 ),
 
-                const SizedBox(height: 28),
+                const SizedBox(height: 24),
 
-                // Main Login Glass Card
+                // Main Login Card
                 GlassCard(
-                  padding: const EdgeInsets.all(24),
-                  borderColor: AppColors.borderGlow.withOpacity(0.4),
+                  padding: const EdgeInsets.all(22),
+                  borderColor: AppColors.borderPixel,
                   child: Form(
                     key: _formKey,
                     child: Column(
@@ -190,9 +246,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         TextFormField(
                           controller: _loginController,
                           decoration: const InputDecoration(
-                            labelText: 'NISN / Email / Nama',
-                            prefixIcon: Icon(Icons.person_outline, color: AppColors.primaryLight),
-                            hintText: 'Contoh: 0087654321 atau email',
+                            labelText: 'NISN / Email / Nama Akun',
+                            prefixIcon: Icon(Icons.person_outline, color: AppColors.manaCyan, size: 20),
+                            hintText: 'Contoh: 0087654321 atau mita@school.id',
                           ),
                           validator: (value) {
                             if (value == null || value.trim().isEmpty) {
@@ -202,19 +258,20 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                         ),
 
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 14),
 
                         // Password field
                         TextFormField(
                           controller: _passwordController,
                           obscureText: _obscurePassword,
                           decoration: InputDecoration(
-                            labelText: 'Kata Sandi',
-                            prefixIcon: const Icon(Icons.lock_outline, color: AppColors.primaryLight),
+                            labelText: 'Kata Sandi Petualang',
+                            prefixIcon: const Icon(Icons.lock_outline, color: AppColors.manaCyan, size: 20),
                             suffixIcon: IconButton(
                               icon: Icon(
                                 _obscurePassword ? Icons.visibility_off : Icons.visibility,
                                 color: AppColors.textMuted,
+                                size: 18,
                               ),
                               onPressed: () {
                                 setState(() {
@@ -231,31 +288,63 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                         ),
 
-                        const SizedBox(height: 24),
+                        const SizedBox(height: 22),
 
-                        // Submit Button
-                        ElevatedButton(
-                          onPressed: auth.status == AuthStatus.authenticating ? null : _handleLogin,
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 16),
+                        // Submit Button (Radiant Amber Gradient)
+                        Container(
+                          height: 48,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            gradient: const LinearGradient(
+                              colors: [
+                                AppColors.primaryContainer,
+                                AppColors.amberGlow,
+                              ],
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.primaryContainer.withOpacity(0.35),
+                                blurRadius: 10,
+                                offset: const Offset(0, 3),
+                              ),
+                            ],
                           ),
-                          child: auth.status == AuthStatus.authenticating
-                              ? const SizedBox(
-                                  height: 20,
-                                  width: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    color: Colors.white,
-                                  ),
-                                )
-                              : const Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(Icons.login, size: 18),
-                                    SizedBox(width: 8),
-                                    Text('MASUK PETUALANGAN', style: TextStyle(fontWeight: FontWeight.bold)),
-                                  ],
-                                ),
+                          child: Material(
+                            color: Colors.transparent,
+                            borderRadius: BorderRadius.circular(12),
+                            child: InkWell(
+                              onTap: auth.status == AuthStatus.authenticating ? null : _handleLogin,
+                              borderRadius: BorderRadius.circular(12),
+                              child: Center(
+                                child: auth.status == AuthStatus.authenticating
+                                    ? const SizedBox(
+                                        height: 20,
+                                        width: 20,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          color: AppColors.surfaceDeep,
+                                        ),
+                                      )
+                                    : Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: const [
+                                          Icon(Icons.fort, size: 18, color: AppColors.surfaceDeep),
+                                          SizedBox(width: 8),
+                                          Text(
+                                            'MASUK KE THE REALM',
+                                            style: TextStyle(
+                                              fontFamily: 'Outfit',
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w800,
+                                              letterSpacing: 0.8,
+                                              color: AppColors.surfaceDeep,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                              ),
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -264,26 +353,42 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 24),
 
-                // Quick Demo Account Helpers (Matching Web Version Demo Credentials)
-                const Text(
-                  'Akun Demo Siap Pakai (1-Klik):',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.textMuted,
+                // Quick Demo Login Pills
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: AppColors.surfaceCard,
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(color: AppColors.borderPixel),
                   ),
-                ),
-                const SizedBox(height: 10),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  alignment: WrapAlignment.center,
-                  children: [
-                    _demoChip('Admin', 'admin@schoolquest.id', 'admin123'),
-                    _demoChip('Guru', 'guru@schoolquest.id', 'guru123'),
-                    _demoChip('Aisyah (Siswa)', '0117148583', 'password'),
-                    _demoChip('Keisya (Siswa)', '0103322092', 'password'),
-                  ],
+                  child: Column(
+                    children: [
+                      const Text(
+                        'AKSES CEPAT DEMO',
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 1.0,
+                          color: AppColors.textMuted,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          _buildQuickFillChip(
+                            label: 'MITA (XII RPL)',
+                            onTap: () => _fillCredentials('0084169869', 'password'),
+                          ),
+                          const SizedBox(width: 8),
+                          _buildQuickFillChip(
+                            label: 'Admin Guru',
+                            onTap: () => _fillCredentials('admin@schoolquest.id', 'password'),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -293,16 +398,26 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _demoChip(String label, String login, String password) {
-    return ActionChip(
-      backgroundColor: AppColors.bgCardLighter,
-      side: const BorderSide(color: AppColors.border, width: 0.8),
-      avatar: const Icon(Icons.flash_on, size: 14, color: AppColors.gold),
-      label: Text(
-        label,
-        style: const TextStyle(fontSize: 11, color: AppColors.textPrimary),
+  Widget _buildQuickFillChip({required String label, required VoidCallback onTap}) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: AppColors.surfaceDeep,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: AppColors.borderPixel),
+        ),
+        child: Text(
+          label,
+          style: const TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.w700,
+            color: AppColors.manaCyan,
+          ),
+        ),
       ),
-      onPressed: () => _fillCredentials(login, password),
     );
   }
 }

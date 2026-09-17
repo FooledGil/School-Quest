@@ -48,50 +48,54 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.bgDark,
+      backgroundColor: AppColors.surfaceCanvas,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Logo / Crest Icon
+            // Realm Logo with ambient glow
             Container(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(18),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                gradient: LinearGradient(
-                  colors: [
-                    AppColors.primary,
-                    AppColors.secondary.withOpacity(0.8),
-                  ],
-                ),
+                color: AppColors.surfaceDeep,
+                border: Border.all(color: AppColors.gold.withOpacity(0.5), width: 2),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.primary.withOpacity(0.5),
+                    color: AppColors.gold.withOpacity(0.35),
                     blurRadius: 24,
                     spreadRadius: 4,
                   ),
                 ],
               ),
-              child: const Icon(
-                Icons.auto_awesome,
-                size: 56,
-                color: Colors.white,
+              child: Image.asset(
+                'assets/images/realm_logo.png',
+                width: 64,
+                height: 64,
+                fit: BoxFit.contain,
+                errorBuilder: (context, error, stackTrace) => const Icon(
+                  Icons.fort,
+                  size: 56,
+                  color: AppColors.gold,
+                ),
               ),
             ),
             const SizedBox(height: 24),
             const Text(
               'SCHOOLQUEST',
               style: TextStyle(
+                fontFamily: 'Outfit',
                 fontSize: 28,
                 fontWeight: FontWeight.w900,
                 letterSpacing: 3,
                 color: AppColors.textPrimary,
               ),
             ),
-            const SizedBox(height: 8),
-            Text(
-              'Petualangan Belajar & Disiplin Gamifikasi',
+            const SizedBox(height: 6),
+            const Text(
+              'Petualangan Belajar & Gamifikasi Sekolah',
               style: TextStyle(
+                fontFamily: 'Outfit',
                 fontSize: 13,
                 color: AppColors.textSecondary,
                 letterSpacing: 0.5,
@@ -99,7 +103,7 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
             const SizedBox(height: 36),
             const CircularProgressIndicator(
-              color: AppColors.primaryLight,
+              color: AppColors.gold,
               strokeWidth: 2.5,
             ),
           ],

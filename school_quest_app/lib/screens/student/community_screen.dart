@@ -4,8 +4,6 @@ import '../../core/constants/app_colors.dart';
 import '../../models/community_model.dart';
 import '../../providers/community_provider.dart';
 import '../../widgets/avatar_widget.dart';
-import '../../widgets/glass_card.dart';
-import '../../widgets/rank_badge.dart';
 import 'thread_detail_screen.dart';
 
 class CommunityScreen extends StatefulWidget {
@@ -19,10 +17,11 @@ class _CommunityScreenState extends State<CommunityScreen> {
   final _searchController = TextEditingController();
 
   final List<Map<String, String>> _categories = [
-    {'id': 'all', 'label': 'Semua'},
+    {'id': 'all', 'label': 'Semua Topik'},
     {'id': 'umum', 'label': 'Umum'},
-    {'id': 'quest', 'label': 'Quest'},
-    {'id': 'bug', 'label': 'Bug'},
+    {'id': 'quest', 'label': 'Quest & Misi'},
+    {'id': 'rpl', 'label': 'Diskusi RPL'},
+    {'id': 'bug', 'label': 'Bug & Kendala'},
     {'id': 'saran', 'label': 'Saran'},
     {'id': 'showcase', 'label': 'Showcase'},
   ];
@@ -60,37 +59,45 @@ class _CommunityScreenState extends State<CommunityScreen> {
               bottom: MediaQuery.of(context).viewInsets.bottom + 20,
             ),
             decoration: BoxDecoration(
-              color: AppColors.bgCard,
+              color: AppColors.surfaceCard,
               borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-              border: Border.all(color: AppColors.border),
+              border: Border.all(color: AppColors.borderPixel),
             ),
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text(
-                    'BUAT DISKUSI BARU DI THE REALM',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 0.5,
-                      color: AppColors.textPrimary,
-                    ),
+                  Row(
+                    children: const [
+                      Icon(Icons.castle, color: AppColors.gold, size: 20),
+                      SizedBox(width: 8),
+                      Text(
+                        'BUAT TOPIK BARU DI THE REALM',
+                        style: TextStyle(
+                          fontFamily: 'Outfit',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 0.5,
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 16),
                   TextField(
                     controller: titleController,
-                    decoration: const InputDecoration(labelText: 'Judul Diskusi'),
+                    decoration: const InputDecoration(labelText: 'Judul Topik Diskusi'),
                   ),
                   const SizedBox(height: 12),
                   DropdownButtonFormField<String>(
                     value: category,
-                    dropdownColor: AppColors.bgCardLighter,
+                    dropdownColor: AppColors.surfaceDeep,
                     decoration: const InputDecoration(labelText: 'Kategori'),
                     items: const [
                       DropdownMenuItem(value: 'umum', child: Text('Umum')),
-                      DropdownMenuItem(value: 'quest', child: Text('Quest')),
+                      DropdownMenuItem(value: 'quest', child: Text('Quest & Misi')),
+                      DropdownMenuItem(value: 'rpl', child: Text('Diskusi Kejuruan RPL')),
                       DropdownMenuItem(value: 'bug', child: Text('Bug & Kendala')),
                       DropdownMenuItem(value: 'saran', child: Text('Saran & Ide')),
                       DropdownMenuItem(value: 'showcase', child: Text('Showcase Prestasi')),
@@ -105,11 +112,17 @@ class _CommunityScreenState extends State<CommunityScreen> {
                     maxLines: 4,
                     decoration: const InputDecoration(
                       labelText: 'Isi Diskusi',
-                      hintText: 'Tuliskan topik pembahasan Anda...',
+                      hintText: 'Tuliskan topik, pertanyaan, atau pembahasan Anda...',
                     ),
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryContainer,
+                      foregroundColor: AppColors.onPrimaryContainer,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
                     onPressed: () async {
                       if (titleController.text.trim().isEmpty || bodyController.text.trim().isEmpty) {
                         return;
@@ -124,13 +137,20 @@ class _CommunityScreenState extends State<CommunityScreen> {
                         Navigator.pop(ctx);
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                            content: Text('Diskusi berhasil dipublikasikan!'),
+                            content: Text('Topik diskusi berhasil dipublikasikan! ⚔️'),
                             backgroundColor: AppColors.emerald,
                           ),
                         );
                       }
                     },
-                    child: const Text('PUBLIKASIKAN THREAD'),
+                    child: const Text(
+                      'PUBLIKASIKAN TOPIK',
+                      style: TextStyle(
+                        fontFamily: 'Outfit',
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 0.8,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -146,26 +166,30 @@ class _CommunityScreenState extends State<CommunityScreen> {
     final provider = Provider.of<CommunityProvider>(context);
 
     return Scaffold(
-      backgroundColor: AppColors.bgDark,
+      backgroundColor: AppColors.surfaceCanvas,
       appBar: AppBar(
-        title: const Text(
-          'THE REALM - FORUM KOMUNITAS',
-          style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 0.8),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: AppColors.primary,
-        onPressed: provider.isMuted ? null : _showCreateThreadDialog,
-        icon: const Icon(Icons.add_comment, color: Colors.white),
-        label: const Text(
-          'BUAT DISKUSI',
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+        title: const Row(
+          children: [
+            Icon(Icons.castle, color: AppColors.gold, size: 22),
+            SizedBox(width: 8),
+            Text(
+              'THE REALM',
+              style: TextStyle(
+                fontFamily: 'Outfit',
+                fontWeight: FontWeight.w800,
+                letterSpacing: 0.8,
+                fontSize: 16,
+              ),
+            ),
+          ],
         ),
       ),
       body: RefreshIndicator(
-        color: AppColors.primaryLight,
+        color: AppColors.gold,
+        backgroundColor: AppColors.surfaceCard,
         onRefresh: () => provider.fetchThreads(),
         child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -175,7 +199,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: AppColors.ruby.withOpacity(0.15),
+                    color: AppColors.ruby.withOpacity(0.12),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(color: AppColors.ruby),
                   ),
@@ -195,15 +219,25 @@ class _CommunityScreenState extends State<CommunityScreen> {
                 const SizedBox(height: 12),
               ],
 
-              // Search Bar
+              // ── 1. Realm Forum Header Card ──
+              _buildForumHeaderCard(provider),
+
+              const SizedBox(height: 14),
+
+              // ── 2. Castle Common Room (Live Tavern Showcase) ──
+              _buildLiveTavernCard(provider),
+
+              const SizedBox(height: 14),
+
+              // ── 3. Search Bar ──
               TextField(
                 controller: _searchController,
                 decoration: InputDecoration(
-                  hintText: 'Cari diskusi, topik, atau kata kunci...',
-                  prefixIcon: const Icon(Icons.search, color: AppColors.textMuted),
+                  hintText: 'Cari topik diskusi atau nama petualang...',
+                  prefixIcon: const Icon(Icons.search, color: AppColors.textMuted, size: 20),
                   suffixIcon: _searchController.text.isNotEmpty
                       ? IconButton(
-                          icon: const Icon(Icons.clear, color: AppColors.textMuted),
+                          icon: const Icon(Icons.clear, color: AppColors.textMuted, size: 18),
                           onPressed: () {
                             _searchController.clear();
                             provider.setSearch('');
@@ -216,7 +250,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
 
               const SizedBox(height: 12),
 
-              // Category Filter Pills
+              // ── 4. Category Filter Chips ──
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -224,47 +258,62 @@ class _CommunityScreenState extends State<CommunityScreen> {
                     final isSelected = provider.selectedCategory == cat['id'];
                     return Padding(
                       padding: const EdgeInsets.only(right: 8),
-                      child: FilterChip(
-                        selected: isSelected,
-                        label: Text(cat['label']!),
-                        backgroundColor: AppColors.bgCard,
-                        selectedColor: AppColors.primary,
-                        checkmarkColor: Colors.white,
-                        labelStyle: TextStyle(
-                          fontSize: 12,
-                          color: isSelected ? Colors.white : AppColors.textSecondary,
-                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                      child: InkWell(
+                        onTap: () => provider.setCategory(cat['id']!),
+                        borderRadius: BorderRadius.circular(10),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+                          decoration: BoxDecoration(
+                            color: isSelected ? AppColors.primaryContainer : AppColors.surfaceCard,
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: isSelected ? AppColors.primaryContainer : AppColors.borderPixel,
+                            ),
+                          ),
+                          child: Text(
+                            cat['label']!,
+                            style: TextStyle(
+                              fontFamily: 'Outfit',
+                              fontSize: 11.5,
+                              fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                              color: isSelected ? AppColors.onPrimaryContainer : AppColors.textSecondary,
+                            ),
+                          ),
                         ),
-                        side: BorderSide(
-                          color: isSelected ? AppColors.primaryLight : AppColors.border,
-                        ),
-                        onSelected: (_) => provider.setCategory(cat['id']!),
                       ),
                     );
                   }).toList(),
                 ),
               ),
 
-              const SizedBox(height: 14),
+              const SizedBox(height: 16),
 
-              // Sort Dropdown & Threads Count
+              // ── 5. Threads List Feed ──
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    '${provider.threads.length} Diskusi Ditemukan',
-                    style: const TextStyle(fontSize: 12, color: AppColors.textMuted),
+                    '${provider.threads.length} Topik Diskusi',
+                    style: const TextStyle(
+                      fontFamily: 'Outfit',
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textMuted,
+                    ),
                   ),
                   DropdownButton<String>(
                     value: provider.selectedSort,
-                    dropdownColor: AppColors.bgCardLighter,
+                    dropdownColor: AppColors.surfaceCard,
                     underline: const SizedBox.shrink(),
-                    icon: const Icon(Icons.sort, size: 18, color: AppColors.primaryLight),
+                    style: const TextStyle(
+                      fontFamily: 'Outfit',
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.manaCyan,
+                    ),
                     items: const [
-                      DropdownMenuItem(value: 'latest', child: Text('Terbaru', style: TextStyle(fontSize: 12))),
-                      DropdownMenuItem(value: 'popular', child: Text('Terpopuler', style: TextStyle(fontSize: 12))),
-                      DropdownMenuItem(value: 'unanswered', child: Text('Belum Dijawab', style: TextStyle(fontSize: 12))),
-                      DropdownMenuItem(value: 'active', child: Text('Paling Aktif', style: TextStyle(fontSize: 12))),
+                      DropdownMenuItem(value: 'newest', child: Text('Terbaru')),
+                      DropdownMenuItem(value: 'popular', child: Text('Terpopuler')),
                     ],
                     onChanged: (val) {
                       if (val != null) provider.setSort(val);
@@ -272,23 +321,27 @@ class _CommunityScreenState extends State<CommunityScreen> {
                   ),
                 ],
               ),
+              const SizedBox(height: 8),
 
-              const SizedBox(height: 10),
-
-              // Threads List
               if (provider.isLoading && provider.threads.isEmpty)
                 const Center(
                   child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 40),
-                    child: CircularProgressIndicator(color: AppColors.primaryLight),
+                    padding: EdgeInsets.all(32),
+                    child: CircularProgressIndicator(color: AppColors.manaCyan),
                   ),
                 )
               else if (provider.threads.isEmpty)
-                const Center(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 40),
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+                  decoration: BoxDecoration(
+                    color: AppColors.surfaceCard,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: AppColors.borderPixel),
+                  ),
+                  child: const Center(
                     child: Text(
-                      'Belum ada diskusi dalam kategori ini. Jadilah yang pertama memulai!',
+                      'Belum ada diskusi dalam kategori ini. Jadilah yang pertama membuat topik!',
+                      textAlign: TextAlign.center,
                       style: TextStyle(color: AppColors.textMuted, fontSize: 13),
                     ),
                   ),
@@ -304,7 +357,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                   },
                 ),
 
-              const SizedBox(height: 70),
+              const SizedBox(height: 40),
             ],
           ),
         ),
@@ -312,171 +365,423 @@ class _CommunityScreenState extends State<CommunityScreen> {
     );
   }
 
-  Widget _buildThreadCard(ForumThreadModel thread, CommunityProvider provider) {
-    return GlassCard(
-      margin: const EdgeInsets.only(bottom: 12),
-      onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) => ThreadDetailScreen(threadId: thread.id),
+  // ─── Header Card ───
+  Widget _buildForumHeaderCard(CommunityProvider provider) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceCard,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.borderPixel),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.3),
+            blurRadius: 10,
+            offset: const Offset(0, 3),
           ),
-        );
-      },
+        ],
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Author header & badges
           Row(
-            children: [
-              AvatarWidget(
-                avatar: thread.author?.avatar,
-                avatarSeed: thread.author?.avatarSeed,
-                size: 32,
+            children: const [
+              Icon(Icons.forum_outlined, size: 14, color: AppColors.manaCyan),
+              SizedBox(width: 4),
+              Text(
+                'GUILD FORUM & COMMUNITY REALM',
+                style: TextStyle(
+                  fontSize: 9.5,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 1.0,
+                  color: AppColors.manaCyan,
+                ),
               ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+            ],
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            'Ruang berkumpul & berdiskusi para petualang SchoolQuest. Tanyakan bantuan misi atau diskusikan pelajaran!',
+            style: TextStyle(
+              fontSize: 12.5,
+              color: AppColors.textSecondary,
+              height: 1.35,
+            ),
+          ),
+          const SizedBox(height: 12),
+
+          // Radiant "+ BUAT TOPIK BARU" button
+          Container(
+            width: double.infinity,
+            height: 46,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              gradient: const LinearGradient(
+                colors: [
+                  AppColors.primaryContainer,
+                  AppColors.amberGlow,
+                ],
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.primaryContainer.withOpacity(0.35),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Material(
+              color: Colors.transparent,
+              borderRadius: BorderRadius.circular(12),
+              child: InkWell(
+                onTap: provider.isMuted ? null : _showCreateThreadDialog,
+                borderRadius: BorderRadius.circular(12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(Icons.add_circle, color: AppColors.surfaceDeep, size: 20),
+                    SizedBox(width: 6),
                     Text(
-                      thread.author?.name ?? 'Anonim',
-                      style: const TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.textPrimary,
+                      '+ BUAT TOPIK BARU',
+                      style: TextStyle(
+                        fontFamily: 'Outfit',
+                        fontSize: 13.5,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 0.8,
+                        color: AppColors.surfaceDeep,
                       ),
-                    ),
-                    Text(
-                      '${thread.author?.studentClass ?? "Siswa"} • ${thread.createdAt}',
-                      style: const TextStyle(fontSize: 10, color: AppColors.textMuted),
                     ),
                   ],
                 ),
               ),
-              if (thread.author != null)
-                RankBadge(rank: thread.author!.rankName, fontSize: 9),
-            ],
+            ),
           ),
+        ],
+      ),
+    );
+  }
 
-          const SizedBox(height: 10),
-
-          // Pinned & Locked indicators
-          if (thread.isPinned || thread.isLocked) ...[
-            Row(
+  // ─── Live Tavern Showcase Card ───
+  Widget _buildLiveTavernCard(CommunityProvider provider) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceCard,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.borderPixel),
+      ),
+      child: Column(
+        children: [
+          // Banner Frame
+          Container(
+            height: 80,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: AppColors.surfaceDeep,
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: Stack(
+              fit: StackFit.expand,
               children: [
-                if (thread.isPinned)
-                  Container(
-                    margin: const EdgeInsets.only(right: 6),
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                Image.asset(
+                  'assets/images/realm_banner.png',
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => Container(color: AppColors.surfaceDeep),
+                ),
+                Container(
+                  color: AppColors.surfaceDeep.withOpacity(0.65),
+                ),
+                Positioned(
+                  top: 8,
+                  left: 8,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     decoration: BoxDecoration(
-                      color: AppColors.gold.withOpacity(0.15),
-                      borderRadius: BorderRadius.circular(4),
+                      color: AppColors.surfaceDeep.withOpacity(0.85),
+                      borderRadius: BorderRadius.circular(6),
                     ),
-                    child: const Text('📌 PINNED', style: TextStyle(fontSize: 9, color: AppColors.gold, fontWeight: FontWeight.bold)),
-                  ),
-                if (thread.isLocked)
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: AppColors.ruby.withOpacity(0.15),
-                      borderRadius: BorderRadius.circular(4),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 6,
+                          height: 6,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: AppColors.emerald,
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        const Text(
+                          'CASTLE COMMON ROOM • LIVE TAVERN',
+                          style: TextStyle(
+                            fontSize: 9,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: 0.8,
+                            color: AppColors.amberGlow,
+                          ),
+                        ),
+                      ],
                     ),
-                    child: const Text('🔒 LOCKED', style: TextStyle(fontSize: 9, color: AppColors.ruby, fontWeight: FontWeight.bold)),
                   ),
+                ),
               ],
             ),
-            const SizedBox(height: 6),
-          ],
+          ),
+          const SizedBox(height: 10),
+
+          // Live stats row
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  const Icon(Icons.people_alt_outlined, size: 16, color: AppColors.manaCyan),
+                  const SizedBox(width: 6),
+                  Text(
+                    '24 Petualang berkumpul',
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(
+                  color: AppColors.surfaceDeep,
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.local_fire_department, size: 13, color: AppColors.manaCyan),
+                    const SizedBox(width: 4),
+                    Text(
+                      '${provider.threads.length} Topik Aktif',
+                      style: const TextStyle(
+                        fontSize: 10.5,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.manaCyan,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ─── Thread Card ───
+  Widget _buildThreadCard(ForumThreadModel thread, CommunityProvider provider) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceCard,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.borderPixel),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Row 1: Author info + Category Tag
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  AvatarWidget(
+                    avatar: thread.author?.avatar,
+                    avatarSeed: thread.author?.avatarSeed,
+                    size: 32,
+                  ),
+                  const SizedBox(width: 8),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            thread.author?.name ?? 'Anonim',
+                            style: const TextStyle(
+                              fontFamily: 'Outfit',
+                              fontSize: 13,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                          const SizedBox(width: 6),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                            decoration: BoxDecoration(
+                              color: AppColors.surfaceDeep,
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: Text(
+                              thread.author?.studentClass ?? 'Siswa',
+                              style: const TextStyle(
+                                fontSize: 9,
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.manaCyan,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Text(
+                        thread.createdAt,
+                        style: const TextStyle(fontSize: 10, color: AppColors.textMuted),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(
+                  color: AppColors.surfaceDeep,
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Text(
+                  thread.category.toUpperCase(),
+                  style: const TextStyle(
+                    fontSize: 9.5,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 0.6,
+                    color: AppColors.amberGlow,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
 
           // Title
-          Text(
-            thread.title,
-            style: const TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.bold,
-              color: AppColors.textPrimary,
+          InkWell(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => ThreadDetailScreen(threadId: thread.id)),
+              );
+            },
+            child: Text(
+              thread.title,
+              style: const TextStyle(
+                fontFamily: 'Outfit',
+                fontSize: 15,
+                fontWeight: FontWeight.w700,
+                color: AppColors.textPrimary,
+              ),
             ),
           ),
           const SizedBox(height: 4),
 
-          // Snippet
+          // Content preview
           Text(
             thread.body,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontSize: 13, color: AppColors.textSecondary),
+            style: const TextStyle(
+              fontSize: 12,
+              color: AppColors.textMuted,
+              height: 1.35,
+            ),
           ),
-
           const SizedBox(height: 12),
 
-          // Footer metrics (Likes, Replies, Views)
+          // Row 3: Interaction actions (Likes, comments, reply button)
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Like Button
-              InkWell(
-                onTap: () => provider.toggleLike('thread', thread.id),
-                borderRadius: BorderRadius.circular(6),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-                  child: Row(
-                    children: [
-                      Icon(
-                        thread.isLiked ? Icons.favorite : Icons.favorite_border,
-                        size: 16,
-                        color: thread.isLiked ? AppColors.ruby : AppColors.textMuted,
+              Row(
+                children: [
+                  // Like Button
+                  InkWell(
+                    onTap: () => provider.toggleLike('thread', thread.id),
+                    borderRadius: BorderRadius.circular(6),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                      child: Row(
+                        children: [
+                          Icon(
+                            thread.isLiked ? Icons.favorite : Icons.favorite_border,
+                            size: 17,
+                            color: thread.isLiked ? AppColors.ruby : AppColors.textMuted,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            '${thread.likesCount}',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w700,
+                              color: thread.isLiked ? AppColors.ruby : AppColors.textMuted,
+                            ),
+                          ),
+                        ],
                       ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+
+                  // Comment Count
+                  Row(
+                    children: [
+                      const Icon(Icons.chat_bubble_outline, size: 16, color: AppColors.textMuted),
                       const SizedBox(width: 4),
                       Text(
-                        '${thread.likesCount}',
-                        style: TextStyle(
+                        '${thread.repliesCount} Balasan',
+                        style: const TextStyle(
                           fontSize: 12,
-                          color: thread.isLiked ? AppColors.ruby : AppColors.textMuted,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.textMuted,
                         ),
                       ),
                     ],
                   ),
-                ),
-              ),
-              const SizedBox(width: 14),
-
-              // Reply count
-              Row(
-                children: [
-                  const Icon(Icons.mode_comment_outlined, size: 16, color: AppColors.textMuted),
-                  const SizedBox(width: 4),
-                  Text(
-                    '${thread.repliesCount}',
-                    style: const TextStyle(fontSize: 12, color: AppColors.textMuted),
-                  ),
-                ],
-              ),
-              const SizedBox(width: 14),
-
-              // Views count
-              Row(
-                children: [
-                  const Icon(Icons.remove_red_eye_outlined, size: 16, color: AppColors.textMuted),
-                  const SizedBox(width: 4),
-                  Text(
-                    '${thread.viewsCount}',
-                    style: const TextStyle(fontSize: 12, color: AppColors.textMuted),
-                  ),
                 ],
               ),
 
-              const Spacer(),
-
-              // Category tag
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                decoration: BoxDecoration(
-                  color: AppColors.bgCardLighter,
-                  borderRadius: BorderRadius.circular(4),
-                  border: Border.all(color: AppColors.border),
-                ),
-                child: Text(
-                  '#${thread.category}',
-                  style: const TextStyle(fontSize: 10, color: AppColors.textMuted),
+              // Action button
+              InkWell(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => ThreadDetailScreen(threadId: thread.id)),
+                  );
+                },
+                borderRadius: BorderRadius.circular(8),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: AppColors.surfaceDeep,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: AppColors.borderPixel),
+                  ),
+                  child: Row(
+                    children: const [
+                      Text(
+                        'Tanggapi',
+                        style: TextStyle(
+                          fontFamily: 'Outfit',
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.manaCyan,
+                        ),
+                      ),
+                      SizedBox(width: 3),
+                      Icon(Icons.arrow_forward, size: 12, color: AppColors.manaCyan),
+                    ],
+                  ),
                 ),
               ),
             ],

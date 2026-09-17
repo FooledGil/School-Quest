@@ -25,7 +25,11 @@ class ExpProgressBar extends StatelessWidget {
         ? (expPercentage! / 100).clamp(0.0, 1.0)
         : (expNeededInLevel != null && expNeededInLevel! > 0
             ? ((expInLevel ?? 0) / expNeededInLevel!).clamp(0.0, 1.0)
-            : 0.0);
+            : (currentExp > 0 ? (currentExp / (currentExp + 100)).clamp(0.0, 1.0) : 0.0));
+
+    final int pctInt = (percentage * 100).round();
+    final int displayCurrent = expInLevel ?? currentExp;
+    final int displayNeeded = expNeededInLevel ?? (currentExp > 0 ? currentExp + 50 : 100);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -36,78 +40,106 @@ class ExpProgressBar extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  const Icon(Icons.bolt, size: 14, color: AppColors.gold),
+                  const Icon(Icons.bolt, size: 15, color: AppColors.manaCyan),
                   const SizedBox(width: 4),
                   Text(
-                    'EXP PROGRESS',
-                    style: TextStyle(
+                    'EXP ($pctInt%)',
+                    style: const TextStyle(
                       fontSize: 11,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 0.5,
-                      color: AppColors.textSecondary,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 0.8,
+                      color: AppColors.manaCyan,
                     ),
                   ),
                 ],
               ),
-              Text(
-                '${(percentage * 100).toStringAsFixed(1)}%',
-                style: const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.gold,
+              RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: '$displayCurrent',
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
+                    TextSpan(
+                      text: ' / $displayNeeded EXP',
+                      style: const TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
           const SizedBox(height: 6),
         ],
+        // Progress Bar Trough
         Container(
           height: height,
           width: double.infinity,
+          padding: const EdgeInsets.all(1.5),
           decoration: BoxDecoration(
-            color: AppColors.bgDark,
+            color: AppColors.surfaceDeep,
             borderRadius: BorderRadius.circular(height / 2),
-            border: Border.all(color: AppColors.border, width: 0.5),
-          ),
-          child: Stack(
-            children: [
-              FractionallySizedBox(
-                widthFactor: percentage,
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(height / 2),
-                    gradient: const LinearGradient(
-                      colors: [AppColors.gold, AppColors.flameOrange],
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.gold.withOpacity(0.4),
-                        blurRadius: 6,
-                        spreadRadius: 0.5,
-                      ),
-                    ],
-                  ),
-                ),
+            border: Border.all(color: AppColors.borderPixel, width: 0.8),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.4),
+                blurRadius: 3,
+                offset: const Offset(0, 1),
               ),
             ],
+          ),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final fillWidth = (constraints.maxWidth * percentage).clamp(0.0, constraints.maxWidth);
+              return Stack(
+                children: [
+                  Container(
+                    width: fillWidth,
+                    height: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(height / 2),
+                      gradient: const LinearGradient(
+                        colors: [
+                          AppColors.manaCyan,
+                          AppColors.secondaryContainer,
+                        ],
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.manaCyan.withOpacity(0.45),
+                          blurRadius: 4,
+                          spreadRadius: 0.5,
+                        ),
+                      ],
+                    ),
+                    child: fillWidth > 12
+                        ? Align(
+                            alignment: Alignment.centerRight,
+                            child: Container(
+                              width: 3,
+                              height: height - 2,
+                              margin: const EdgeInsets.only(right: 2),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.8),
+                                borderRadius: BorderRadius.circular(2),
+                              ),
+                            ),
+                          )
+                        : null,
+                  ),
+                ],
+              );
+            },
           ),
         ),
-        if (showLabels && expInLevel != null && expNeededInLevel != null) ...[
-          const SizedBox(height: 4),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                '$expInLevel EXP',
-                style: const TextStyle(fontSize: 11, color: AppColors.textMuted),
-              ),
-              Text(
-                '$expNeededInLevel EXP needed',
-                style: const TextStyle(fontSize: 11, color: AppColors.textMuted),
-              ),
-            ],
-          ),
-        ],
       ],
     );
   }

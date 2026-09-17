@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;background-color:#0B0F17;}body{overscroll-behavior:none;-webkit-tap-highlight-color:transparent;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "background": "#0f131c", "tertiary": "#56e5a9", "surface-deep": "#070B14", "on-secondary-fixed": "#001a42", "inverse-on-surface": "#2c3039", "on-tertiary": "#003824", "on-tertiary-fixed-variant": "#005236", "surface-canvas": "#0B0F17", "mana-cyan": "#38BDF8", "tertiary-fixed-dim": "#4edea3", "text-secondary": "#E2E8F0", "on-tertiary-container": "#004e34", "quest-danger": "#EF4444", "primary-fixed": "#ffddb8", "on-tertiary-fixed": "#002113", "secondary": "#adc6ff", "on-primary": "#472a00", "on-secondary-fixed-variant": "#004395", "text-primary": "#F8FAFC", "primary-container": "#f59e0b", "on-primary-container": "#613b00", "rank-bronze": "#CD7F32", "surface-card": "#131C31", "surface-container": "#1c2028", "on-error-container": "#ffdad6", "tertiary-fixed": "#6ffbbe", "outline": "#a08e7a", "on-primary-fixed": "#2a1700", "surface-container-lowest": "#0a0e16", "inverse-primary": "#855300", "primary-fixed-dim": "#ffb95f", "on-secondary": "#002e6a", "quest-success": "#10B981", "on-secondary-container": "#e6ecff", "error": "#ffb4ab", "primary": "#ffc174", "outline-variant": "#534434", "secondary-fixed-dim": "#adc6ff", "rank-gold": "#F59E0B", "on-surface": "#dfe2ee", "on-background": "#dfe2ee", "error-container": "#93000a", "surface-container-low": "#181c24", "amber-glow": "#FBBF24", "surface-bright": "#353942", "surface-tint": "#ffb95f", "secondary-container": "#0566d9", "text-muted": "#64748B", "on-surface-variant": "#d8c3ad", "inverse-surface": "#dfe2ee", "surface-container-highest": "#31353e", "surface-container-high": "#262a33", "tertiary-container": "#30c88f", "surface-variant": "#31353e", "surface-dim": "#0f131c", "surface-card-elevated": "#1A253E", "secondary-fixed": "#d8e2ff", "on-error": "#690005", "rank-silver": "#94A3B8", "on-primary-fixed-variant": "#653e00", "surface": "#0f131c", "border-active": "#38BDF8", "border-pixel": "#222E46" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "gutter-sm": "0.75rem", "space-lg": "1rem", "space-md": "0.75rem", "space-2xl": "2rem", "margin": "1rem", "space-xs": "0.25rem", "space-sm": "0.5rem", "gutter": "1rem", "space-xl": "1.5rem", "margin-tablet": "1.5rem" }, fontFamily: { "stat-metric": ["Outfit"], "label-badge": ["Outfit"], "body-compact": ["Outfit"], "headline-md": ["Outfit"], "title-quest": ["Outfit"], "headline-lg": ["Outfit"], "display-hero": ["Outfit"], "body-regular": ["Outfit"], "label-micro": ["Outfit"], "headline-lg-mobile": ["Outfit"] }, fontSize: { "stat-metric": ["20px", { "lineHeight": "24px", "fontWeight": "800" }], "label-badge": ["11px", { "lineHeight": "14px", "letterSpacing": "0.08em", "fontWeight": "700" }], "body-compact": ["12px", { "lineHeight": "16px", "fontWeight": "400" }], "headline-md": ["16px", { "lineHeight": "22px", "letterSpacing": "0.03em", "fontWeight": "700" }], "title-quest": ["15px", { "lineHeight": "20px", "fontWeight": "600" }], "headline-lg": ["22px", { "lineHeight": "28px", "letterSpacing": "0.04em", "fontWeight": "700" }], "display-hero": ["32px", { "lineHeight": "38px", "letterSpacing": "0.05em", "fontWeight": "800" }], "body-regular": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "label-micro": ["9px", { "lineHeight": "12px", "letterSpacing": "0.1em", "fontWeight": "700" }], "headline-lg-mobile": ["18px", { "lineHeight": "24px", "letterSpacing": "0.04em", "fontWeight": "700" }] } } } };</script></head><body class="bg-surface-canvas text-on-surface font-body-regular min-h-screen flex flex-col antialiased selection:bg-primary selection:text-on-primary"><header class="fixed top-0 w-full z-50 pt-safe bg-surface-card/85 backdrop-blur-xl shadow-[0_4px_20px_rgba(0,0,0,0.35)]"><div class="h-16 px-margin flex items-center justify-between"><div class="flex items-center gap-space-sm"><img alt="SchoolQuest Realm Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1XdXCDhz8Pm95wKCn7_rX_WsLSI7N1KxSovQ1xm3E9y6D1guLjhY8tTZX-GcRdvvtxyS3nknszmDI4OmVRill3gZBTSZYppXaiIRMO8Z2H_ycB0QusfH8iUa9NweV3FMFcbIVyUyXcyUeBZbg83uV65X2o_85sHrHtfYeymd7RxgrZyv1lDn6rxQLxKAUmYHsiCkpJtgverywrMXuRscLghOVuZoYbQbFve9PXdATifQxtJG3gd4UvIBEqB"/><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-rank-gold text-[20px]">fort</span><span class="font-headline-md text-headline-md text-text-primary tracking-wide">SchoolQuest</span></div><span class="hidden">Realm Guild</span></div><div class="flex items-center gap-space-sm"><div class="flex items-center gap-space-xs px-space-sm py-1 rounded-full bg-surface-deep/80"><span class="material-symbols-outlined text-rank-gold text-[18px]">local_fire_department</span><span class="font-label-badge text-label-badge text-amber-glow">1D</span></div><button class="w-11 h-11 flex items-center justify-center rounded-xl bg-surface-card hover:bg-surface-card-elevated text-on-surface transition-colors"><span class="material-symbols-outlined text-[20px]">notifications</span></button><div class="relative flex items-center justify-center"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><span class="absolute -bottom-1 -right-1 px-1 py-0.2 bg-secondary-container text-on-secondary-container font-label-micro text-label-micro rounded">LV.1</span></div></div></div></header><main class="flex-1 flex flex-col relative w-full pt-16 pb-24 bg-surface-canvas"><div class="flex flex-col w-full">
+<!-- Guild Forum Realm Header Section -->
+<section class="px-margin pt-space-md pb-space-xs flex flex-col gap-space-sm">
+<div class="inline-flex items-center gap-space-xs self-start px-space-sm py-0.5 rounded-full bg-surface-deep text-mana-cyan shadow-sm">
+<span class="material-symbols-outlined text-[14px]">forum</span>
+<span class="font-label-micro text-label-micro uppercase tracking-wider">GUILD FORUM &amp; COMMUNITY REALM</span>
+</div>
+<div class="flex items-center justify-between gap-space-sm">
+<div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-text-primary tracking-wide flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-amber-glow text-[22px]">castle</span>
+<span>THE REALM</span>
+</h1>
+<p class="font-body-compact text-body-compact text-text-muted mt-0.5 line-clamp-2">
+          Ruang berkumpul, berdiskusi, dan berbagi strategi bagi para petualang SchoolQuest. Tanyakan bantuan misi, diskusikan pelajaran, atau rayakan kemenangan bersama!
+        </p>
+</div>
+</div>
+<!-- Prominent Action: Buat Topik Baru -->
+<button class="w-full mt-space-xs h-12 rounded-xl bg-gradient-to-r from-primary-container via-amber-glow to-primary-fixed-dim text-surface-deep font-headline-md text-headline-md font-bold flex items-center justify-center gap-space-xs shadow-[0_4px_16px_rgba(245,158,11,0.35)] active:scale-[0.98] transition-transform" id="open-new-topic">
+<span class="material-symbols-outlined text-[20px] font-extrabold">add_circle</span>
+<span>+ BUAT TOPIK BARU</span>
+</button>
+</section>
+<!-- Castle Common Room: Live Tavern Showcase Card -->
+<section class="px-margin pt-space-sm">
+<div class="relative overflow-hidden rounded-xl bg-surface-card shadow-lg p-space-md flex flex-col gap-space-sm">
+<!-- Background Graphic Frame -->
+<div class="relative h-28 w-full rounded-lg overflow-hidden bg-surface-deep shadow-inner">
+<img alt="Castle Common Room Tavern" class="w-full h-full object-cover object-center opacity-75 brightness-90" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQN9KFx35wSOrI6Y6oJZLpl3V6a4h4PsJqRYNobx5Ah3GUHwCDmcLrpqjnqlcsHNHgYQABVABr5Y8LEFSyvmx2p5F8GSLk35UE83rMhcyOWIUTs886SEVE1fugzM0pSBBpGXdudKOqnrGbjFulXR3Zjs-sYdmljzUQp-_0xYkImXWt8bF0g-sj2qq_5Xlpj3Lsgo-_gmH2b4nDCJc_5tb0f-5sP5unjR-jNKV6D_swYjIgmzSXDT5_75mS3m7MVrXDgN4"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-card via-surface-card/40 to-transparent"></div>
+<div class="absolute top-2.5 left-2.5 px-space-sm py-1 rounded-md bg-surface-deep/90 backdrop-blur-sm flex items-center gap-space-xs">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-quest-success opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-quest-success"></span>
+</span>
+<span class="font-label-micro text-label-micro text-amber-glow uppercase tracking-wider">CASTLE COMMON ROOM • LIVE TAVERN</span>
+</div>
+</div>
+<!-- Live Statistics Strip -->
+<div class="flex items-center justify-between px-space-xs py-1">
+<div class="flex items-center gap-space-xs">
+<div class="flex -space-x-2">
+<div class="w-6 h-6 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container font-label-micro text-label-micro">M</div>
+<div class="w-6 h-6 rounded-full bg-primary flex items-center justify-center text-on-primary font-label-micro text-label-micro">R</div>
+<div class="w-6 h-6 rounded-full bg-tertiary flex items-center justify-center text-on-tertiary font-label-micro text-label-micro">K</div>
+</div>
+<span class="font-body-compact text-body-compact text-text-secondary">
+<strong class="text-text-primary">24 Petualang</strong> berkumpul
+          </span>
+</div>
+<div class="flex items-center gap-1 bg-surface-deep/80 px-2 py-1 rounded text-mana-cyan">
+<span class="material-symbols-outlined text-[14px]">local_fire_department</span>
+<span class="font-label-badge text-label-badge">4 Topik Aktif Hari Ini</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Search Filter Bar -->
+<section class="px-margin pt-space-md">
+<div class="relative flex items-center w-full">
+<span class="material-symbols-outlined absolute left-3 text-text-muted text-[18px]">search</span>
+<input class="w-full h-11 pl-9 pr-9 bg-surface-card rounded-xl text-text-primary font-body-regular text-body-regular placeholder:text-text-muted focus:outline-none focus:ring-1 focus:ring-mana-cyan transition-all shadow-sm" id="forum-search-input" placeholder="Cari topik diskusi atau nama petualang..." type="text"/>
+<button class="material-symbols-outlined absolute right-3 text-text-muted hover:text-text-primary text-[18px] hidden" id="clear-search">close</button>
+</div>
+</section>
+<!-- Topic Filter Tabs (Horizontal Scrollable Chips) -->
+<section class="pt-space-sm">
+<div class="flex items-center gap-space-xs overflow-x-auto px-margin scrollbar-none pb-1">
+<button class="filter-tab active flex-shrink-0 px-3 py-1.5 rounded-lg bg-primary-container text-on-primary-container font-label-badge text-label-badge tracking-wide flex items-center gap-1 transition-colors shadow-sm" data-category="all">
+<span class="material-symbols-outlined text-[14px]">apps</span>
+<span>Semua Topik (4)</span>
+</button>
+<button class="filter-tab flex-shrink-0 px-3 py-1.5 rounded-lg bg-surface-card text-text-muted hover:text-text-secondary font-label-badge text-label-badge tracking-wide flex items-center gap-1 transition-colors" data-category="umum">
+<span class="material-symbols-outlined text-[14px]">campaign</span>
+<span>Umum (1)</span>
+</button>
+<button class="filter-tab flex-shrink-0 px-3 py-1.5 rounded-lg bg-surface-card text-text-muted hover:text-text-secondary font-label-badge text-label-badge tracking-wide flex items-center gap-1 transition-colors" data-category="quest">
+<span class="material-symbols-outlined text-[14px]">history_edu</span>
+<span>Quest &amp; Misi (2)</span>
+</button>
+<button class="filter-tab flex-shrink-0 px-3 py-1.5 rounded-lg bg-surface-card text-text-muted hover:text-text-secondary font-label-badge text-label-badge tracking-wide flex items-center gap-1 transition-colors" data-category="rpl">
+<span class="material-symbols-outlined text-[14px]">terminal</span>
+<span>Diskusi RPL (1)</span>
+</button>
+</div>
+</section>
+<!-- Discussion Forum Feed Cards -->
+<section class="px-margin pt-space-xs flex flex-col gap-space-md pb-space-2xl" id="forum-feed-list">
+<!-- Card 1: Quest & Misi -->
+<article class="topic-card bg-surface-card rounded-xl p-space-md shadow-md flex flex-col gap-space-sm hover:bg-surface-card-elevated transition-colors" data-author="MITA (XII RPL)" data-category="quest" data-title="Tips menyelesaikan quest Database JOIN sebelum jam 14:00?">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container font-headline-md text-headline-md">
+            M
+          </div>
+<div>
+<div class="flex items-center gap-1">
+<span class="font-headline-md text-headline-md text-text-primary">MITA</span>
+<span class="px-1.5 py-0.2 rounded bg-surface-deep text-mana-cyan font-label-micro text-label-micro">XII RPL</span>
+</div>
+<span class="font-label-micro text-label-micro text-text-muted">2 jam lalu</span>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded-md bg-surface-deep text-primary-fixed-dim font-label-badge text-label-badge">
+          Quest &amp; Misi
+        </span>
+</div>
+<div class="flex flex-col gap-1">
+<h3 class="font-title-quest text-title-quest text-text-primary hover:text-mana-cyan transition-colors">
+          Tips menyelesaikan quest Database JOIN sebelum jam 14:00?
+        </h3>
+<p class="font-body-compact text-body-compact text-text-muted line-clamp-2">
+          Ada error di kueri INNER JOIN tabel siswa dan absensi. Sisa waktu misi tinggal 2 jam lagi untuk klaim 40 EXP bonus harian guild!
+        </p>
+</div>
+<!-- Interaction Bar -->
+<div class="flex items-center justify-between pt-space-xs">
+<div class="flex items-center gap-space-md text-text-muted font-body-compact text-body-compact">
+<button class="like-button flex items-center gap-1 hover:text-quest-danger transition-colors" data-liked="false">
+<span class="material-symbols-outlined text-[18px]">favorite</span>
+<span class="like-counter">15</span>
+</button>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">chat_bubble</span>
+<span>8 Balasan</span>
+</div>
+</div>
+<button class="px-space-md py-1 rounded-lg bg-surface-deep hover:bg-secondary-container hover:text-on-secondary-container text-mana-cyan font-label-badge text-label-badge flex items-center gap-1 transition-all">
+<span>Bantu Misi</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</button>
+</div>
+</article>
+<!-- Card 2: Umum -->
+<article class="topic-card bg-surface-card rounded-xl p-space-md shadow-md flex flex-col gap-space-sm hover:bg-surface-card-elevated transition-colors" data-author="Ragil" data-category="umum" data-title="Jadwal apel pagi minggu depan ada perubahan tidak?">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary font-headline-md text-headline-md">
+            R
+          </div>
+<div>
+<div class="flex items-center gap-1">
+<span class="font-headline-md text-headline-md text-text-primary">Ragil</span>
+<span class="px-1.5 py-0.2 rounded bg-surface-deep text-amber-glow font-label-micro text-label-micro">XI TKJ</span>
+</div>
+<span class="font-label-micro text-label-micro text-text-muted">4 jam lalu</span>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded-md bg-surface-deep text-text-secondary font-label-badge text-label-badge">
+          Umum
+        </span>
+</div>
+<div class="flex flex-col gap-1">
+<h3 class="font-title-quest text-title-quest text-text-primary hover:text-mana-cyan transition-colors">
+          Jadwal apel pagi minggu depan ada perubahan tidak?
+        </h3>
+<p class="font-body-compact text-body-compact text-text-muted line-clamp-2">
+          Dengar kabar dari perwakilan OSIS upacara bendera dimajukan 15 menit lebih awal karena agenda pelantikan kapten guild semester baru.
+        </p>
+</div>
+<!-- Interaction Bar -->
+<div class="flex items-center justify-between pt-space-xs">
+<div class="flex items-center gap-space-md text-text-muted font-body-compact text-body-compact">
+<button class="like-button flex items-center gap-1 hover:text-quest-danger transition-colors" data-liked="false">
+<span class="material-symbols-outlined text-[18px]">favorite</span>
+<span class="like-counter">6</span>
+</button>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">chat_bubble</span>
+<span>3 Balasan</span>
+</div>
+</div>
+<button class="px-space-md py-1 rounded-lg bg-surface-deep hover:bg-surface-bright text-text-secondary font-label-badge text-label-badge flex items-center gap-1 transition-all">
+<span>Tanggapi</span>
+<span class="material-symbols-outlined text-[14px]">reply</span>
+</button>
+</div>
+</article>
+<!-- Card 3: Diskusi RPL -->
+<article class="topic-card bg-surface-card rounded-xl p-space-md shadow-md flex flex-col gap-space-sm hover:bg-surface-card-elevated transition-colors" data-author="Kevin" data-category="rpl" data-title="Share repository template Flutter untuk project UKK">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<div class="w-8 h-8 rounded-full bg-tertiary flex items-center justify-center text-on-tertiary font-headline-md text-headline-md">
+            K
+          </div>
+<div>
+<div class="flex items-center gap-1">
+<span class="font-headline-md text-headline-md text-text-primary">Kevin</span>
+<span class="px-1.5 py-0.2 rounded bg-surface-deep text-tertiary font-label-micro text-label-micro">XII RPL 1</span>
+</div>
+<span class="font-label-micro text-label-micro text-text-muted">1 hari lalu</span>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded-md bg-surface-deep text-tertiary-fixed font-label-badge text-label-badge">
+          Diskusi RPL
+        </span>
+</div>
+<div class="flex flex-col gap-1">
+<h3 class="font-title-quest text-title-quest text-text-primary hover:text-mana-cyan transition-colors">
+          Share repository template Flutter untuk project UKK
+        </h3>
+<p class="font-body-compact text-body-compact text-text-muted line-clamp-2">
+          Sudah saya siapkan arsitektur Clean Architecture + BLoC sederhana untuk teman-teman yang mau start koding aplikasi kasir/perpustakaan.
+        </p>
+</div>
+<!-- Interaction Bar -->
+<div class="flex items-center justify-between pt-space-xs">
+<div class="flex items-center gap-space-md text-text-muted font-body-compact text-body-compact">
+<button class="like-button flex items-center gap-1 hover:text-quest-danger transition-colors text-quest-danger" data-liked="true">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="like-counter">24</span>
+</button>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">chat_bubble</span>
+<span>12 Balasan</span>
+</div>
+</div>
+<button class="px-space-md py-1 rounded-lg bg-surface-deep hover:bg-tertiary-container hover:text-on-tertiary-container text-tertiary font-label-badge text-label-badge flex items-center gap-1 transition-all">
+<span>Lihat Kode</span>
+<span class="material-symbols-outlined text-[14px]">code</span>
+</button>
+</div>
+</article>
+<!-- Card 4: Additional Quest & Misi Card -->
+<article class="topic-card bg-surface-card rounded-xl p-space-md shadow-md flex flex-col gap-space-sm hover:bg-surface-card-elevated transition-colors" data-author="Daffa" data-category="quest" data-title="Strategi Boss Raid Matematika: Matriks Invers Ordo 3x3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<div class="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-on-secondary font-headline-md text-headline-md">
+            D
+          </div>
+<div>
+<div class="flex items-center gap-1">
+<span class="font-headline-md text-headline-md text-text-primary">Daffa</span>
+<span class="px-1.5 py-0.2 rounded bg-surface-deep text-mana-cyan font-label-micro text-label-micro">XI RPL 2</span>
+</div>
+<span class="font-label-micro text-label-micro text-text-muted">1 hari lalu</span>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded-md bg-surface-deep text-primary-fixed-dim font-label-badge text-label-badge">
+          Quest &amp; Misi
+        </span>
+</div>
+<div class="flex flex-col gap-1">
+<h3 class="font-title-quest text-title-quest text-text-primary hover:text-mana-cyan transition-colors">
+          Strategi Boss Raid Matematika: Matriks Invers Ordo 3x3
+        </h3>
+<p class="font-body-compact text-body-compact text-text-muted line-clamp-2">
+          Kompilasi cara cepat hitung determinan metode Sarrus &amp; Adjoin matriks. Guild party matematika besok jam 10 pagi kumpul di Tavern!
+        </p>
+</div>
+<div class="flex items-center justify-between pt-space-xs">
+<div class="flex items-center gap-space-md text-text-muted font-body-compact text-body-compact">
+<button class="like-button flex items-center gap-1 hover:text-quest-danger transition-colors" data-liked="false">
+<span class="material-symbols-outlined text-[18px]">favorite</span>
+<span class="like-counter">19</span>
+</button>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">chat_bubble</span>
+<span>9 Balasan</span>
+</div>
+</div>
+<button class="px-space-md py-1 rounded-lg bg-surface-deep hover:bg-secondary-container hover:text-on-secondary-container text-mana-cyan font-label-badge text-label-badge flex items-center gap-1 transition-all">
+<span>Ikut Raid</span>
+<span class="material-symbols-outlined text-[14px]">swords</span>
+</button>
+</div>
+</article>
+</section>
+<!-- Create New Topic Modal Sheet (Default Hidden) -->
+<div class="fixed inset-0 z-50 bg-surface-deep/80 backdrop-blur-md flex flex-col justify-end hidden" id="new-topic-modal">
+<div class="w-full bg-surface-card-elevated rounded-t-2xl p-margin flex flex-col gap-space-md max-h-[85vh] overflow-y-auto shadow-2xl">
+<div class="flex items-center justify-between pb-space-xs border-b border-surface-container-high">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-amber-glow text-[22px]">post_add</span>
+<span class="font-headline-md text-headline-md text-text-primary">Buat Topik di Balai Realm</span>
+</div>
+<button class="w-8 h-8 rounded-full bg-surface-deep flex items-center justify-center text-text-muted hover:text-text-primary" id="close-new-topic">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-badge text-label-badge text-text-secondary">Kategori Diskusi</label>
+<div class="grid grid-cols-3 gap-space-xs">
+<button class="category-select active py-1.5 rounded-lg bg-primary-container text-on-primary-container font-label-badge text-label-badge text-center" data-val="quest" type="button">Quest &amp; Misi</button>
+<button class="category-select py-1.5 rounded-lg bg-surface-deep text-text-muted font-label-badge text-label-badge text-center" data-val="umum" type="button">Umum</button>
+<button class="category-select py-1.5 rounded-lg bg-surface-deep text-text-muted font-label-badge text-label-badge text-center" data-val="rpl" type="button">Diskusi RPL</button>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-badge text-label-badge text-text-secondary">Judul Topik Diskusi</label>
+<input class="h-11 px-3 bg-surface-deep rounded-xl text-text-primary font-body-regular text-body-regular placeholder:text-text-muted focus:outline-none focus:ring-1 focus:ring-mana-cyan" id="input-topic-title" placeholder="cth: Solusi Error Foreign Key MySQL..." type="text"/>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-badge text-label-badge text-text-secondary">Pesan / Strategi Misi</label>
+<textarea class="p-3 bg-surface-deep rounded-xl text-text-primary font-body-regular text-body-regular placeholder:text-text-muted focus:outline-none focus:ring-1 focus:ring-mana-cyan resize-none" id="input-topic-body" placeholder="Tuliskan kendala, kode, atau pertanyaan untuk kawan petualang guild..." rows="4"></textarea>
+</div>
+<div class="flex items-center gap-space-sm pt-space-xs">
+<button class="w-1/3 h-11 rounded-xl bg-surface-deep text-text-muted hover:text-text-primary font-headline-md text-headline-md" id="cancel-topic-btn">Batal</button>
+<button class="w-2/3 h-11 rounded-xl bg-gradient-to-r from-primary-container to-amber-glow text-surface-deep font-headline-md text-headline-md font-bold flex items-center justify-center gap-1 shadow-md" id="submit-topic-btn">
+<span class="material-symbols-outlined text-[18px]">send</span>
+<span>Kirim Topik</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<script>
+  (function() {
+    // Topic Category Filtering
+    const tabs = document.querySelectorAll('.filter-tab');
+    const cards = document.querySelectorAll('.topic-card');
+    const searchInput = document.getElementById('forum-search-input');
+    const clearSearch = document.getElementById('clear-search');
+
+    let activeFilter = 'all';
+
+    function filterPosts() {
+      const query = (searchInput.value || '').toLowerCase().trim();
+      if (query.length > 0) {
+        clearSearch.classList.remove('hidden');
+      } else {
+        clearSearch.classList.add('hidden');
+      }
+
+      cards.forEach(card => {
+        const cat = card.dataset.category;
+        const author = (card.dataset.author || '').toLowerCase();
+        const title = (card.dataset.title || '').toLowerCase();
+
+        const matchCat = (activeFilter === 'all' || cat === activeFilter);
+        const matchSearch = query === '' || author.includes(query) || title.includes(query);
+
+        if (matchCat && matchSearch) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    }
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => {
+          t.classList.remove('bg-primary-container', 'text-on-primary-container', 'shadow-sm');
+          t.classList.add('bg-surface-card', 'text-text-muted');
+        });
+        tab.classList.remove('bg-surface-card', 'text-text-muted');
+        tab.classList.add('bg-primary-container', 'text-on-primary-container', 'shadow-sm');
+
+        activeFilter = tab.dataset.category;
+        filterPosts();
+      });
+    });
+
+    searchInput.addEventListener('input', filterPosts);
+    clearSearch.addEventListener('click', () => {
+      searchInput.value = '';
+      filterPosts();
+    });
+
+    // Like Toggle Interaction
+    document.querySelectorAll('.like-button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const isLiked = btn.dataset.liked === 'true';
+        const counter = btn.querySelector('.like-counter');
+        let count = parseInt(counter.textContent, 10);
+
+        if (isLiked) {
+          btn.dataset.liked = 'false';
+          btn.classList.remove('text-quest-danger');
+          btn.querySelector('.material-symbols-outlined').style.fontVariationSettings = "'FILL' 0";
+          counter.textContent = Math.max(0, count - 1);
+        } else {
+          btn.dataset.liked = 'true';
+          btn.classList.add('text-quest-danger');
+          btn.querySelector('.material-symbols-outlined').style.fontVariationSettings = "'FILL' 1";
+          counter.textContent = count + 1;
+        }
+      });
+    });
+
+    // Modal Sheet Handlers
+    const modal = document.getElementById('new-topic-modal');
+    const openBtn = document.getElementById('open-new-topic');
+    const closeBtn = document.getElementById('close-new-topic');
+    const cancelBtn = document.getElementById('cancel-topic-btn');
+    const submitBtn = document.getElementById('submit-topic-btn');
+
+    function toggleModal(show) {
+      if (show) {
+        modal.classList.remove('hidden');
+      } else {
+        modal.classList.add('hidden');
+      }
+    }
+
+    openBtn.addEventListener('click', () => toggleModal(true));
+    closeBtn.addEventListener('click', () => toggleModal(false));
+    cancelBtn.addEventListener('click', () => toggleModal(false));
+
+    // Category Selector Inside Modal
+    const modalCatButtons = document.querySelectorAll('.category-select');
+    modalCatButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        modalCatButtons.forEach(b => {
+          b.classList.remove('bg-primary-container', 'text-on-primary-container');
+          b.classList.add('bg-surface-deep', 'text-text-muted');
+        });
+        btn.classList.remove('bg-surface-deep', 'text-text-muted');
+        btn.classList.add('bg-primary-container', 'text-on-primary-container');
+      });
+    });
+
+    submitBtn.addEventListener('click', () => {
+      const titleInput = document.getElementById('input-topic-title');
+      if (!titleInput.value.trim()) {
+        titleInput.focus();
+        return;
+      }
+      toggleModal(false);
+      titleInput.value = '';
+      document.getElementById('input-topic-body').value = '';
+    });
+  })();
+</script></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface-card/90 backdrop-blur-xl shadow-[0_-4px_24px_rgba(0,0,0,0.45)]" data-active-classes="text-rank-gold"><div class="h-16 px-margin flex justify-around items-center"><a class="flex flex-col items-center justify-center w-14 h-14 text-text-muted hover:text-text-secondary transition-all" data-path="dashboard" href="#"><span class="material-symbols-outlined text-[24px]">explore</span><span class="font-label-micro text-label-micro mt-1">Beranda</span></a><a class="relative flex flex-col items-center justify-center w-14 h-14 text-text-muted hover:text-text-secondary transition-all" data-path="quests" href="#"><span class="material-symbols-outlined text-[24px]">history_edu</span><span class="font-label-micro text-label-micro mt-1">Misi</span><span class="absolute top-1.5 right-2 px-1.5 py-0.5 rounded-full bg-primary-container text-on-primary-container font-label-micro text-label-micro leading-none">3</span></a><a class="flex flex-col items-center justify-center w-14 h-14 text-text-muted hover:text-text-secondary transition-all" data-path="hall-of-fame" href="#"><span class="material-symbols-outlined text-[24px]">military_tech</span><span class="font-label-micro text-label-micro mt-1">Peringkat</span></a><a aria-current="page" class="flex flex-col items-center justify-center w-14 h-14 transition-all text-rank-gold" data-path="realm-guild" href="#"><span class="material-symbols-outlined text-[24px]">shield</span><span class="font-label-micro text-label-micro mt-1">Guild</span></a></div></nav></body></html>

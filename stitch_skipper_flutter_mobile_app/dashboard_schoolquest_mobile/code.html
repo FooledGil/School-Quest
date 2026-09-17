@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;background-color:#0B0F17;}body{overscroll-behavior:none;-webkit-tap-highlight-color:transparent;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "background": "#0f131c", "tertiary": "#56e5a9", "surface-deep": "#070B14", "on-secondary-fixed": "#001a42", "inverse-on-surface": "#2c3039", "on-tertiary": "#003824", "on-tertiary-fixed-variant": "#005236", "surface-canvas": "#0B0F17", "mana-cyan": "#38BDF8", "tertiary-fixed-dim": "#4edea3", "text-secondary": "#E2E8F0", "on-tertiary-container": "#004e34", "quest-danger": "#EF4444", "primary-fixed": "#ffddb8", "on-tertiary-fixed": "#002113", "secondary": "#adc6ff", "on-primary": "#472a00", "on-secondary-fixed-variant": "#004395", "text-primary": "#F8FAFC", "primary-container": "#f59e0b", "on-primary-container": "#613b00", "rank-bronze": "#CD7F32", "surface-card": "#131C31", "surface-container": "#1c2028", "on-error-container": "#ffdad6", "tertiary-fixed": "#6ffbbe", "outline": "#a08e7a", "on-primary-fixed": "#2a1700", "surface-container-lowest": "#0a0e16", "inverse-primary": "#855300", "primary-fixed-dim": "#ffb95f", "on-secondary": "#002e6a", "quest-success": "#10B981", "on-secondary-container": "#e6ecff", "error": "#ffb4ab", "primary": "#ffc174", "outline-variant": "#534434", "secondary-fixed-dim": "#adc6ff", "rank-gold": "#F59E0B", "on-surface": "#dfe2ee", "on-background": "#dfe2ee", "error-container": "#93000a", "surface-container-low": "#181c24", "amber-glow": "#FBBF24", "surface-bright": "#353942", "surface-tint": "#ffb95f", "secondary-container": "#0566d9", "text-muted": "#64748B", "on-surface-variant": "#d8c3ad", "inverse-surface": "#dfe2ee", "surface-container-highest": "#31353e", "surface-container-high": "#262a33", "tertiary-container": "#30c88f", "surface-variant": "#31353e", "surface-dim": "#0f131c", "surface-card-elevated": "#1A253E", "secondary-fixed": "#d8e2ff", "on-error": "#690005", "rank-silver": "#94A3B8", "on-primary-fixed-variant": "#653e00", "surface": "#0f131c", "border-active": "#38BDF8", "border-pixel": "#222E46" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "gutter-sm": "0.75rem", "space-lg": "1rem", "space-md": "0.75rem", "space-2xl": "2rem", "margin": "1rem", "space-xs": "0.25rem", "space-sm": "0.5rem", "gutter": "1rem", "space-xl": "1.5rem", "margin-tablet": "1.5rem" }, fontFamily: { "stat-metric": ["Outfit"], "label-badge": ["Outfit"], "body-compact": ["Outfit"], "headline-md": ["Outfit"], "title-quest": ["Outfit"], "headline-lg": ["Outfit"], "display-hero": ["Outfit"], "body-regular": ["Outfit"], "label-micro": ["Outfit"], "headline-lg-mobile": ["Outfit"] }, fontSize: { "stat-metric": ["20px", { "lineHeight": "24px", "fontWeight": "800" }], "label-badge": ["11px", { "lineHeight": "14px", "letterSpacing": "0.08em", "fontWeight": "700" }], "body-compact": ["12px", { "lineHeight": "16px", "fontWeight": "400" }], "headline-md": ["16px", { "lineHeight": "22px", "letterSpacing": "0.03em", "fontWeight": "700" }], "title-quest": ["15px", { "lineHeight": "20px", "fontWeight": "600" }], "headline-lg": ["22px", { "lineHeight": "28px", "letterSpacing": "0.04em", "fontWeight": "700" }], "display-hero": ["32px", { "lineHeight": "38px", "letterSpacing": "0.05em", "fontWeight": "800" }], "body-regular": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "label-micro": ["9px", { "lineHeight": "12px", "letterSpacing": "0.1em", "fontWeight": "700" }], "headline-lg-mobile": ["18px", { "lineHeight": "24px", "letterSpacing": "0.04em", "fontWeight": "700" }] } } } };</script></head><body class="bg-surface-canvas text-on-surface font-body-regular min-h-screen flex flex-col antialiased selection:bg-primary selection:text-on-primary"><header class="fixed top-0 w-full z-50 pt-safe bg-surface-card/85 backdrop-blur-xl shadow-[0_4px_20px_rgba(0,0,0,0.35)]"><div class="h-16 px-margin flex items-center justify-between"><div class="flex items-center gap-space-sm"><img alt="SchoolQuest Realm Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1XdXCDhz8Pm95wKCn7_rX_WsLSI7N1KxSovQ1xm3E9y6D1guLjhY8tTZX-GcRdvvtxyS3nknszmDI4OmVRill3gZBTSZYppXaiIRMO8Z2H_ycB0QusfH8iUa9NweV3FMFcbIVyUyXcyUeBZbg83uV65X2o_85sHrHtfYeymd7RxgrZyv1lDn6rxQLxKAUmYHsiCkpJtgverywrMXuRscLghOVuZoYbQbFve9PXdATifQxtJG3gd4UvIBEqB"/><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-rank-gold text-[20px]">fort</span><span class="font-headline-md text-headline-md text-text-primary tracking-wide">SchoolQuest</span></div><span class="hidden">Dashboard</span></div><div class="flex items-center gap-space-sm"><div class="flex items-center gap-space-xs px-space-sm py-1 rounded-full bg-surface-deep/80"><span class="material-symbols-outlined text-rank-gold text-[18px]">local_fire_department</span><span class="font-label-badge text-label-badge text-amber-glow">1D</span></div><button class="w-11 h-11 flex items-center justify-center rounded-xl bg-surface-card hover:bg-surface-card-elevated text-on-surface transition-colors"><span class="material-symbols-outlined text-[20px]">notifications</span></button><div class="relative flex items-center justify-center"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><span class="absolute -bottom-1 -right-1 px-1 py-0.2 bg-secondary-container text-on-secondary-container font-label-micro text-label-micro rounded">LV.1</span></div></div></div></header><main class="flex-1 flex flex-col relative w-full pt-16 pb-24 bg-surface-canvas"><div class="flex flex-col w-full">
+<!-- Subtle Gamified Ambient Particles & Hero Profile Container -->
+<div class="relative px-margin pt-space-md pb-space-lg flex flex-col gap-space-lg">
+<!-- Player Card -->
+<div class="relative overflow-hidden rounded-xl bg-surface-card shadow-xl p-space-lg">
+<!-- Decorative Backdrop Glow -->
+<div class="absolute -top-10 -right-10 w-36 h-36 rounded-full bg-mana-cyan/10 blur-2xl pointer-events-none"></div>
+<div class="absolute -bottom-8 -left-8 w-32 h-32 rounded-full bg-primary-container/10 blur-xl pointer-events-none"></div>
+<div class="relative z-10 flex flex-col gap-space-md">
+<!-- Profile Top Row -->
+<div class="flex items-center gap-space-md">
+<!-- RPG Avatar Frame -->
+<div class="relative flex-shrink-0">
+<div class="w-16 h-16 rounded-xl overflow-hidden bg-surface-deep shadow-md flex items-center justify-center">
+<img alt="Mita Adventurer Portrait" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAj32D-pCTdrN_-9EtzduyPDyZOQuTpnetDs9oKz_eJQCGuPMTKxH4nDIHGzstkI39cxFI9oWrR4uu6jKSukyV3F47Jg70ZTtNgWdtphrK-Gajzd-034dxXatAruorVI-R1eDE0FyYsToaF9xrFi4X8Y5d_Dc4ZPyKE4SEIxtEXmUSqBWa-MedK1hfzyQRhrXVEU0qw76hMAuycbYCKWOAf7ImfH4OyxV1yz7OGveihAEE3UsdvXqlOMQ"/>
+</div>
+<!-- Lvl Badge Pin -->
+<div class="absolute -bottom-2 -right-1 px-1.5 py-0.5 rounded-md bg-secondary-container text-on-secondary-container shadow-sm flex items-center gap-0.5">
+<span class="font-label-micro text-label-micro uppercase tracking-wider">LV.1</span>
+</div>
+</div>
+<!-- Player Details -->
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-space-xs flex-wrap">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-text-primary tracking-wide truncate">MITA</h2>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface-deep text-amber-glow font-label-badge text-label-badge shadow-inner">
+<span class="material-symbols-outlined text-[12px]">military_tech</span>
+                Novice
+              </span>
+</div>
+<p class="font-body-compact text-body-compact text-text-muted mt-0.5 truncate">
+              NISN: 0084169869 • XII RPL
+            </p>
+<div class="flex items-center gap-1 mt-1 text-tertiary">
+<span class="material-symbols-outlined text-[14px]">school</span>
+<span class="font-label-badge text-label-badge">SMK Jurusan Rekayasa Perangkat Lunak</span>
+</div>
+</div>
+</div>
+<!-- EXP Gauge Module -->
+<div class="flex flex-col gap-1.5 pt-1">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-mana-cyan text-[14px]">bolt</span>
+<span class="font-label-badge text-label-badge text-mana-cyan tracking-wider">EXP (87%)</span>
+</div>
+<span class="font-label-badge text-label-badge text-text-secondary">
+<span class="text-text-primary font-bold">130</span> / 150 EXP
+            </span>
+</div>
+<!-- Progress Bar Trough -->
+<div class="w-full h-2.5 rounded-full bg-surface-deep overflow-hidden shadow-inner p-[1px]">
+<div class="h-full rounded-full bg-gradient-to-r from-mana-cyan to-secondary-container relative flex items-center justify-end" style="width: 87%;">
+<div class="w-1.5 h-full bg-text-primary rounded-full opacity-75 animate-pulse"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Quick Stats Grid (2x2 Mobile RPG Metric Layout) -->
+<div class="grid grid-cols-2 gap-gutter-sm">
+<!-- Total EXP -->
+<div class="bg-surface-card rounded-xl p-space-md flex flex-col justify-between shadow-md relative overflow-hidden group">
+<div class="flex items-center justify-between">
+<span class="font-label-badge text-label-badge text-text-muted uppercase">Total EXP</span>
+<div class="w-8 h-8 rounded-lg bg-primary-container/20 flex items-center justify-center text-amber-glow">
+<span class="material-symbols-outlined text-[18px]">star</span>
+</div>
+</div>
+<div class="mt-2 flex items-baseline gap-1">
+<span class="font-stat-metric text-stat-metric text-text-primary">130</span>
+<span class="font-label-micro text-label-micro text-amber-glow">PTS</span>
+</div>
+</div>
+<!-- Quests Selesai -->
+<div class="bg-surface-card rounded-xl p-space-md flex flex-col justify-between shadow-md relative overflow-hidden group">
+<div class="flex items-center justify-between">
+<span class="font-label-badge text-label-badge text-text-muted uppercase">Quest Selesai</span>
+<div class="w-8 h-8 rounded-lg bg-tertiary-container/20 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-[18px]">task_alt</span>
+</div>
+</div>
+<div class="mt-2 flex items-baseline gap-1">
+<span class="font-stat-metric text-stat-metric text-text-primary">1</span>
+<span class="font-label-micro text-label-micro text-tertiary">MISI</span>
+</div>
+</div>
+<!-- Daily Streak -->
+<div class="bg-surface-card rounded-xl p-space-md flex flex-col justify-between shadow-md relative overflow-hidden group">
+<div class="flex items-center justify-between">
+<span class="font-label-badge text-label-badge text-text-muted uppercase">Daily Streak</span>
+<div class="w-8 h-8 rounded-lg bg-surface-deep flex items-center justify-center text-amber-glow shadow-inner">
+<span class="material-symbols-outlined text-[18px]">local_fire_department</span>
+</div>
+</div>
+<div class="mt-2 flex items-baseline gap-1">
+<span class="font-stat-metric text-stat-metric text-text-primary">1</span>
+<span class="font-label-micro text-label-micro text-amber-glow">HARI AKTIF</span>
+</div>
+</div>
+<!-- Peringkat -->
+<div class="bg-surface-card rounded-xl p-space-md flex flex-col justify-between shadow-md relative overflow-hidden group">
+<div class="flex items-center justify-between">
+<span class="font-label-badge text-label-badge text-text-muted uppercase">Peringkat</span>
+<div class="w-8 h-8 rounded-lg bg-secondary-container/20 flex items-center justify-center text-mana-cyan">
+<span class="material-symbols-outlined text-[18px]">military_tech</span>
+</div>
+</div>
+<div class="mt-2 flex items-baseline gap-1">
+<span class="font-stat-metric text-stat-metric text-mana-cyan">#9</span>
+<span class="font-label-micro text-label-micro text-text-muted">KELAS XII</span>
+</div>
+</div>
+</div>
+<!-- Active Quests Module -->
+<div class="flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-amber-glow text-[20px]">assignment</span>
+<h3 class="font-headline-md text-headline-md text-text-primary uppercase tracking-wide">Quest Aktif</h3>
+</div>
+<a class="font-label-badge text-label-badge text-mana-cyan hover:text-secondary flex items-center gap-0.5" href="#">
+          Semua <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</a>
+</div>
+<!-- Quest List -->
+<div class="flex flex-col gap-space-md">
+<!-- Quest Item 1 -->
+<div class="rounded-xl bg-surface-card p-space-md shadow-md flex flex-col gap-space-sm hover:bg-surface-card-elevated transition-colors">
+<div class="flex items-center justify-between">
+<span class="px-2 py-0.5 rounded-full bg-surface-deep text-quest-success font-label-badge text-label-badge tracking-wider uppercase">
+              EASY
+            </span>
+<div class="flex items-center gap-1 text-amber-glow font-label-badge text-label-badge">
+<span class="material-symbols-outlined text-[14px]">monetization_on</span>
+<span>+40 EXP</span>
+</div>
+</div>
+<div class="flex flex-col">
+<h4 class="font-title-quest text-title-quest text-text-primary">
+              Bersosialisasi dengan 3 Orang Baru
+            </h4>
+<p class="font-body-compact text-body-compact text-text-muted mt-0.5">
+              Perkenalkan dirimu kepada kawan sekelas atau jurusan lain saat jam istirahat.
+            </p>
+</div>
+<div class="flex items-center justify-between pt-1">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-surface-deep text-secondary font-label-badge text-label-badge">
+<span class="material-symbols-outlined text-[13px]">group</span>
+              Social
+            </span>
+<button class="px-4 py-2 rounded-lg bg-secondary-container hover:bg-secondary text-on-secondary-container font-label-badge text-label-badge tracking-wider transition-all flex items-center gap-1.5 shadow-md active:scale-95">
+<span>KERJAKAN</span>
+<span class="material-symbols-outlined text-[15px]">swords</span>
+</button>
+</div>
+</div>
+<!-- Quest Item 2 -->
+<div class="rounded-xl bg-surface-card p-space-md shadow-md flex flex-col gap-space-sm hover:bg-surface-card-elevated transition-colors">
+<div class="flex items-center justify-between">
+<span class="px-2 py-0.5 rounded-full bg-surface-deep text-quest-success font-label-badge text-label-badge tracking-wider uppercase">
+              EASY
+            </span>
+<div class="flex items-center gap-1 text-amber-glow font-label-badge text-label-badge">
+<span class="material-symbols-outlined text-[14px]">monetization_on</span>
+<span>+35 EXP</span>
+</div>
+</div>
+<div class="flex flex-col">
+<h4 class="font-title-quest text-title-quest text-text-primary">
+              Bantu Guru Membawa Buku ke Perpustakaan
+            </h4>
+<p class="font-body-compact text-body-compact text-text-muted mt-0.5">
+              Dapatkan stempel apresiasi dari guru pengajar setelah menyelesaikan tugas piket.
+            </p>
+</div>
+<div class="flex items-center justify-between pt-1">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-surface-deep text-tertiary font-label-badge text-label-badge">
+<span class="material-symbols-outlined text-[13px]">cleaning_services</span>
+              Piket
+            </span>
+<button class="px-4 py-2 rounded-lg bg-secondary-container hover:bg-secondary text-on-secondary-container font-label-badge text-label-badge tracking-wider transition-all flex items-center gap-1.5 shadow-md active:scale-95">
+<span>KERJAKAN</span>
+<span class="material-symbols-outlined text-[15px]">swords</span>
+</button>
+</div>
+</div>
+<!-- Quest Item 3 -->
+<div class="rounded-xl bg-surface-card p-space-md shadow-md flex flex-col gap-space-sm hover:bg-surface-card-elevated transition-colors">
+<div class="flex items-center justify-between">
+<span class="px-2 py-0.5 rounded-full bg-surface-deep text-quest-success font-label-badge text-label-badge tracking-wider uppercase">
+              EASY
+            </span>
+<div class="flex items-center gap-1 text-amber-glow font-label-badge text-label-badge">
+<span class="material-symbols-outlined text-[14px]">monetization_on</span>
+<span>+45 EXP</span>
+</div>
+</div>
+<div class="flex flex-col">
+<h4 class="font-title-quest text-title-quest text-text-primary">
+              Rapikan Rak Buku Perpustakaan
+            </h4>
+<p class="font-body-compact text-body-compact text-text-muted mt-0.5">
+              Susun minimal 10 buku literasi pemrograman sesuai nomor rak DDC.
+            </p>
+</div>
+<div class="flex items-center justify-between pt-1">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-surface-deep text-tertiary font-label-badge text-label-badge">
+<span class="material-symbols-outlined text-[13px]">local_library</span>
+              Piket
+            </span>
+<button class="px-4 py-2 rounded-lg bg-surface-card-elevated hover:bg-secondary-container text-text-secondary hover:text-on-secondary-container font-label-badge text-label-badge tracking-wider transition-all flex items-center gap-1.5 shadow-md active:scale-95">
+<span>LIHAT</span>
+<span class="material-symbols-outlined text-[15px]">visibility</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Realm Visual Showcase Tile (Integrating App Visuals) -->
+<div class="rounded-xl bg-surface-card shadow-lg overflow-hidden flex flex-col relative">
+<div class="h-32 w-full relative overflow-hidden">
+<img alt="School Realm Guild Hall" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUz2TC8aLgSYKXsmAQI4M66PC1LOYbpFEVJiw8PvbY5IgdidBwcUQWcW65-4ab31X8a6fRYdiNAGgqsvOYvZrTOeuTk6JLBEdzwW52n_Y2ZQigtloVJzTNDUjQKdEkNa8XcVQQAzg7C23It5cc6hRjr8CDu34stTTVCMwSqhsZqRQGKJLe5WWxYdHo6p5U_yh0iD4KhdQns1OuAizhynpTeLBisWE2jHRQqxZM2uPQuO1eTtqsXcd9mNgxOPmNyxUXVDg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-card via-surface-card/40 to-transparent"></div>
+<div class="absolute bottom-2.5 left-3 flex items-center gap-2">
+<span class="px-2 py-0.5 rounded-full bg-primary-container text-on-primary-container font-label-badge text-label-badge">EVENT BULANAN</span>
+<span class="font-label-badge text-label-badge text-text-secondary">Raid Bos Semester Ganjil</span>
+</div>
+</div>
+<div class="p-space-md flex items-center justify-between bg-surface-card">
+<p class="font-body-compact text-body-compact text-text-muted">Kumpulkan XP bersama kawan guild untuk mengklaim gelar Juara Kelas.</p>
+<span class="material-symbols-outlined text-amber-glow text-[22px] flex-shrink-0 ml-2">shield_with_heart</span>
+</div>
+</div>
+<!-- Achievements / Pencapaian -->
+<div class="flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-rank-gold text-[20px]">emoji_events</span>
+<h3 class="font-headline-md text-headline-md text-text-primary uppercase tracking-wide">Pencapaian</h3>
+</div>
+<span class="font-label-badge text-label-badge text-text-muted">1 / 5 Terbuka</span>
+</div>
+<!-- Horizontal Scrollable Badges Strip -->
+<div class="flex items-center gap-gutter-sm overflow-x-auto pb-2 -mx-margin px-margin no-scrollbar">
+<!-- Unlocked Badge -->
+<div class="flex-shrink-0 w-28 p-space-sm rounded-xl bg-surface-card shadow-md flex flex-col items-center text-center gap-1.5 relative overflow-hidden group">
+<div class="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-glow to-primary-container flex items-center justify-center text-surface-deep shadow-md">
+<span class="material-symbols-outlined text-[24px]">workspace_premium</span>
+</div>
+<span class="font-title-quest text-title-quest text-text-primary truncate w-full text-center">First Quest</span>
+<span class="font-label-micro text-label-micro text-amber-glow bg-primary-container/20 px-2 py-0.5 rounded-full">TERBUKA</span>
+</div>
+<!-- Locked Badges -->
+<div class="flex-shrink-0 w-28 p-space-sm rounded-xl bg-surface-deep opacity-75 shadow-sm flex flex-col items-center text-center gap-1.5">
+<div class="w-12 h-12 rounded-xl bg-surface-card flex items-center justify-center text-text-muted">
+<span class="material-symbols-outlined text-[24px]">lock</span>
+</div>
+<span class="font-title-quest text-title-quest text-text-muted truncate w-full text-center">Speed Runner</span>
+<span class="font-label-micro text-label-micro text-text-muted bg-surface-card px-2 py-0.5 rounded-full">TERKUNCI</span>
+</div>
+<div class="flex-shrink-0 w-28 p-space-sm rounded-xl bg-surface-deep opacity-75 shadow-sm flex flex-col items-center text-center gap-1.5">
+<div class="w-12 h-12 rounded-xl bg-surface-card flex items-center justify-center text-text-muted">
+<span class="material-symbols-outlined text-[24px]">lock</span>
+</div>
+<span class="font-title-quest text-title-quest text-text-muted truncate w-full text-center">On Fire</span>
+<span class="font-label-micro text-label-micro text-text-muted bg-surface-card px-2 py-0.5 rounded-full">TERKUNCI</span>
+</div>
+<div class="flex-shrink-0 w-28 p-space-sm rounded-xl bg-surface-deep opacity-75 shadow-sm flex flex-col items-center text-center gap-1.5">
+<div class="w-12 h-12 rounded-xl bg-surface-card flex items-center justify-center text-text-muted">
+<span class="material-symbols-outlined text-[24px]">lock</span>
+</div>
+<span class="font-title-quest text-title-quest text-text-muted truncate w-full text-center">Quest Master</span>
+<span class="font-label-micro text-label-micro text-text-muted bg-surface-card px-2 py-0.5 rounded-full">TERKUNCI</span>
+</div>
+<div class="flex-shrink-0 w-28 p-space-sm rounded-xl bg-surface-deep opacity-75 shadow-sm flex flex-col items-center text-center gap-1.5">
+<div class="w-12 h-12 rounded-xl bg-surface-card flex items-center justify-center text-text-muted">
+<span class="material-symbols-outlined text-[24px]">lock</span>
+</div>
+<span class="font-title-quest text-title-quest text-text-muted truncate w-full text-center">Subject Expert</span>
+<span class="font-label-micro text-label-micro text-text-muted bg-surface-card px-2 py-0.5 rounded-full">TERKUNCI</span>
+</div>
+</div>
+</div>
+<!-- Jadwal Hari Ini (Gamified Timetable) -->
+<div class="flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-mana-cyan text-[20px]">calendar_month</span>
+<h3 class="font-headline-md text-headline-md text-text-primary uppercase tracking-wide">Jadwal Hari Ini</h3>
+</div>
+<span class="font-label-badge text-label-badge text-amber-glow px-2 py-0.5 rounded-md bg-surface-deep">SENIN</span>
+</div>
+<!-- Timeline List Module -->
+<div class="rounded-xl bg-surface-card p-space-md shadow-md flex flex-col gap-space-md">
+<!-- Slot 1 -->
+<div class="flex gap-space-md items-start relative">
+<!-- Time indicator -->
+<div class="flex flex-col items-center w-14 flex-shrink-0 pt-0.5">
+<span class="font-label-badge text-label-badge text-text-muted">06:30</span>
+<span class="font-label-micro text-label-micro text-text-muted">07:00</span>
+</div>
+<!-- Line & Node -->
+<div class="flex flex-col items-center self-stretch">
+<div class="w-3 h-3 rounded-full bg-secondary-container ring-4 ring-surface-card"></div>
+<div class="w-0.5 flex-1 bg-surface-container mt-1"></div>
+</div>
+<!-- Info -->
+<div class="flex-1 pb-space-xs">
+<div class="flex items-center justify-between">
+<h5 class="font-title-quest text-title-quest text-text-primary">Apel Pagi</h5>
+<span class="px-2 py-0.5 rounded bg-surface-deep text-text-secondary font-label-micro text-label-micro">Lapangan</span>
+</div>
+<p class="font-body-compact text-body-compact text-text-muted mt-0.5">XII Rekayasa Perangkat Lunak</p>
+</div>
+</div>
+<!-- Slot 2 -->
+<div class="flex gap-space-md items-start relative">
+<!-- Time indicator -->
+<div class="flex flex-col items-center w-14 flex-shrink-0 pt-0.5">
+<span class="font-label-badge text-label-badge text-mana-cyan font-bold">07:00</span>
+<span class="font-label-micro text-label-micro text-text-muted">09:00</span>
+</div>
+<!-- Line & Node -->
+<div class="flex flex-col items-center self-stretch">
+<div class="w-3 h-3 rounded-full bg-mana-cyan ring-4 ring-surface-card animate-pulse"></div>
+<div class="w-0.5 flex-1 bg-surface-container mt-1"></div>
+</div>
+<!-- Info -->
+<div class="flex-1 pb-space-xs rounded-lg p-2.5 bg-surface-deep/90 shadow-sm">
+<div class="flex items-center justify-between">
+<h5 class="font-title-quest text-title-quest text-mana-cyan">Mata Pelajaran Pilihan RPL</h5>
+<span class="px-1.5 py-0.5 rounded bg-mana-cyan/20 text-mana-cyan font-label-micro text-label-micro">SEKARANG</span>
+</div>
+<div class="flex items-center gap-1 text-text-secondary font-body-compact text-body-compact mt-1">
+<span class="material-symbols-outlined text-[13px]">person</span>
+<span>Cep Kusaeri, ST.</span>
+</div>
+<p class="font-label-micro text-label-micro text-text-muted mt-0.5">Lab Komputer RPL 2 • XII RPL</p>
+</div>
+</div>
+<!-- Slot 3 -->
+<div class="flex gap-space-md items-start relative">
+<!-- Time indicator -->
+<div class="flex flex-col items-center w-14 flex-shrink-0 pt-0.5">
+<span class="font-label-badge text-label-badge text-text-muted">09:10</span>
+<span class="font-label-micro text-label-micro text-text-muted">09:50</span>
+</div>
+<!-- Line & Node -->
+<div class="flex flex-col items-center self-stretch">
+<div class="w-2.5 h-2.5 rounded-full bg-text-muted/40"></div>
+<div class="w-0.5 flex-1 bg-surface-container mt-1"></div>
+</div>
+<!-- Info -->
+<div class="flex-1 pb-space-xs">
+<h5 class="font-title-quest text-title-quest text-text-primary">Mata Pelajaran Pilihan RPL</h5>
+<p class="font-body-compact text-body-compact text-text-muted mt-0.5">Lanjutan Sesi Praktikum Basis Data</p>
+</div>
+</div>
+<!-- Slot 4 -->
+<div class="flex gap-space-md items-start relative">
+<!-- Time indicator -->
+<div class="flex flex-col items-center w-14 flex-shrink-0 pt-0.5">
+<span class="font-label-badge text-label-badge text-text-muted">09:50</span>
+<span class="font-label-micro text-label-micro text-text-muted">11:10</span>
+</div>
+<!-- Line & Node -->
+<div class="flex flex-col items-center self-stretch">
+<div class="w-2.5 h-2.5 rounded-full bg-text-muted/40"></div>
+</div>
+<!-- Info -->
+<div class="flex-1">
+<div class="flex items-center justify-between">
+<h5 class="font-title-quest text-title-quest text-text-primary">Konsentrasi Keahlian RPL</h5>
+<span class="px-2 py-0.5 rounded bg-surface-deep text-secondary font-label-micro text-label-micro">Teori &amp; Demo</span>
+</div>
+<p class="font-body-compact text-body-compact text-text-muted mt-0.5">Arsitektur Mobile UI &amp; State Management</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Extra Showcase Preview Card -->
+<div class="rounded-xl overflow-hidden bg-surface-card p-space-md shadow-md flex items-center gap-space-md">
+<div class="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 bg-surface-deep">
+<img alt="Guild Expedition Hall" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSCjaNynSQjZQdqogYwDpyrp-eCZSo9c9Lb-zdWknvNac2c_Ou2Y_a9kUjrlvFao5paMGYax-u8VOPkloXBYJVd8Q2l0awNrQCFcgkS51pnx2SoSNpdZLiAWkOLRvxKKJ6flJ6_xpAzf9ynp6OK4oXJw_pG1mfYxvCvjp4N2XDluhyppkN8b4e3AVuuPpFPQw_8mBMcrN_7Yljso2dCfq8c7rsOOruRWHWU7bJwA791boyB3ibNpRFWEQg-T6U92NE5JE"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-1 text-tertiary">
+<span class="material-symbols-outlined text-[14px]">verified</span>
+<span class="font-label-badge text-label-badge">Guild XII RPL</span>
+</div>
+<h4 class="font-title-quest text-title-quest text-text-primary truncate">Ekspedisi Kelas Mingguan</h4>
+<p class="font-body-compact text-body-compact text-text-muted truncate mt-0.5">Kumpulkan 500 Guild Point untuk bonus loot.</p>
+</div>
+<button class="w-9 h-9 rounded-lg bg-surface-deep hover:bg-surface-card-elevated text-text-primary flex items-center justify-center flex-shrink-0 transition-colors">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+<div class="h-2"></div>
+</div>
+</div>
+<script>
+  // Simple playful sound / haptic feedback visual micro-interaction for Quest CTA buttons
+  document.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      const originalTransform = this.style.transform;
+      this.style.transform = 'scale(0.94)';
+      setTimeout(() => {
+        this.style.transform = originalTransform;
+      }, 120);
+    });
+  });
+</script></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface-card/90 backdrop-blur-xl shadow-[0_-4px_24px_rgba(0,0,0,0.45)]" data-active-classes="text-rank-gold"><div class="h-16 px-margin flex justify-around items-center"><a aria-current="page" class="flex flex-col items-center justify-center w-14 h-14 transition-all text-rank-gold" data-path="dashboard" href="#"><span class="material-symbols-outlined text-[24px]">explore</span><span class="font-label-micro text-label-micro mt-1">Beranda</span></a><a class="relative flex flex-col items-center justify-center w-14 h-14 text-text-muted hover:text-text-secondary transition-all" data-path="quests" href="#"><span class="material-symbols-outlined text-[24px]">history_edu</span><span class="font-label-micro text-label-micro mt-1">Misi</span><span class="absolute top-1.5 right-2 px-1.5 py-0.5 rounded-full bg-primary-container text-on-primary-container font-label-micro text-label-micro leading-none">3</span></a><a class="flex flex-col items-center justify-center w-14 h-14 text-text-muted hover:text-text-secondary transition-all" data-path="hall-of-fame" href="#"><span class="material-symbols-outlined text-[24px]">military_tech</span><span class="font-label-micro text-label-micro mt-1">Peringkat</span></a><a class="flex flex-col items-center justify-center w-14 h-14 text-text-muted hover:text-text-secondary transition-all" data-path="realm-guild" href="#"><span class="material-symbols-outlined text-[24px]">shield</span><span class="font-label-micro text-label-micro mt-1">Guild</span></a></div></nav></body></html>
