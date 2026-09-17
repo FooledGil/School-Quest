@@ -134,6 +134,78 @@ class _AdminStudentsScreenState extends State<AdminStudentsScreen> {
                       trailing: Text('+${c['exp_earned']} EXP', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.gold)),
                     );
                   }),
+                  const SizedBox(height: 24),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: AppColors.surfaceDeep,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: AppColors.borderPixel),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Tindakan Akun Siswa',
+                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.textSecondary),
+                        ),
+                        const SizedBox(height: 10),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.amberGlow,
+                              foregroundColor: AppColors.surfaceDeep,
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                            ),
+                            icon: const Icon(Icons.lock_reset_rounded, size: 18),
+                            label: const Text(
+                              'Reset Kata Sandi ke "password"',
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                            ),
+                            onPressed: () async {
+                              final confirm = await showDialog<bool>(
+                                context: context,
+                                builder: (dlgCtx) => AlertDialog(
+                                  backgroundColor: AppColors.surfaceCard,
+                                  title: const Text('Konfirmasi Reset Password'),
+                                  content: Text('Apakah Anda yakin ingin mereset kata sandi siswa ${s['name']} menjadi "password"?'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.of(dlgCtx).pop(false),
+                                      child: const Text('Batal'),
+                                    ),
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(backgroundColor: AppColors.ruby),
+                                      onPressed: () => Navigator.of(dlgCtx).pop(true),
+                                      child: const Text('Reset'),
+                                    ),
+                                  ],
+                                ),
+                              );
+
+                              if (confirm == true) {
+                                final ok = await admin.resetStudentPassword(s['id']);
+                                if (ok && context.mounted) {
+                                  Navigator.of(context).pop();
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Kata sandi untuk ${s['name']} berhasil direset ke "password".'),
+                                      backgroundColor: AppColors.emerald,
+                                      behavior: SnackBarBehavior.floating,
+                                    ),
+                                  );
+                                }
+                              }
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
                 ],
               ),
             ),

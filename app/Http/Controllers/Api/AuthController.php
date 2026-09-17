@@ -47,6 +47,29 @@ class AuthController extends Controller
             ], 403);
         }
 
+        // Initialize or maintain streak on successful login
+        $today = \Carbon\Carbon::today();
+        if (!$user->last_activity_date) {
+            $user->streak_days = 1;
+            $user->last_activity_date = $today;
+            $user->save();
+        } else {
+            $lastActivity = \Carbon\Carbon::parse($user->last_activity_date)->startOfDay();
+            if ($lastActivity->isYesterday()) {
+                $user->streak_days = ($user->streak_days ?: 0) + 1;
+                $user->last_activity_date = $today;
+                $user->save();
+            } elseif ($lastActivity->isBefore(\Carbon\Carbon::yesterday())) {
+                $user->streak_days = 1;
+                $user->last_activity_date = $today;
+                $user->save();
+            } elseif ($user->streak_days == 0) {
+                $user->streak_days = 1;
+                $user->last_activity_date = $today;
+                $user->save();
+            }
+        }
+
         $deviceName = $request->device_name ?: 'flutter-mobile-app';
         $token = $user->createToken($deviceName)->plainTextToken;
 
@@ -140,6 +163,53 @@ class AuthController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Berhasil logout.',
+        ]);
+    }
+
+    /**
+     * Report forgotten password by student / user.
+     */
+    public function reportForgotPassword(Request $request)
+    {
+        $request->validate([
+            'identifier' => 'required|string|max:100',
+            'notes' => 'nullable|string|max:500',
+        ]);
+
+        \App\Models\PasswordResetRequest::ensureTableExists();
+
+        $identifier = trim($request->identifier);
+        $user = User::where('nisn', $identifier)
+            ->orWhere('name', $identifier)
+            ->orWhere('email', $identifier)
+            ->first();
+
+        // Check if there is already a pending request
+        $existing = \App\Models\PasswordResetRequest::where('status', 'pending')
+            ->where(function ($q) use ($identifier, $user) {
+                $q->where('identifier', $identifier);
+                if ($user) {
+                    $q->orWhere('user_id', $user->id);
+                }
+            })->first();
+
+        if ($existing) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Laporan lupa kata sandi Anda sudah tercatat dan sedang menunggu konfirmasi Admin. Kata sandi akan disetel ke default: password.',
+            ]);
+        }
+
+        \App\Models\PasswordResetRequest::create([
+            'user_id' => $user?->id,
+            'identifier' => $identifier,
+            'notes' => $request->notes,
+            'status' => 'pending',
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Laporan lupa kata sandi berhasil dikirim! Silakan hubungi Admin atau Wali Kelas untuk konfirmasi reset ke password bawaan (password).',
         ]);
     }
 }

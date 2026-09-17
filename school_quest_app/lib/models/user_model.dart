@@ -79,7 +79,7 @@ class UserModel {
       level: json['level'] ?? 1,
       exp: json['exp'] ?? 0,
       weeklyExp: json['weekly_exp'] ?? 0,
-      streakDays: json['streak_days'] ?? 0,
+      streakDays: json['streak_days'] ?? json['streak'] ?? 0,
       avatar: json['avatar'],
       avatarSeed: json['avatar_seed'],
       rankName: json['rank_name'] ?? 'Novice',

@@ -2,6 +2,11 @@ import React, { useState, useEffect } from 'react';
 
 const TIPS = [
     {
+        icon: '🔑',
+        title: 'PANDUAN LOGIN',
+        text: 'Masuk dengan format [nama lengkap/nisn] dan gunakan kata sandi password (default).',
+    },
+    {
         icon: '⚔️',
         title: 'TIPS PETUALANG',
         text: 'Kerjakan Main Quest setiap hari untuk mengumpulkan EXP dan naik pangkat rank!',

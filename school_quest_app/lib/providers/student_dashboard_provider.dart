@@ -19,6 +19,7 @@ class StudentDashboardProvider extends ChangeNotifier {
   List<QuestModel> _recentQuests = [];
   List<AchievementModel> _achievements = [];
   Map<String, dynamic>? _activeSanction;
+  int _selectedDayOfWeek = DateTime.now().weekday > 5 ? 1 : DateTime.now().weekday;
 
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
@@ -29,14 +30,46 @@ class StudentDashboardProvider extends ChangeNotifier {
   List<QuestModel> get recentQuests => _recentQuests;
   List<AchievementModel> get achievements => _achievements;
   Map<String, dynamic>? get activeSanction => _activeSanction;
+  int get selectedDayOfWeek => _selectedDayOfWeek;
 
-  Future<void> fetchDashboard() async {
+  Future<void> selectDay(int day) async {
+    _selectedDayOfWeek = day;
+    notifyListeners();
+    try {
+      final response = await _apiClient.get('${ApiConstants.studentDashboard}?day=$day');
+      if (response['status'] == 'success') {
+        final data = response['data'];
+        _schedules = (data['schedules'] as List? ?? [])
+            .map((s) => ScheduleModel.fromJson(s))
+            .toList();
+        if (data['piket'] != null) {
+          _piket = PiketScheduleModel.fromJson(data['piket']);
+        } else {
+          _piket = null;
+        }
+        notifyListeners();
+      }
+    } catch (e) {
+      _errorMessage = e.toString();
+      notifyListeners();
+    }
+  }
+
+  Future<void> fetchDashboard({int? day}) async {
     _isLoading = true;
     _errorMessage = null;
+    if (day != null) {
+      _selectedDayOfWeek = day;
+    }
     notifyListeners();
 
     try {
-      final response = await _apiClient.get(ApiConstants.studentDashboard);
+      final endpoint = day != null
+          ? '${ApiConstants.studentDashboard}?day=$day'
+          : (_selectedDayOfWeek != DateTime.now().weekday
+              ? '${ApiConstants.studentDashboard}?day=$_selectedDayOfWeek'
+              : ApiConstants.studentDashboard);
+      final response = await _apiClient.get(endpoint);
       if (response['status'] == 'success') {
         final data = response['data'];
 

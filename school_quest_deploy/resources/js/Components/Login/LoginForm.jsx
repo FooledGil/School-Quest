@@ -8,11 +8,47 @@ export default function LoginForm({ onLoginSuccess, animating = false }) {
     const [data, setData] = useState({ login: '', password: '' });
     const [processing, setProcessing] = useState(false);
     const [validationErrors, setValidationErrors] = useState({});
+
+    // Forgot password state
+    const [showForgotModal, setShowForgotModal] = useState(false);
+    const [forgotIdentifier, setForgotIdentifier] = useState('');
+    const [forgotNotes, setForgotNotes] = useState('');
+    const [forgotSubmitting, setForgotSubmitting] = useState(false);
+    const [forgotResult, setForgotResult] = useState(null);
+    const [forgotError, setForgotError] = useState(null);
     
     const identityInputRef = useRef(null);
     const passwordInputRef = useRef(null);
     const passwordInputInnerRef = useRef(null);
     const submitBtnRef = useRef(null);
+
+    const handleForgotSubmit = async (e) => {
+        e.preventDefault();
+        if (!forgotIdentifier.trim()) {
+            setForgotError('Harap masukkan Nama Lengkap, NISN, atau Email Anda.');
+            return;
+        }
+
+        setForgotSubmitting(true);
+        setForgotError(null);
+        setForgotResult(null);
+
+        try {
+            const res = await axios.post('/forgot-password-report', {
+                identifier: forgotIdentifier.trim(),
+                notes: forgotNotes.trim(),
+            });
+            if (res.data?.success || res.data?.status === 'success') {
+                setForgotResult(res.data.message || 'Laporan berhasil dikirim ke Admin/Wali Kelas.');
+                setForgotIdentifier('');
+                setForgotNotes('');
+            }
+        } catch (err) {
+            setForgotError(err.response?.data?.message || 'Gagal mengirim laporan. Silakan coba lagi.');
+        } finally {
+            setForgotSubmitting(false);
+        }
+    };
 
     // Update a single field in the form data
     const updateField = (field, value) => {
@@ -76,7 +112,9 @@ export default function LoginForm({ onLoginSuccess, animating = false }) {
         setProcessing(true);
 
         try {
-            const response = await axios.post('/login', data, {
+            const loginUrl = window.location.pathname.includes('index.php') ? '/index.php/login' : '/login';
+            const response = await axios.post(loginUrl, data, {
+                baseURL: '/',
                 headers: { 'X-Login-Animation': 'true' }
             });
 
@@ -115,7 +153,7 @@ export default function LoginForm({ onLoginSuccess, animating = false }) {
                 <LoginInput
                     ref={identityInputRef}
                     id="identity-input"
-                    label="IDENTIFIER / NISN / EMAIL"
+                    label="IDENTIFIER / NAMA / NISN / EMAIL"
                     type="text"
                     value={data.login}
                     onChange={(e) => {
@@ -125,7 +163,7 @@ export default function LoginForm({ onLoginSuccess, animating = false }) {
                         }
                     }}
                     onKeyDown={handleIdentityKeyDown}
-                    placeholder="Masukkan NISN, Nama, atau Email..."
+                    placeholder="Contoh: [nama lengkap/nisn]"
                     icon={<span role="img" aria-label="id-card">🪪</span>}
                     error={validationErrors.login}
                     autoFocus
@@ -146,12 +184,28 @@ export default function LoginForm({ onLoginSuccess, animating = false }) {
                             setValidationErrors(prev => ({ ...prev, password: null }));
                         }
                     }}
-                    placeholder="••••••••"
+                    placeholder="Default: password"
                     icon={<span role="img" aria-label="key">🔑</span>}
                     error={validationErrors.password}
                     allowPasswordToggle={true}
                     disabled={isDisabled}
                 />
+
+                {/* Forgot Password Link */}
+                <div className="flex items-center justify-end -mt-1">
+                    <button
+                        type="button"
+                        onClick={() => {
+                            setForgotIdentifier(data.login || '');
+                            setForgotError(null);
+                            setForgotResult(null);
+                            setShowForgotModal(true);
+                        }}
+                        className="text-[11px] text-sky-400 hover:text-sky-300 transition-colors cursor-pointer hover:underline font-body"
+                    >
+                        Lupa Kata Sandi?
+                    </button>
+                </div>
 
                 {/* Primary CTA Button: ENTER THE REALM with Game Font */}
                 <button
@@ -177,8 +231,140 @@ export default function LoginForm({ onLoginSuccess, animating = false }) {
                 </button>
             </form>
 
+            {/* Login Format Information Banner */}
+            <div className="mt-4 p-3 sm:p-3.5 rounded-xl sm:rounded-2xl bg-[#090e1a]/95 border border-[#1e2d4a] shadow-inner select-none">
+                <div className="flex items-center gap-2 mb-2">
+                    <span className="text-sm">🔑</span>
+                    <span className="font-game text-[9px] sm:text-[10px] text-sky-400 tracking-wider font-bold">
+                        PANDUAN FORMAT LOGIN
+                    </span>
+                </div>
+                <div className="p-2.5 rounded-lg bg-[#0d1424] border border-[#1b263b] space-y-1.5 font-mono text-[11px] sm:text-xs">
+                    <div className="flex items-center justify-between gap-2">
+                        <span className="text-slate-400">Identitas:</span>
+                        <span className="text-amber-400 font-bold tracking-wide">[nama lengkap/nisn]</span>
+                    </div>
+                    <div className="flex items-center justify-between gap-2">
+                        <span className="text-slate-400">Password:</span>
+                        <span className="text-emerald-400 font-bold tracking-wide">password <span className="text-[10px] text-emerald-500/80 font-normal font-sans">(default)</span></span>
+                    </div>
+                </div>
+                <p className="text-[10px] text-slate-400 mt-2 text-center font-body">
+                    Masukkan NISN atau Nama Lengkap Anda. Guru & Admin juga dapat login dengan email.
+                </p>
+            </div>
+
             {/* Realm Server & Adventurer Tips Widget */}
             <RealmNotice />
+
+            {/* Forgot Password Report Modal */}
+            {showForgotModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
+                    <div className="w-full max-w-md bg-[#0f172a] border-2 border-slate-700 rounded-2xl p-5 sm:p-6 shadow-2xl relative text-left">
+                        <button
+                            type="button"
+                            onClick={() => setShowForgotModal(false)}
+                            className="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer"
+                        >
+                            ✕
+                        </button>
+
+                        <div className="flex items-center gap-2.5 mb-3">
+                            <span className="text-xl">🔑</span>
+                            <div>
+                                <h3 className="font-game text-xs sm:text-sm text-white tracking-wider">
+                                    Lapor Lupa Kata Sandi
+                                </h3>
+                                <p className="text-[11px] text-slate-400 font-body">
+                                    Laporan ini akan langsung diteruskan ke Admin / Wali Kelas
+                                </p>
+                            </div>
+                        </div>
+
+                        {forgotResult ? (
+                            <div className="my-4 p-3.5 rounded-xl bg-emerald-950/60 border border-emerald-500/50 text-emerald-200 text-xs leading-relaxed space-y-2">
+                                <p className="font-bold flex items-center gap-1.5">
+                                    <span>✅</span>
+                                    <span>Laporan Terkirim!</span>
+                                </p>
+                                <p>{forgotResult}</p>
+                                <p className="text-[10.5px] text-emerald-300/80">
+                                    Setelah admin mengonfirmasi, akun Anda dapat login kembali menggunakan kata sandi default: <span className="font-mono font-bold text-amber-300">password</span>.
+                                </p>
+                                <button
+                                    type="button"
+                                    onClick={() => setShowForgotModal(false)}
+                                    className="w-full mt-3 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-semibold"
+                                >
+                                    Tutup
+                                </button>
+                            </div>
+                        ) : (
+                            <form onSubmit={handleForgotSubmit} className="space-y-3.5 mt-4">
+                                {forgotError && (
+                                    <div className="p-2.5 rounded-lg bg-red-950/60 border border-red-500/50 text-red-200 text-xs">
+                                        {forgotError}
+                                    </div>
+                                )}
+
+                                <div>
+                                    <label className="block text-[10px] font-game text-slate-300 uppercase tracking-wider mb-1">
+                                        Identitas (Nama Lengkap / NISN / Email) *
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={forgotIdentifier}
+                                        onChange={(e) => setForgotIdentifier(e.target.value)}
+                                        placeholder="Contoh: MITA atau 0084169869"
+                                        className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white placeholder-slate-500 focus:border-sky-400 focus:outline-none"
+                                        required
+                                        autoFocus
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-[10px] font-game text-slate-300 uppercase tracking-wider mb-1">
+                                        Catatan Tambahan (Opsional)
+                                    </label>
+                                    <textarea
+                                        value={forgotNotes}
+                                        onChange={(e) => setForgotNotes(e.target.value)}
+                                        placeholder="Contoh: Lupa password akun, mohon diresetkan ke password default."
+                                        rows={2}
+                                        className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white placeholder-slate-500 focus:border-sky-400 focus:outline-none"
+                                    />
+                                </div>
+
+                                <div className="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800 text-[10.5px] text-slate-400 space-y-1">
+                                    <p className="flex items-center gap-1 text-amber-300 font-semibold">
+                                        <span>💡</span> Informasi:
+                                    </p>
+                                    <p>
+                                        Ketika disetujui Admin, kata sandi Anda akan direset ke bawaan: <span className="font-mono font-bold text-emerald-400">password</span>.
+                                    </p>
+                                </div>
+
+                                <div className="flex gap-2 pt-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowForgotModal(false)}
+                                        className="flex-1 py-2 rounded-lg border border-slate-700 hover:bg-slate-800 text-xs text-slate-300 font-medium cursor-pointer"
+                                    >
+                                        Batal
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        disabled={forgotSubmitting}
+                                        className="flex-1 py-2 rounded-lg bg-sky-600 hover:bg-sky-500 text-xs text-white font-semibold cursor-pointer disabled:opacity-50 flex items-center justify-center gap-1.5"
+                                    >
+                                        {forgotSubmitting ? 'Mengirim...' : 'Kirim Laporan'}
+                                    </button>
+                                </div>
+                            </form>
+                        )}
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

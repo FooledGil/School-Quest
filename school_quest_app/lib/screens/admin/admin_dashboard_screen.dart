@@ -18,7 +18,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<AdminProvider>(context, listen: false).fetchDashboard();
+      final admin = Provider.of<AdminProvider>(context, listen: false);
+      admin.fetchDashboard();
+      admin.fetchPasswordResetRequests();
     });
   }
 
@@ -26,6 +28,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   Widget build(BuildContext context) {
     final admin = Provider.of<AdminProvider>(context);
     final stats = admin.stats;
+    final resetRequests = admin.passwordResetRequests;
+    final pendingRequests = resetRequests.where((r) => r['status'] == 'pending').toList();
 
     return Scaffold(
       backgroundColor: AppColors.bgDark,
@@ -33,7 +37,12 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           ? const Center(child: CircularProgressIndicator(color: AppColors.primaryLight))
           : RefreshIndicator(
               color: AppColors.primaryLight,
-              onRefresh: () => admin.fetchDashboard(),
+              onRefresh: () async {
+                await Future.wait([
+                  admin.fetchDashboard(),
+                  admin.fetchPasswordResetRequests(),
+                ]);
+              },
               child: SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                 child: Column(
@@ -67,6 +76,193 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                         ],
                       ),
                     ],
+
+                    const SizedBox(height: 24),
+
+                    // ── Laporan Lupa Kata Sandi Siswa ──
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(Icons.lock_reset_rounded, size: 20, color: AppColors.amberGlow),
+                            const SizedBox(width: 8),
+                            const Text(
+                              'Permintaan Lupa Sandi',
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                        if (pendingRequests.isNotEmpty)
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                            decoration: BoxDecoration(
+                              color: AppColors.amberGlow.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: AppColors.amberGlow),
+                            ),
+                            child: Text(
+                              '${pendingRequests.length} Menunggu',
+                              style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppColors.amberGlow),
+                            ),
+                          ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    if (resetRequests.isEmpty)
+                      GlassCard(
+                        padding: const EdgeInsets.all(14),
+                        child: Row(
+                          children: const [
+                            Icon(Icons.check_circle_outline, color: AppColors.emerald, size: 20),
+                            SizedBox(width: 10),
+                            Text(
+                              'Tidak ada antrian permintaan lupa password.',
+                              style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                            ),
+                          ],
+                        ),
+                      )
+                    else
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: resetRequests.length > 5 ? 5 : resetRequests.length,
+                        itemBuilder: (context, index) {
+                          final req = resetRequests[index];
+                          final isPending = req['status'] == 'pending';
+                          final isResolved = req['status'] == 'resolved';
+
+                          return GlassCard(
+                            margin: const EdgeInsets.only(bottom: 8),
+                            padding: const EdgeInsets.all(12),
+                            borderColor: isPending ? AppColors.amberGlow.withOpacity(0.5) : AppColors.borderPixel,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 16,
+                                      backgroundColor: isPending
+                                          ? AppColors.amberGlow.withOpacity(0.2)
+                                          : (isResolved ? AppColors.emerald.withOpacity(0.2) : AppColors.ruby.withOpacity(0.2)),
+                                      child: Icon(
+                                        isPending ? Icons.pending : (isResolved ? Icons.check : Icons.close),
+                                        size: 16,
+                                        color: isPending ? AppColors.amberGlow : (isResolved ? AppColors.emerald : AppColors.ruby),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            req['user_name'] ?? req['identifier'] ?? 'Siswa',
+                                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                                          ),
+                                          Text(
+                                            'NISN: ${req['user_nisn'] ?? req['identifier']} • ${req['user_class'] ?? "Siswa"}',
+                                            style: const TextStyle(fontSize: 11, color: AppColors.textMuted),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                      decoration: BoxDecoration(
+                                        color: isPending
+                                            ? AppColors.amberGlow.withOpacity(0.15)
+                                            : (isResolved ? AppColors.emerald.withOpacity(0.15) : AppColors.ruby.withOpacity(0.15)),
+                                        borderRadius: BorderRadius.circular(6),
+                                        border: Border.all(
+                                          color: isPending
+                                              ? AppColors.amberGlow
+                                              : (isResolved ? AppColors.emerald : AppColors.ruby),
+                                          width: 0.8,
+                                        ),
+                                      ),
+                                      child: Text(
+                                        isPending ? 'PENDING' : (isResolved ? 'DIRESET' : 'DITOLAK'),
+                                        style: TextStyle(
+                                          fontSize: 9,
+                                          fontWeight: FontWeight.bold,
+                                          color: isPending
+                                              ? AppColors.amberGlow
+                                              : (isResolved ? AppColors.emerald : AppColors.ruby),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                if (req['notes'] != null && req['notes'].toString().isNotEmpty) ...[
+                                  const SizedBox(height: 8),
+                                  Container(
+                                    width: double.infinity,
+                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.surfaceDeep,
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                    child: Text(
+                                      'Catatan: "${req['notes']}"',
+                                      style: const TextStyle(fontSize: 11, fontStyle: FontStyle.italic, color: AppColors.textSecondary),
+                                    ),
+                                  ),
+                                ],
+                                if (isPending) ...[
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      TextButton(
+                                        style: TextButton.styleFrom(
+                                          foregroundColor: AppColors.textMuted,
+                                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                          minimumSize: Size.zero,
+                                        ),
+                                        onPressed: () async {
+                                          await admin.resolvePasswordResetRequest(req['id'], 'reject');
+                                        },
+                                        child: const Text('Tolak', style: TextStyle(fontSize: 11)),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      ElevatedButton.icon(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: AppColors.emerald,
+                                          foregroundColor: Colors.white,
+                                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                          minimumSize: Size.zero,
+                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                        ),
+                                        icon: const Icon(Icons.key, size: 14),
+                                        label: const Text(
+                                          'Reset ke "password"',
+                                          style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+                                        ),
+                                        onPressed: () async {
+                                          final ok = await admin.resolvePasswordResetRequest(req['id'], 'resolve');
+                                          if (ok && context.mounted) {
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              SnackBar(
+                                                content: Text('Password untuk ${req['user_name'] ?? req['identifier']} berhasil direset ke "password"'),
+                                                backgroundColor: AppColors.emerald,
+                                                behavior: SnackBarBehavior.floating,
+                                              ),
+                                            );
+                                          }
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ],
+                            ),
+                          );
+                        },
+                      ),
 
                     const SizedBox(height: 24),
 

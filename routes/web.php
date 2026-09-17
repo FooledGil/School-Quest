@@ -26,6 +26,7 @@ Route::get('/', function () {
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/forgot-password-report', [AuthController::class, 'reportForgotPassword'])->name('forgot.password.report');
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -87,6 +88,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     Route::get('/students', [AdminStudentController::class, 'index'])->name('students.index');
     Route::get('/students/{student}', [AdminStudentController::class, 'show'])->name('students.show');
+    Route::post('/students/{student}/reset-password', [AdminStudentController::class, 'resetPassword'])->name('students.resetPassword');
+    Route::post('/password-resets/{id}/resolve', [AdminStudentController::class, 'resolveResetRequest'])->name('passwordResets.resolve');
 });
 
 // Storage fallback route for environments without symlink support

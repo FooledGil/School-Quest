@@ -32,6 +32,9 @@ class AdminProvider extends ChangeNotifier {
   List<dynamic> _students = [];
   Map<String, dynamic>? _selectedStudentDetail;
 
+  // Password reset requests state
+  List<dynamic> _passwordResetRequests = [];
+
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
   String? get successMessage => _successMessage;
@@ -269,4 +272,54 @@ class AdminProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  List<dynamic> get passwordResetRequests => _passwordResetRequests;
+
+  Future<void> fetchPasswordResetRequests() async {
+    try {
+      final response = await _apiClient.get('/admin/password-resets');
+      if (response['status'] == 'success') {
+        _passwordResetRequests = response['data'] ?? [];
+        notifyListeners();
+      }
+    } catch (e) {
+      _errorMessage = e.toString();
+      notifyListeners();
+    }
+  }
+
+  Future<bool> resolvePasswordResetRequest(int requestId, String action) async {
+    try {
+      final response = await _apiClient.post('/admin/password-resets/$requestId/resolve', body: {
+        'action': action,
+      });
+      if (response['status'] == 'success') {
+        _successMessage = response['message'] ?? 'Permintaan berhasil diproses';
+        await fetchPasswordResetRequests();
+        return true;
+      }
+      return false;
+    } catch (e) {
+      _errorMessage = e.toString();
+      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<bool> resetStudentPassword(int studentId) async {
+    try {
+      final response = await _apiClient.post('/admin/students/$studentId/reset-password');
+      if (response['status'] == 'success') {
+        _successMessage = response['message'] ?? 'Password berhasil direset ke "password"';
+        notifyListeners();
+        return true;
+      }
+      return false;
+    } catch (e) {
+      _errorMessage = e.toString();
+      notifyListeners();
+      return false;
+    }
+  }
 }
+

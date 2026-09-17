@@ -124,4 +124,106 @@ class AdminStudentApiController extends Controller
             ],
         ]);
     }
+
+    /**
+     * Direct one-click reset of student password to default ('password').
+     */
+    public function resetPassword(User $student)
+    {
+        $student->password = \Illuminate\Support\Facades\Hash::make('password');
+        $student->save();
+
+        \App\Models\PasswordResetRequest::ensureTableExists();
+        \App\Models\PasswordResetRequest::where('user_id', $student->id)
+            ->where('status', 'pending')
+            ->update([
+                'status' => 'resolved',
+                'resolved_by' => auth()->id(),
+                'resolved_at' => now(),
+            ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => "Password siswa {$student->name} berhasil direset ke 'password'.",
+        ]);
+    }
+
+    /**
+     * List all pending password reset requests for admin review.
+     */
+    public function passwordResetRequests()
+    {
+        \App\Models\PasswordResetRequest::ensureTableExists();
+
+        $requests = \App\Models\PasswordResetRequest::with('user')
+            ->orderByRaw("FIELD(status, 'pending', 'resolved', 'rejected')")
+            ->latest()
+            ->take(50)
+            ->get()
+            ->map(function ($r) {
+                return [
+                    'id' => $r->id,
+                    'identifier' => $r->identifier,
+                    'notes' => $r->notes,
+                    'status' => $r->status,
+                    'user_id' => $r->user_id,
+                    'user_name' => $r->user?->name,
+                    'user_class' => $r->user?->class,
+                    'user_nisn' => $r->user?->nisn,
+                    'created_at' => $r->created_at->format('d M Y, H:i'),
+                    'resolved_at' => $r->resolved_at?->format('d M Y, H:i'),
+                ];
+            });
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $requests,
+        ]);
+    }
+
+    /**
+     * Resolve or reject a password reset request.
+     */
+    public function resolvePasswordResetRequest(\Illuminate\Http\Request $request, $id)
+    {
+        \App\Models\PasswordResetRequest::ensureTableExists();
+
+        $resetReq = \App\Models\PasswordResetRequest::findOrFail($id);
+        $action = $request->input('action', 'resolve'); // 'resolve' or 'reject'
+
+        if ($action === 'resolve') {
+            $user = $resetReq->user;
+            if (!$user && $resetReq->identifier) {
+                $user = User::where('nisn', $resetReq->identifier)
+                    ->orWhere('name', $resetReq->identifier)
+                    ->orWhere('email', $resetReq->identifier)
+                    ->first();
+            }
+
+            if ($user) {
+                $user->password = \Illuminate\Support\Facades\Hash::make('password');
+                $user->save();
+            }
+
+            $resetReq->status = 'resolved';
+            $resetReq->resolved_by = auth()->id();
+            $resetReq->resolved_at = now();
+            $resetReq->save();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => "Permintaan disetujui. Kata sandi akun {$resetReq->identifier} telah direset ke default ('password').",
+            ]);
+        } else {
+            $resetReq->status = 'rejected';
+            $resetReq->resolved_by = auth()->id();
+            $resetReq->resolved_at = now();
+            $resetReq->save();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => "Permintaan reset kata sandi telah ditolak.",
+            ]);
+        }
+    }
 }

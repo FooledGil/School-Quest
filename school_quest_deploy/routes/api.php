@@ -21,6 +21,7 @@ use App\Http\Controllers\Api\Admin\AdminStudentApiController;
 
 // Public Authentication
 Route::post('/auth/login', [AuthController::class, 'login']);
+Route::post('/auth/forgot-password-report', [AuthController::class, 'reportForgotPassword']);
 
 // Authenticated Routes
 Route::middleware('auth:sanctum')->group(function () {
@@ -80,5 +81,8 @@ Route::middleware('auth:sanctum')->group(function () {
         
         Route::get('/students', [AdminStudentApiController::class, 'index']);
         Route::get('/students/{student}', [AdminStudentApiController::class, 'show']);
+        Route::post('/students/{student}/reset-password', [AdminStudentApiController::class, 'resetPassword']);
+        Route::get('/password-resets', [AdminStudentApiController::class, 'passwordResetRequests']);
+        Route::post('/password-resets/{id}/resolve', [AdminStudentApiController::class, 'resolvePasswordResetRequest']);
     });
 });

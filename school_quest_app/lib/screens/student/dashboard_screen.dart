@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/constants/app_colors.dart';
+import '../../models/schedule_model.dart';
 import '../../models/user_model.dart';
 import '../../providers/student_dashboard_provider.dart';
 import '../../widgets/avatar_widget.dart';
@@ -109,24 +110,33 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         ),
                       const SizedBox(width: 8),
 
-                      // Notification Bell Button
-                      IconButton(
-                        style: IconButton.styleFrom(
-                          backgroundColor: AppColors.surfaceDeep,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            side: const BorderSide(color: AppColors.borderPixel),
-                          ),
-                        ),
-                        icon: const Icon(Icons.notifications_outlined, size: 18, color: AppColors.textSecondary),
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Tidak ada pemberitahuan baru saat ini.'),
-                              behavior: SnackBarBehavior.floating,
+                      // Notification Bell Button with Unread Badge
+                      Stack(
+                        children: [
+                          IconButton(
+                            style: IconButton.styleFrom(
+                              backgroundColor: AppColors.surfaceDeep,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                side: const BorderSide(color: AppColors.borderPixel),
+                              ),
                             ),
-                          );
-                        },
+                            icon: const Icon(Icons.notifications_outlined, size: 18, color: AppColors.textSecondary),
+                            onPressed: () => _showNotificationCenter(context, user, dashboard),
+                          ),
+                          Positioned(
+                            top: 8,
+                            right: 8,
+                            child: Container(
+                              width: 8,
+                              height: 8,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: AppColors.manaCyan,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(width: 14),
                     ],
@@ -140,6 +150,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         // Sanction Alert Banner (if any)
                         if (dashboard.activeSanction != null)
                           _buildSanctionBanner(dashboard),
+
+                        // Streak Celebration Banner (Special Notification / Milestone)
+                        if (user != null && user.streakDays > 0)
+                          _buildStreakCelebrationBanner(user),
 
                         // RPG Hero Profile Card
                         if (user != null) _buildHeroProfileCard(user, stats),
@@ -281,7 +295,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           ),
                           const SizedBox(height: 3),
                           Text(
-                            'NISN: ${user.nisn ?? "0084169869"} • ${user.studentClass ?? "XII RPL"}',
+                            'NISN: ${user.nisn ?? "-"} • ${user.studentClass ?? "Siswa"}',
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
@@ -912,7 +926,38 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   // ─── Today's Timetable Section ───
+  static const Map<int, String> _dayNames = {
+    1: 'SENIN',
+    2: 'SELASA',
+    3: 'RABU',
+    4: 'KAMIS',
+    5: 'JUMAT',
+  };
+
+  bool _isScheduleActiveNow(ScheduleModel schedule, int selectedDay) {
+    final now = DateTime.now();
+    if (now.weekday != selectedDay) return false;
+
+    try {
+      final currentMinutes = now.hour * 60 + now.minute;
+      final startParts = schedule.timeStart.split(':');
+      final endParts = schedule.timeEnd.split(':');
+      if (startParts.length < 2 || endParts.length < 2) return false;
+
+      final startMinutes = int.parse(startParts[0]) * 60 + int.parse(startParts[1]);
+      final endMinutes = int.parse(endParts[0]) * 60 + int.parse(endParts[1]);
+
+      return currentMinutes >= startMinutes && currentMinutes <= endMinutes;
+    } catch (_) {
+      return false;
+    }
+  }
+
   Widget _buildTimetableSection(StudentDashboardProvider dashboard) {
+    final selectedDay = dashboard.selectedDayOfWeek;
+    final isToday = DateTime.now().weekday == selectedDay;
+    final dayLabel = _dayNames[selectedDay] ?? 'SENIN';
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -924,7 +969,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 Icon(Icons.calendar_month, size: 18, color: AppColors.manaCyan),
                 SizedBox(width: 8),
                 Text(
-                  'JADWAL HARI INI',
+                  'JADWAL PELAJARAN',
                   style: TextStyle(
                     fontFamily: 'Outfit',
                     fontSize: 15,
@@ -942,9 +987,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 borderRadius: BorderRadius.circular(6),
                 border: Border.all(color: AppColors.borderPixel),
               ),
-              child: const Text(
-                'SENIN',
-                style: TextStyle(
+              child: Text(
+                isToday ? '$dayLabel (HARI INI)' : dayLabel,
+                style: const TextStyle(
                   fontSize: 10,
                   fontWeight: FontWeight.w800,
                   letterSpacing: 0.8,
@@ -956,18 +1001,81 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
         const SizedBox(height: 10),
 
+        // Horizontal Day Selector Chips (Senin - Jumat)
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [1, 2, 3, 4, 5].map((dayNum) {
+              final isChipSelected = selectedDay == dayNum;
+              final isCurrentDay = DateTime.now().weekday == dayNum;
+              final name = _dayNames[dayNum] ?? 'HARI';
+
+              return Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: InkWell(
+                  onTap: () => dashboard.selectDay(dayNum),
+                  borderRadius: BorderRadius.circular(8),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: isChipSelected ? AppColors.manaCyan.withOpacity(0.18) : AppColors.surfaceDeep,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: isChipSelected ? AppColors.manaCyan : AppColors.borderPixel,
+                        width: isChipSelected ? 1.5 : 1.0,
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (isCurrentDay) ...[
+                          Container(
+                            width: 6,
+                            height: 6,
+                            margin: const EdgeInsets.only(right: 6),
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppColors.emerald,
+                            ),
+                          ),
+                        ],
+                        Text(
+                          name.substring(0, 1) + name.substring(1).toLowerCase(),
+                          style: TextStyle(
+                            fontFamily: 'Outfit',
+                            fontSize: 11.5,
+                            fontWeight: isChipSelected ? FontWeight.w800 : FontWeight.w600,
+                            color: isChipSelected ? AppColors.manaCyan : AppColors.textSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+        const SizedBox(height: 12),
+
         if (dashboard.schedules.isEmpty)
           Container(
-            padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
+            padding: const EdgeInsets.symmetric(vertical: 22, horizontal: 16),
             decoration: BoxDecoration(
               color: AppColors.surfaceCard,
               borderRadius: BorderRadius.circular(14),
               border: Border.all(color: AppColors.borderPixel),
             ),
-            child: const Center(
-              child: Text(
-                'Tidak ada jadwal pelajaran hari ini.',
-                style: TextStyle(color: AppColors.textMuted, fontSize: 13),
+            child: Center(
+              child: Column(
+                children: [
+                  const Icon(Icons.event_available, color: AppColors.textMuted, size: 28),
+                  const SizedBox(height: 6),
+                  Text(
+                    'Tidak ada jadwal pelajaran untuk hari $dayLabel.',
+                    style: const TextStyle(color: AppColors.textMuted, fontSize: 12.5),
+                  ),
+                ],
               ),
             ),
           )
@@ -982,7 +1090,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             child: Column(
               children: List.generate(dashboard.schedules.length, (index) {
                 final s = dashboard.schedules[index];
-                final isCurrent = index == 1; // Example active class
+                final isCurrent = _isScheduleActiveNow(s, selectedDay);
                 final isLast = index == dashboard.schedules.length - 1;
 
                 return IntrinsicHeight(
@@ -1053,7 +1161,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               ? BoxDecoration(
                                   color: AppColors.surfaceDeep,
                                   borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(color: AppColors.manaCyan.withOpacity(0.3)),
+                                  border: Border.all(color: AppColors.manaCyan.withOpacity(0.4)),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: AppColors.manaCyan.withOpacity(0.08),
+                                      blurRadius: 8,
+                                    ),
+                                  ],
                                 )
                               : null,
                           child: Column(
@@ -1075,10 +1189,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   ),
                                   if (isCurrent)
                                     Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1.5),
+                                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                                       decoration: BoxDecoration(
                                         color: AppColors.manaCyan.withOpacity(0.2),
                                         borderRadius: BorderRadius.circular(4),
+                                        border: Border.all(color: AppColors.manaCyan, width: 0.8),
                                       ),
                                       child: const Text(
                                         'SEKARANG',
@@ -1086,6 +1201,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                           fontSize: 8.5,
                                           fontWeight: FontWeight.w800,
                                           color: AppColors.manaCyan,
+                                          letterSpacing: 0.6,
                                         ),
                                       ),
                                     ),
@@ -1229,4 +1345,296 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
     );
   }
+
+  // ─── Streak Celebration Banner ───
+  Widget _buildStreakCelebrationBanner(UserModel user) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            const Color(0xFF78350F).withOpacity(0.55),
+            const Color(0xFF451A03).withOpacity(0.55),
+            AppColors.surfaceCard,
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppColors.gold.withOpacity(0.65), width: 1.2),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.gold.withOpacity(0.12),
+            blurRadius: 10,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: AppColors.gold.withOpacity(0.2),
+              border: Border.all(color: AppColors.gold.withOpacity(0.5)),
+            ),
+            child: const Icon(
+              Icons.local_fire_department,
+              color: AppColors.amberGlow,
+              size: 22,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      'STREAK AKTIF: ${user.streakDays} HARI',
+                      style: const TextStyle(
+                        fontFamily: 'Outfit',
+                        fontSize: 13,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 0.5,
+                        color: AppColors.amberGlow,
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    const Text('🔥', style: TextStyle(fontSize: 12)),
+                  ],
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  user.streakDays >= 7
+                      ? 'Luar biasa! Kamu pembelajar sejati, pertahankan streak petualangan ini!'
+                      : 'Hebat! Selesaikan quest setiap hari untuk melipatgandakan bonus EXP harian!',
+                  style: const TextStyle(
+                    fontSize: 11,
+                    color: AppColors.textSecondary,
+                    height: 1.3,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ─── Special Notifications Center Modal Bottom Sheet ───
+  void _showNotificationCenter(BuildContext context, UserModel? user, StudentDashboardProvider dashboard) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => Container(
+        height: MediaQuery.of(context).size.height * 0.75,
+        decoration: const BoxDecoration(
+          color: AppColors.surfaceCard,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          border: Border(top: BorderSide(color: AppColors.borderPixel, width: 1.5)),
+        ),
+        child: Column(
+          children: [
+            const SizedBox(height: 12),
+            Container(
+              width: 44,
+              height: 4,
+              decoration: BoxDecoration(
+                color: AppColors.borderPixel,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const SizedBox(height: 14),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: const [
+                      Icon(Icons.notifications_active, color: AppColors.manaCyan, size: 22),
+                      SizedBox(width: 10),
+                      Text(
+                        'PUSAT PEMBERITAHUAN',
+                        style: TextStyle(
+                          fontFamily: 'Outfit',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 0.8,
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
+                    ],
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close, size: 20, color: AppColors.textMuted),
+                    onPressed: () => Navigator.of(ctx).pop(),
+                  ),
+                ],
+              ),
+            ),
+            const Divider(color: AppColors.borderPixel, height: 1),
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.all(16),
+                children: [
+                  // Streak Notification
+                  _buildNotificationTile(
+                    title: 'Streak Petualangan',
+                    subtitle: (user != null && user.streakDays > 0)
+                        ? 'Kamu telah aktif ${user.streakDays} hari berturut-turut! Tetap konsisten belajar dan selesaikan quest harian.'
+                        : 'Mulai petualangan belajarmu hari ini untuk membangun streak baru!',
+                    badge: '${user?.streakDays ?? 1} HARI',
+                    icon: Icons.local_fire_department,
+                    iconColor: AppColors.gold,
+                    tag: 'STREAK MILESTONE',
+                    tagColor: AppColors.gold,
+                    time: 'Hari ini',
+                  ),
+                  const SizedBox(height: 10),
+
+                  // Quests Alert
+                  _buildNotificationTile(
+                    title: 'Misi & Quest Harian',
+                    subtitle: dashboard.recentQuests.isNotEmpty
+                        ? 'Ada ${dashboard.recentQuests.length} quest aktif yang siap kamu kerjakan untuk mengumpulkan EXP!'
+                        : 'Semua quest hari ini telah kamu selesaikan. Bersiaplah untuk misi esok hari!',
+                    badge: '${dashboard.recentQuests.length} QUEST',
+                    icon: Icons.sports_martial_arts,
+                    iconColor: AppColors.tertiary,
+                    tag: 'QUEST ALERT',
+                    tagColor: AppColors.tertiary,
+                    time: 'Tersedia',
+                  ),
+                  const SizedBox(height: 10),
+
+                  // Leaderboard / Rank Status
+                  _buildNotificationTile(
+                    title: 'Status Peringkat Kelas',
+                    subtitle: 'Peringkat #${dashboard.stats?['rank_position'] ?? '9'} di kelas ${user?.studentClass ?? "XII"}. Raih posisi Top 3 untuk menyandang gelar Champion!',
+                    badge: 'RANK #${dashboard.stats?['rank_position'] ?? '9'}',
+                    icon: Icons.emoji_events,
+                    iconColor: AppColors.manaCyan,
+                    tag: 'LEADERBOARD TIER',
+                    tagColor: AppColors.manaCyan,
+                    time: 'Minggu ini',
+                  ),
+                  const SizedBox(height: 10),
+
+                  // Class Piket Notification
+                  if (dashboard.piket != null && dashboard.piket!.members.isNotEmpty) ...[
+                    _buildNotificationTile(
+                      title: 'Petugas Piket Kelas Hari Ini',
+                      subtitle: 'Petugas: ${dashboard.piket!.members.map((m) => m.name).join(', ')}. Pastikan kelas tetap bersih dan rapi!',
+                      badge: 'PIKET',
+                      icon: Icons.cleaning_services_rounded,
+                      iconColor: AppColors.amberGlow,
+                      tag: 'JADWAL PIKET',
+                      tagColor: AppColors.amberGlow,
+                      time: 'Hari ini',
+                    ),
+                    const SizedBox(height: 10),
+                  ],
+
+                  // Sanction (if any)
+                  if (dashboard.activeSanction != null) ...[
+                    _buildNotificationTile(
+                      title: 'Peringatan Disiplin Aktif',
+                      subtitle: dashboard.activeSanction!['reason'] ?? 'Harap patuhi peraturan tata tertib sekolah.',
+                      badge: 'SANKSI',
+                      icon: Icons.warning_amber_rounded,
+                      iconColor: AppColors.ruby,
+                      tag: 'PERINGATAN GURU',
+                      tagColor: AppColors.ruby,
+                      time: 'Penting',
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNotificationTile({
+    required String title,
+    required String subtitle,
+    required String badge,
+    required IconData icon,
+    required Color iconColor,
+    required String tag,
+    required Color tagColor,
+    required String time,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceDeep,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppColors.borderPixel),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: iconColor.withOpacity(0.15),
+              border: Border.all(color: iconColor.withOpacity(0.4)),
+            ),
+            child: Icon(icon, color: iconColor, size: 20),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: tagColor.withOpacity(0.15),
+                        borderRadius: BorderRadius.circular(4),
+                        border: Border.all(color: tagColor.withOpacity(0.4), width: 0.8),
+                      ),
+                      child: Text(
+                        tag,
+                        style: TextStyle(fontSize: 8.5, fontWeight: FontWeight.w800, color: tagColor, letterSpacing: 0.5),
+                      ),
+                    ),
+                    Text(
+                      time,
+                      style: const TextStyle(fontSize: 10, color: AppColors.textMuted),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  title,
+                  style: const TextStyle(fontFamily: 'Outfit', fontWeight: FontWeight.w700, fontSize: 13.5, color: AppColors.textPrimary),
+                ),
+                const SizedBox(height: 3),
+                Text(
+                  subtitle,
+                  style: const TextStyle(fontSize: 11.5, color: AppColors.textSecondary, height: 1.35),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
+
