@@ -89,7 +89,17 @@ function SubmissionCard({ submission, onApprove, onReject }) {
                 {submission.proof_image && (
                     <div className="mb-2">
                         <a href={submission.proof_image} target="_blank" rel="noopener noreferrer" className="block w-full max-w-sm rounded-lg overflow-hidden border border-slate-700 hover:border-blue-500 transition-colors">
-                            <img src={submission.proof_image} alt="Bukti Quest" className="w-full h-auto object-cover max-h-48" />
+                            <img 
+                                src={submission.proof_image} 
+                                alt="Bukti Quest" 
+                                className="w-full h-auto object-cover max-h-48" 
+                                onError={(e) => {
+                                    if (!e.target.dataset.triedFallback && typeof submission.proof_image === 'string' && submission.proof_image.startsWith('/storage/')) {
+                                        e.target.dataset.triedFallback = '1';
+                                        e.target.src = '/index.php' + submission.proof_image;
+                                    }
+                                }}
+                            />
                         </a>
                     </div>
                 )}

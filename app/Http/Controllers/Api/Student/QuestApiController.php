@@ -100,6 +100,7 @@ class QuestApiController extends Controller
         $proofImagePath = null;
         if ($request->hasFile('proof_image')) {
             $proofImagePath = $request->file('proof_image')->store('quest_proofs', 'public');
+            \App\Services\StorageMirrorService::mirrorToRoot($proofImagePath);
         }
 
         $completion = QuestCompletion::create([

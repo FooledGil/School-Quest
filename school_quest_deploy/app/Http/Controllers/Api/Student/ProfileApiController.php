@@ -104,6 +104,7 @@ class ProfileApiController extends Controller
         $this->deleteOldStorageAvatar($user);
 
         $path = $request->file('avatar_file')->store('avatars', 'public');
+        \App\Services\StorageMirrorService::mirrorToRoot($path);
 
         $user->avatar = '/storage/' . $path;
         $user->avatar_seed = null;

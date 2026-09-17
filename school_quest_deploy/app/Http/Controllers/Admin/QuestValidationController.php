@@ -29,7 +29,7 @@ class QuestValidationController extends Controller
                     'quest_difficulty' => $completion->quest->difficulty,
                     'exp_reward' => $completion->exp_earned,
                     'proof_text' => $completion->proof_text,
-                    'proof_image' => $completion->proof_image ? \Illuminate\Support\Facades\Storage::url($completion->proof_image) : null,
+                    'proof_image' => \App\Services\StorageMirrorService::mirrorToRoot($completion->proof_image),
                     'submitted_at' => $completion->completed_at->diffForHumans(),
                     'submitted_at_full' => $completion->completed_at->format('d M Y, H:i'),
                 ];
