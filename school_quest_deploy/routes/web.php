@@ -88,3 +88,52 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/students', [AdminStudentController::class, 'index'])->name('students.index');
     Route::get('/students/{student}', [AdminStudentController::class, 'show'])->name('students.show');
 });
+
+// Storage fallback route for environments without symlink support
+Route::get('/storage/{path}', function ($path) {
+    $candidates = [
+        dirname(base_path()) . '/storage/' . $path,
+        storage_path('app/public/' . $path),
+        public_path('storage/' . $path),
+    ];
+
+    foreach ($candidates as $file) {
+        if (file_exists($file) && !is_dir($file)) {
+            // Self-heal: ensure it is mirrored to root storage for subsequent direct Nginx hits
+            $rootStorage = dirname(base_path()) . '/storage/' . $path;
+            if (!file_exists($rootStorage)) {
+                @mkdir(dirname($rootStorage), 0777, true);
+                @copy($file, $rootStorage);
+                @chmod($rootStorage, 0666);
+            }
+
+            $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+            $mimeTypes = [
+                'jpg'  => 'image/jpeg',
+                'jpeg' => 'image/jpeg',
+                'png'  => 'image/png',
+                'gif'  => 'image/gif',
+                'webp' => 'image/webp',
+                'svg'  => 'image/svg+xml',
+            ];
+            $contentType = $mimeTypes[$extension] ?? (mime_content_type($file) ?: 'application/octet-stream');
+            return response()->file($file, ['Content-Type' => $contentType]);
+        }
+    }
+
+    abort(404);
+})->where('path', '.*');
+
+// Sync storage utility route
+Route::get('/sync-storage', function () {
+    $file = public_path('sync-storage.php');
+    if (file_exists($file)) {
+        require $file;
+        return;
+    }
+    return response('sync-storage.php tidak ditemukan', 404);
+});
+Route::get('/sync-storage.php', function () {
+    return redirect('/sync-storage');
+});
+

@@ -99,6 +99,14 @@ Route::get('/storage/{path}', function ($path) {
 
     foreach ($candidates as $file) {
         if (file_exists($file) && !is_dir($file)) {
+            // Self-heal: ensure it is mirrored to root storage for subsequent direct Nginx hits
+            $rootStorage = dirname(base_path()) . '/storage/' . $path;
+            if (!file_exists($rootStorage)) {
+                @mkdir(dirname($rootStorage), 0777, true);
+                @copy($file, $rootStorage);
+                @chmod($rootStorage, 0666);
+            }
+
             $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
             $mimeTypes = [
                 'jpg'  => 'image/jpeg',
@@ -115,4 +123,17 @@ Route::get('/storage/{path}', function ($path) {
 
     abort(404);
 })->where('path', '.*');
+
+// Sync storage utility route
+Route::get('/sync-storage', function () {
+    $file = public_path('sync-storage.php');
+    if (file_exists($file)) {
+        require $file;
+        return;
+    }
+    return response('sync-storage.php tidak ditemukan', 404);
+});
+Route::get('/sync-storage.php', function () {
+    return redirect('/sync-storage');
+});
 

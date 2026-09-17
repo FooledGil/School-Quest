@@ -53,7 +53,8 @@ class StorageMirrorService
             }
         }
 
-        return Storage::url($cleanPath);
+        // Always return clean /storage/ path without /index.php so Nginx serves it directly
+        return '/storage/' . $cleanPath;
     }
 
     /**
