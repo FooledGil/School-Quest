@@ -312,7 +312,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                       color: AppColors.manaCyan,
                     ),
                     items: const [
-                      DropdownMenuItem(value: 'newest', child: Text('Terbaru')),
+                      DropdownMenuItem(value: 'latest', child: Text('Terbaru')),
                       DropdownMenuItem(value: 'popular', child: Text('Terpopuler')),
                     ],
                     onChanged: (val) {
