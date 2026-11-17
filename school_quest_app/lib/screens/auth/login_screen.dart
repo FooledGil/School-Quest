@@ -104,7 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'Laporan ini akan langsung masuk ke Admin / Wali Kelas untuk mereset kata sandi akun Anda ke bawaan (password).',
+                'Laporan ini akan langsung masuk ke Admin / Wali Kelas untuk mereset kata sandi akun Anda ke NISN (kata sandi default).',
                 style: TextStyle(fontSize: 12, color: AppColors.textSecondary, height: 1.3),
               ),
               const SizedBox(height: 14),
@@ -277,7 +277,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           decoration: InputDecoration(
                             labelText: 'Kata Sandi (Password)',
                             prefixIcon: const Icon(Icons.lock_outline, color: AppColors.manaCyan, size: 20),
-                            hintText: 'Default: password',
+                            hintText: 'Default: NISN',
                             suffixIcon: IconButton(
                               icon: Icon(
                                 _obscurePassword ? Icons.visibility_off : Icons.visibility,
@@ -457,7 +457,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                                 Expanded(
                                   child: Text(
-                                    'password (default)',
+                                    'NISN (default)',
                                     style: const TextStyle(
                                       fontFamily: 'Outfit',
                                       fontSize: 12,
@@ -473,7 +473,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       const SizedBox(height: 8),
                       const Text(
-                        'Masukkan Nama Lengkap atau NISN Anda. Guru/Admin juga dapat login dengan email.',
+                        'Masukkan Nama Lengkap atau NISN Anda. Kata sandi default adalah NISN. Guru/Admin login dengan email.',
                         textAlign: TextAlign.center,
                         style: TextStyle(fontSize: 10.5, color: AppColors.textMuted, height: 1.3),
                       ),

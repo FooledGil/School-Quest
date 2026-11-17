@@ -162,7 +162,7 @@ class _AdminStudentsScreenState extends State<AdminStudentsScreen> {
                             ),
                             icon: const Icon(Icons.lock_reset_rounded, size: 18),
                             label: const Text(
-                              'Reset Kata Sandi ke "password"',
+                              'Reset Kata Sandi ke NISN',
                               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
                             ),
                             onPressed: () async {
@@ -171,7 +171,7 @@ class _AdminStudentsScreenState extends State<AdminStudentsScreen> {
                                 builder: (dlgCtx) => AlertDialog(
                                   backgroundColor: AppColors.surfaceCard,
                                   title: const Text('Konfirmasi Reset Password'),
-                                  content: Text('Apakah Anda yakin ingin mereset kata sandi siswa ${s['name']} menjadi "password"?'),
+                                  content: Text('Apakah Anda yakin ingin mereset kata sandi siswa ${s['name']} menjadi NISN (kata sandi default)?'),
                                   actions: [
                                     TextButton(
                                       onPressed: () => Navigator.of(dlgCtx).pop(false),
@@ -192,7 +192,7 @@ class _AdminStudentsScreenState extends State<AdminStudentsScreen> {
                                   Navigator.of(context).pop();
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
-                                      content: Text('Kata sandi untuk ${s['name']} berhasil direset ke "password".'),
+                                      content: Text('Kata sandi untuk ${s['name']} berhasil direset ke NISN.'),
                                       backgroundColor: AppColors.emerald,
                                       behavior: SnackBarBehavior.floating,
                                     ),

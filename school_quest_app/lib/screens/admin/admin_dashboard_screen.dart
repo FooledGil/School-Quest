@@ -239,7 +239,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                                         ),
                                         icon: const Icon(Icons.key, size: 14),
                                         label: const Text(
-                                          'Reset ke "password"',
+                                          'Reset ke NISN',
                                           style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
                                         ),
                                         onPressed: () async {
@@ -247,7 +247,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                                           if (ok && context.mounted) {
                                             ScaffoldMessenger.of(context).showSnackBar(
                                               SnackBar(
-                                                content: Text('Password untuk ${req['user_name'] ?? req['identifier']} berhasil direset ke "password"'),
+                                                content: Text('Password untuk ${req['user_name'] ?? req['identifier']} berhasil direset ke NISN'),
                                                 backgroundColor: AppColors.emerald,
                                                 behavior: SnackBarBehavior.floating,
                                               ),

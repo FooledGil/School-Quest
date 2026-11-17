@@ -310,7 +310,7 @@ class AdminProvider extends ChangeNotifier {
     try {
       final response = await _apiClient.post('/admin/students/$studentId/reset-password');
       if (response['status'] == 'success') {
-        _successMessage = response['message'] ?? 'Password berhasil direset ke "password"';
+        _successMessage = response['message'] ?? 'Password berhasil direset ke NISN';
         notifyListeners();
         return true;
       }
