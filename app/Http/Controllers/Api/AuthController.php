@@ -201,7 +201,7 @@ class AuthController extends Controller
         if ($existing) {
             return response()->json([
                 'status' => 'success',
-                'message' => 'Laporan lupa kata sandi Anda sudah tercatat dan sedang menunggu konfirmasi Admin. Kata sandi akan disetel ke default: password.',
+                'message' => 'Laporan lupa kata sandi Anda sudah tercatat dan sedang menunggu konfirmasi Admin. Kata sandi akan disetel ke NISN akun Anda (kata sandi default).',
             ]);
         }
 
@@ -214,7 +214,7 @@ class AuthController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Laporan lupa kata sandi berhasil dikirim! Silakan hubungi Admin atau Wali Kelas untuk konfirmasi reset ke password bawaan (password).',
+            'message' => 'Laporan lupa kata sandi berhasil dikirim! Silakan hubungi Admin atau Wali Kelas untuk konfirmasi reset ke NISN (kata sandi default).',
         ]);
     }
 }

@@ -132,13 +132,15 @@ Access the application in your browser: **[http://127.0.0.1:8000](http://127.0.0
 
 The system comes pre-seeded with test accounts for administrators, teachers, and students:
 
+> **Student password rule:** the default password is the student's **NISN**. When an admin resets a student password, it is set back to that student's NISN.
+
 | Role | Login Identifier (Email / NISN / Name) | Password | Description |
 | :--- | :--- | :--- | :--- |
 | **Administrator** | `admin@schoolquest.id` | `admin123` | Full access to Admin Dashboard, student management & moderation |
 | **Piket Teacher** | `guru@schoolquest.id` | `guru123` | Access to Quest Validation Center & verification review |
-| **Student (Class X-MPLB 1)** | `0117148583` *(NISN)* or `AISYAH` | `password` | Active student from Class X-MPLB 1 |
-| **Student (Class X-MPLB 2)** | `0103742689` *(NISN)* or `ANGGI SYAHPUTRI` | `password` | Active student from Class X-MPLB 2 |
-| **Student (Class XII RPL)** | `adityapratama@student.schoolquest.id` | `password` | Active student from Software Engineering (XII RPL) |
+| **Student (Class X-MPLB 1)** | `0117148583` *(NISN)* or `AISYAH` | `0117148583` | Active student from Class X-MPLB 1 |
+| **Student (Class X-MPLB 2)** | `0103742689` *(NISN)* or `ANGGI SYAHPUTRI` | `0103742689` | Active student from Class X-MPLB 2 |
+| **Student (Class XII RPL)** | `0084169869` *(NISN)* or `MITA` | `0084169869` | Active student from Software Engineering (XII RPL) |
 
 ---
 

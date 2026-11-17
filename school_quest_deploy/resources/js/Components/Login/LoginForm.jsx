@@ -184,7 +184,7 @@ export default function LoginForm({ onLoginSuccess, animating = false }) {
                             setValidationErrors(prev => ({ ...prev, password: null }));
                         }
                     }}
-                    placeholder="Default: password"
+                    placeholder="Default: NISN"
                     icon={<span role="img" aria-label="key">🔑</span>}
                     error={validationErrors.password}
                     allowPasswordToggle={true}
@@ -246,11 +246,11 @@ export default function LoginForm({ onLoginSuccess, animating = false }) {
                     </div>
                     <div className="flex items-center justify-between gap-2">
                         <span className="text-slate-400">Password:</span>
-                        <span className="text-emerald-400 font-bold tracking-wide">password <span className="text-[10px] text-emerald-500/80 font-normal font-sans">(default)</span></span>
+                        <span className="text-emerald-400 font-bold tracking-wide">NISN <span className="text-[10px] text-emerald-500/80 font-normal font-sans">(default)</span></span>
                     </div>
                 </div>
                 <p className="text-[10px] text-slate-400 mt-2 text-center font-body">
-                    Masukkan NISN atau Nama Lengkap Anda. Guru & Admin juga dapat login dengan email.
+                    Masukkan NISN atau Nama Lengkap Anda. Kata sandi default adalah NISN. Guru & Admin login dengan email.
                 </p>
             </div>
 
@@ -289,7 +289,7 @@ export default function LoginForm({ onLoginSuccess, animating = false }) {
                                 </p>
                                 <p>{forgotResult}</p>
                                 <p className="text-[10.5px] text-emerald-300/80">
-                                    Setelah admin mengonfirmasi, akun Anda dapat login kembali menggunakan kata sandi default: <span className="font-mono font-bold text-amber-300">password</span>.
+                                    Setelah admin mengonfirmasi, akun Anda dapat login kembali menggunakan kata sandi default: <span className="font-mono font-bold text-amber-300">NISN Anda</span>.
                                 </p>
                                 <button
                                     type="button"
@@ -329,7 +329,7 @@ export default function LoginForm({ onLoginSuccess, animating = false }) {
                                     <textarea
                                         value={forgotNotes}
                                         onChange={(e) => setForgotNotes(e.target.value)}
-                                        placeholder="Contoh: Lupa password akun, mohon diresetkan ke password default."
+                                        placeholder="Contoh: Lupa password akun, mohon diresetkan ke NISN."
                                         rows={2}
                                         className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-xs text-white placeholder-slate-500 focus:border-sky-400 focus:outline-none"
                                     />
@@ -340,7 +340,7 @@ export default function LoginForm({ onLoginSuccess, animating = false }) {
                                         <span>💡</span> Informasi:
                                     </p>
                                     <p>
-                                        Ketika disetujui Admin, kata sandi Anda akan direset ke bawaan: <span className="font-mono font-bold text-emerald-400">password</span>.
+                                        Ketika disetujui Admin, kata sandi Anda akan direset ke NISN Anda (kata sandi default).
                                     </p>
                                 </div>
 

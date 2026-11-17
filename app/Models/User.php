@@ -99,6 +99,26 @@ class User extends Authenticatable
         return $this->hasMany(UserSanction::class, 'admin_id');
     }
 
+    /**
+     * Default password for a student account.
+     * Students use their NISN; accounts without a NISN fall back to "password".
+     */
+    public function defaultPassword(): string
+    {
+        $nisn = trim((string) $this->nisn);
+
+        return $nisn !== '' ? $nisn : 'password';
+    }
+
+    /**
+     * Reset this account's password back to the default (NISN).
+     */
+    public function resetPasswordToDefault(): void
+    {
+        $this->password = $this->defaultPassword();
+        $this->save();
+    }
+
     public function getIsMutedAttribute(): bool
     {
         return $this->muted_until !== null && $this->muted_until->isFuture();

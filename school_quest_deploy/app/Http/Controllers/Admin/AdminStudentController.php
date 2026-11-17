@@ -58,8 +58,7 @@ class AdminStudentController extends Controller
 
     public function resetPassword(User $student)
     {
-        $student->password = \Illuminate\Support\Facades\Hash::make('password');
-        $student->save();
+        $student->resetPasswordToDefault();
 
         \App\Models\PasswordResetRequest::ensureTableExists();
         \App\Models\PasswordResetRequest::where('user_id', $student->id)
@@ -70,7 +69,10 @@ class AdminStudentController extends Controller
                 'resolved_at' => now(),
             ]);
 
-        return back()->with('success', "Password siswa {$student->name} berhasil direset ke 'password'.");
+        $default = $student->defaultPassword();
+        $label = trim((string) $student->nisn) !== '' ? 'NISN' : 'kata sandi default';
+
+        return back()->with('success', "Kata sandi siswa {$student->name} berhasil direset ke {$label} ({$default}).");
     }
 
     public function resolveResetRequest(\Illuminate\Http\Request $request, $id)
@@ -93,8 +95,7 @@ class AdminStudentController extends Controller
                 return back()->with('error', "Akun dengan identitas \"{$resetReq->identifier}\" tidak ditemukan. Permintaan tidak direset — silakan tolak permintaan ini.");
             }
 
-            $user->password = \Illuminate\Support\Facades\Hash::make('password');
-            $user->save();
+            $user->resetPasswordToDefault();
 
             // Link orphaned requests to the resolved account for future reference.
             $resetReq->user_id = $user->id;
@@ -103,7 +104,10 @@ class AdminStudentController extends Controller
             $resetReq->resolved_at = now();
             $resetReq->save();
 
-            return back()->with('success', "Permintaan disetujui. Akun {$user->name} (NISN: {$user->nisn}) telah direset ke 'password'.");
+            $default = $user->defaultPassword();
+            $label = trim((string) $user->nisn) !== '' ? 'NISN' : 'kata sandi default';
+
+            return back()->with('success', "Permintaan disetujui. Akun {$user->name} telah direset ke {$label} ({$default}).");
         } else {
             $resetReq->status = 'rejected';
             $resetReq->resolved_by = auth()->id();

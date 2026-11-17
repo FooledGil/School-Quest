@@ -31,14 +31,14 @@ export default function StudentsIndex({ students = [], passwordResetRequests = [
 
     const handleResetStudent = (e, student) => {
         e.stopPropagation();
-        if (confirm(`Reset kata sandi siswa ${student.name} ke default ('password')?`)) {
+        if (confirm(`Reset kata sandi siswa ${student.name} ke NISN (kata sandi default)?`)) {
             router.post(`/admin/students/${student.id}/reset-password`);
         }
     };
 
     const handleResolveRequest = (requestId, action) => {
         const confirmMsg = action === 'resolve'
-            ? "Setujui laporan dan reset kata sandi akun ke default ('password')?"
+            ? "Setujui laporan dan reset kata sandi akun ke NISN (kata sandi default)?"
             : "Tolak permintaan reset kata sandi ini?";
         if (confirm(confirmMsg)) {
             router.post(`/admin/password-resets/${requestId}/resolve`, { action }, {
@@ -103,7 +103,7 @@ export default function StudentsIndex({ students = [], passwordResetRequests = [
                                             onClick={() => handleResolveRequest(req.id, 'resolve')}
                                             className="flex-1 py-1.5 px-2.5 rounded bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-[11px] cursor-pointer"
                                         >
-                                            ✓ Reset ke 'password'
+                                            ✓ Reset ke NISN
                                         </button>
                                         <button
                                             type="button"
@@ -180,7 +180,7 @@ export default function StudentsIndex({ students = [], passwordResetRequests = [
                                                 type="button"
                                                 onClick={(e) => handleResetStudent(e, student)}
                                                 className="px-2.5 py-1 rounded bg-slate-800 hover:bg-amber-600/80 border border-slate-700 text-slate-300 hover:text-white text-[11px] font-semibold transition-colors cursor-pointer"
-                                                title="Reset kata sandi siswa ini ke bawaan ('password')"
+                                                title="Reset kata sandi siswa ini ke NISN (kata sandi default)"
                                             >
                                                 🔑 Reset Pass
                                             </button>

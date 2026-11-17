@@ -127,12 +127,11 @@ class AdminStudentApiController extends Controller
     }
 
     /**
-     * Direct one-click reset of student password to default ('password').
+     * Direct one-click reset of a student password to the default (NISN).
      */
     public function resetPassword(User $student)
     {
-        $student->password = \Illuminate\Support\Facades\Hash::make('password');
-        $student->save();
+        $student->resetPasswordToDefault();
 
         \App\Models\PasswordResetRequest::ensureTableExists();
         \App\Models\PasswordResetRequest::where('user_id', $student->id)
@@ -143,9 +142,12 @@ class AdminStudentApiController extends Controller
                 'resolved_at' => now(),
             ]);
 
+        $default = $student->defaultPassword();
+        $label = trim((string) $student->nisn) !== '' ? 'NISN' : 'kata sandi default';
+
         return response()->json([
             'status' => 'success',
-            'message' => "Password siswa {$student->name} berhasil direset ke 'password'.",
+            'message' => "Kata sandi siswa {$student->name} berhasil direset ke {$label} ({$default}).",
         ]);
     }
 
@@ -218,8 +220,7 @@ class AdminStudentApiController extends Controller
                 ], 422);
             }
 
-            $user->password = \Illuminate\Support\Facades\Hash::make('password');
-            $user->save();
+            $user->resetPasswordToDefault();
 
             // Link orphaned requests to the resolved account for future reference.
             $resetReq->user_id = $user->id;
@@ -228,9 +229,12 @@ class AdminStudentApiController extends Controller
             $resetReq->resolved_at = now();
             $resetReq->save();
 
+            $default = $user->defaultPassword();
+            $label = trim((string) $user->nisn) !== '' ? 'NISN' : 'kata sandi default';
+
             return response()->json([
                 'status' => 'success',
-                'message' => "Permintaan disetujui. Kata sandi akun {$user->name} (NISN: {$user->nisn}) telah direset ke default ('password').",
+                'message' => "Permintaan disetujui. Kata sandi akun {$user->name} telah direset ke {$label} ({$default}).",
             ]);
         } else {
             $resetReq->status = 'rejected';

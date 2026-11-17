@@ -24,7 +24,7 @@ Here is a quick navigation guide to specific modules and topics in [README.md](R
 3. 🚀 [**Workflow & Operations (How)**](README.md#-quick-start-guide)
    - Interaction workflows for Students (task submission & photo evidence) and Teachers (validation, approvals, and rejections with feedback).
    - Quick Start Guide for Linux (automated script for Arch Linux `setup_arch.sh` and manual installation for Ubuntu/Debian/Windows WSL).
-   - Ready-to-use demo credentials (Admin, Teacher, MPLB & RPL Students via Email, NISN, or Name).
+   - Ready-to-use demo credentials (Admin, Teacher, MPLB & RPL Students via Email, NISN, or Name). Student default passwords use their NISN.
    - Automated testing suite with PHPUnit 11 (`php artisan test`).
    - Troubleshooting and system maintenance.
 

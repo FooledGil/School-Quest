@@ -4,7 +4,7 @@ const TIPS = [
     {
         icon: '🔑',
         title: 'PANDUAN LOGIN',
-        text: 'Masuk dengan format [nama lengkap/nisn] dan gunakan kata sandi password (default).',
+        text: 'Masuk dengan format [nama lengkap/nisn] dan gunakan NISN sebagai kata sandi default.',
     },
     {
         icon: '⚔️',
