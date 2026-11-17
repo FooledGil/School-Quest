@@ -195,6 +195,54 @@ class ExpService
     }
 
     /**
+     * Preview the EXP a user would receive for a quest right now.
+     * Includes the Catch-Up multiplier and achievements that would unlock.
+     */
+    public static function getQuestRewardPreview(User $user, int $baseExp, ?string $questCategory = null, ?array $catchUp = null): array
+    {
+        $catchUp = $catchUp ?: self::getCatchUpMultiplier($user);
+
+        $catchUpBonus = $catchUp['has_boost']
+            ? (int) round($baseExp * ($catchUp['multiplier'] - 1.0))
+            : 0;
+        $afterCatchUp = $baseExp + $catchUpBonus;
+
+        $achievementPreview = app(AchievementService::class)
+            ->previewUnlocks($user, $questCategory, $afterCatchUp);
+
+        return [
+            'exp_base' => $baseExp,
+            'catch_up' => $catchUp,
+            'catch_up_bonus' => $catchUpBonus,
+            'exp_after_catch_up' => $afterCatchUp,
+            'achievement_bonus_exp' => (int) ($achievementPreview['total_exp_bonus'] ?? 0),
+            'achievement_preview' => $achievementPreview['achievements'] ?? [],
+            'exp_total_estimate' => $afterCatchUp + (int) ($achievementPreview['total_exp_bonus'] ?? 0),
+        ];
+    }
+
+    /**
+     * Attach reward preview fields to a quest model so the UI can show an accurate breakdown.
+     */
+    public static function attachRewardPreview(User $user, $quest, ?array $catchUp = null): void
+    {
+        $preview = self::getQuestRewardPreview(
+            $user,
+            (int) ($quest->exp_reward ?: 0),
+            $quest->category ?? null,
+            $catchUp
+        );
+
+        $quest->exp_base = $preview['exp_base'];
+        $quest->catch_up = $preview['catch_up'];
+        $quest->catch_up_bonus = $preview['catch_up_bonus'];
+        $quest->exp_after_catch_up = $preview['exp_after_catch_up'];
+        $quest->achievement_bonus_exp = $preview['achievement_bonus_exp'];
+        $quest->achievement_preview = $preview['achievement_preview'];
+        $quest->exp_total_estimate = $preview['exp_total_estimate'];
+    }
+
+    /**
      * Add EXP to a user, recalculate level, update weekly exp, streak, check achievements, and return status.
      */
     public function addExp(User $user, int $expAmount, bool $applyCatchUp = true): array
@@ -208,19 +256,21 @@ class ExpService
         $bonusExp = $catchUp['has_boost'] 
             ? (int) round($expAmount * ($catchUp['multiplier'] - 1.0)) 
             : 0;
-        $totalExpGained = $expAmount + $bonusExp;
+        $catchUpExpGained = $expAmount + $bonusExp;
 
         $oldLevel = $user->level ?: 1;
-        $user->exp = max(0, ($user->exp ?: 0) + $totalExpGained);
-        $user->weekly_exp = max(0, ($user->weekly_exp ?: 0) + $totalExpGained);
+        $user->exp = max(0, ($user->exp ?: 0) + $catchUpExpGained);
+        $user->weekly_exp = max(0, ($user->weekly_exp ?: 0) + $catchUpExpGained);
         $newLevel = self::calculateLevel($user->exp);
         $user->level = $newLevel;
 
         $this->updateStreak($user);
         $user->save();
 
-        // Check if new level unlocks achievements
-        app(AchievementService::class)->checkAchievements($user);
+        // Check if new level unlocks achievements (their bonus EXP is reported separately)
+        $achievementResult = app(AchievementService::class)->checkAchievements($user);
+        $achievementBonus = (int) ($achievementResult['total_exp_bonus'] ?? 0);
+        $totalExpGained = $catchUpExpGained + $achievementBonus;
 
         // If achievements rewarded bonus EXP, refresh level once more
         $finalLevel = self::calculateLevel($user->exp);
@@ -235,7 +285,12 @@ class ExpService
             'new_level' => $finalLevel,
             'exp_base' => $expAmount,
             'bonus_exp' => $bonusExp,
-            'exp_gained' => $totalExpGained,
+            'achievement_bonus_exp' => $achievementBonus,
+            'unlocked_achievements' => $achievementResult['achievements'] ?? [],
+            // Legacy: EXP from the quest + catch-up multiplier only.
+            'exp_gained' => $catchUpExpGained,
+            // Actual total added to the user's EXP, including achievement bonuses.
+            'total_exp_gained' => $totalExpGained,
             'weekly_exp' => $user->weekly_exp,
             'catch_up' => $catchUp,
             'rank_name' => self::getRankName($finalLevel),

@@ -99,6 +99,9 @@ class DashboardApiController extends Controller
             ->take(4)
             ->get();
 
+        $catchUp = ExpService::getCatchUpMultiplier($user);
+        $recentQuests->each(fn ($quest) => ExpService::attachRewardPreview($user, $quest, $catchUp));
+
         $allAchievements = Achievement::all();
         $userAchievementIds = $user->achievements()->pluck('achievement_id')->toArray();
 
@@ -169,6 +172,7 @@ class DashboardApiController extends Controller
                 ],
                 'piket' => $piketSchedule,
                 'recent_quests' => $recentQuests,
+                'exp_boost' => $catchUp,
                 'achievements' => $achievements,
                 'active_sanction' => $activeSanction ? [
                     'id' => $activeSanction->id,

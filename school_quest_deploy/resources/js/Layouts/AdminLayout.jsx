@@ -17,14 +17,16 @@ export default function AdminLayout({ user: propUser, children }) {
         avatar: getAvatarUrl(rawUser),
     };
 
+    const isIndexPhp = typeof window !== 'undefined' && window.location.pathname.includes('/index.php');
+    const prefix = isIndexPhp ? '/index.php' : '';
     const pathname = typeof window !== 'undefined' ? window.location.pathname : '/admin/dashboard';
 
     const links = [
-        { name: 'Dashboard', href: '/admin/dashboard', icon: HomeIcon, active: pathname === '/admin/dashboard' },
-        { name: 'Manage Quests', href: '/admin/quests', icon: ClipboardDocumentListIcon, active: pathname.startsWith('/admin/quests') },
-        { name: 'Validasi Quest', href: '/admin/validations', icon: ShieldCheckIcon, active: pathname.startsWith('/admin/validations') },
-        { name: 'The Realm', href: '/admin/community', icon: ChatBubbleLeftRightIcon, active: pathname.startsWith('/admin/community'), badge: auth?.pending_reports_count > 0 ? auth.pending_reports_count : null },
-        { name: 'Student Progress', href: '/admin/students', icon: UsersIcon, active: pathname.startsWith('/admin/students') },
+        { name: 'Dashboard', href: `${prefix}/admin/dashboard`, icon: HomeIcon, active: pathname === `${prefix}/admin/dashboard` || pathname === '/admin/dashboard' },
+        { name: 'Manage Quests', href: `${prefix}/admin/quests`, icon: ClipboardDocumentListIcon, active: pathname.startsWith(`${prefix}/admin/quests`) || pathname.startsWith('/admin/quests') },
+        { name: 'Validasi Quest', href: `${prefix}/admin/validations`, icon: ShieldCheckIcon, active: pathname.startsWith(`${prefix}/admin/validations`) || pathname.startsWith('/admin/validations') },
+        { name: 'The Realm', href: `${prefix}/admin/community`, icon: ChatBubbleLeftRightIcon, active: pathname.startsWith(`${prefix}/admin/community`) || pathname.startsWith('/admin/community'), badge: auth?.pending_reports_count > 0 ? auth.pending_reports_count : null },
+        { name: 'Student Progress', href: `${prefix}/admin/students`, icon: UsersIcon, active: pathname.startsWith(`${prefix}/admin/students`) || pathname.startsWith('/admin/students') },
     ];
 
     return (

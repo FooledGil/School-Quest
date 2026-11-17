@@ -179,18 +179,31 @@ class AuthController extends Controller
         \App\Models\PasswordResetRequest::ensureTableExists();
 
         $identifier = trim($request->identifier);
-        $user = User::where('nisn', $identifier)
-            ->orWhere('name', $identifier)
-            ->orWhere('email', $identifier)
-            ->first();
+        $normalized = mb_strtolower($identifier);
 
-        // Check if there is already a pending request
+        $user = User::where(function ($q) use ($normalized) {
+            $q->whereRaw('LOWER(nisn) = ?', [$normalized])
+                ->orWhereRaw('LOWER(name) = ?', [$normalized])
+                ->orWhereRaw('LOWER(email) = ?', [$normalized]);
+        })->first();
+
+        // Do not create a request for an identity that does not exist.
+        if (!$user) {
+            return response()->json([
+                'status' => 'error',
+                'success' => false,
+                'message' => 'Identitas tidak ditemukan. Periksa kembali Nama Lengkap, NISN, atau Email yang terdaftar di SchoolQuest.',
+                'errors' => [
+                    'identifier' => ['Identitas tidak ditemukan. Periksa kembali Nama Lengkap, NISN, atau Email Anda.'],
+                ],
+            ], 422);
+        }
+
+        // Check if there is already a pending request (same account or same identifier, case-insensitive)
         $existing = \App\Models\PasswordResetRequest::where('status', 'pending')
-            ->where(function ($q) use ($identifier, $user) {
-                $q->where('identifier', $identifier);
-                if ($user) {
-                    $q->orWhere('user_id', $user->id);
-                }
+            ->where(function ($q) use ($normalized, $user) {
+                $q->where('user_id', $user->id)
+                    ->orWhereRaw('LOWER(identifier) = ?', [$normalized]);
             })->first();
 
         if ($existing) {
@@ -201,7 +214,7 @@ class AuthController extends Controller
         }
 
         \App\Models\PasswordResetRequest::create([
-            'user_id' => $user?->id,
+            'user_id' => $user->id,
             'identifier' => $identifier,
             'notes' => $request->notes,
             'status' => 'pending',

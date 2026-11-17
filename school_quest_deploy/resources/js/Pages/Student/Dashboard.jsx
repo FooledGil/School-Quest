@@ -7,14 +7,14 @@ import StatCard from '@/Components/StatCard';
 import ScheduleTimeline from '@/Components/ScheduleTimeline';
 import QuestCard from '@/Components/QuestCard';
 import AchievementBadge from '@/Components/AchievementBadge';
-import { StarIcon, CheckBadgeIcon, FireIcon, TrophyIcon, CalendarDaysIcon, CheckCircleIcon } from '@heroicons/react/24/solid';
+import { StarIcon, CheckBadgeIcon, FireIcon, TrophyIcon, CalendarDaysIcon, CheckCircleIcon, BoltIcon } from '@heroicons/react/24/solid';
 import { CrossedSwordsIcon } from '@/Components/Icons/SwordIcon';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 
 import { getAvatarUrl } from '@/Utils/avatar';
 
-export default function Dashboard({ user: propUser, schedules = [], stats = {}, recentQuests = [], achievements = [] }) {
+export default function Dashboard({ user: propUser, schedules = [], stats = {}, recentQuests = [], achievements = [], expBoost = null }) {
     const pageRef = useRef(null);
     const heroRef = useRef(null);
     const statsRef = useRef(null);
@@ -24,8 +24,9 @@ export default function Dashboard({ user: propUser, schedules = [], stats = {}, 
 
     const user = propUser || {};
     const avatar = getAvatarUrl(user);
-    const rankName = stats.rank || 'Novice';
-    const nextLevelExp = stats.nextLevelExp || 100;
+    const rankName = stats.rank || user.rank_name || 'Novice';
+    const nextLevelExp = user.next_level_exp || stats.nextLevelExp || 150;
+    const baseExp = user.current_level_base_exp ?? stats.currentLevelBaseExp ?? 0;
 
     useGSAP(() => {
         if (pageRef.current) {
@@ -93,8 +94,9 @@ export default function Dashboard({ user: propUser, schedules = [], stats = {}, 
                                     <img 
                                         src={avatar} 
                                         alt={user.name} 
+                                        onError={(e) => { e.currentTarget.src = '/images/default-avatar.svg'; }}
                                         className="w-full h-full object-cover"
-                                        style={{ imageRendering: 'pixelated' }} 
+                                        style={{ imageRendering: user.avatar_seed ? 'pixelated' : 'auto' }} 
                                     />
                                 </div>
                             </div>
@@ -124,8 +126,9 @@ export default function Dashboard({ user: propUser, schedules = [], stats = {}, 
                             <div className="mt-3 sm:mt-4 max-w-xl">
                                 <ExpBar 
                                     currentExp={user.exp || 0} 
-                                    nextLevelExp={nextLevelExp} 
-                                    level={user.level || 1} 
+                                    requiredExp={nextLevelExp} 
+                                    baseExp={baseExp}
+                                    showPercent={true}
                                 />
                             </div>
                         </div>
@@ -135,36 +138,58 @@ export default function Dashboard({ user: propUser, schedules = [], stats = {}, 
                     <div className="absolute -top-24 -right-24 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
                 </div>
 
+                {/* Catch-Up / Challenger Surge Multiplier Info */}
+                {expBoost?.has_boost && (
+                    <div className="bg-gradient-to-r from-amber-950/40 via-blue-950/40 to-amber-950/40 border-2 border-amber-500/40 rounded-xl p-3.5 shadow-lg shadow-amber-500/5 flex items-start gap-3">
+                        <div className="p-2 rounded-lg bg-amber-500/20 border border-amber-500/40 shrink-0 text-amber-400 mt-0.5">
+                            <BoltIcon className="w-5 h-5 animate-pulse" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 flex-wrap mb-0.5">
+                                <h4 className="font-game text-xs sm:text-sm text-amber-300 tracking-wider">
+                                    {expBoost.title} AKTIF!
+                                </h4>
+                                <span className="bg-amber-500/30 text-amber-300 border border-amber-400/50 font-mono font-bold text-[10px] px-2 py-0.5 rounded-full">
+                                    ×{expBoost.multiplier} (+{expBoost.bonus_percentage}% EXP)
+                                </span>
+                            </div>
+                            <p className="text-[11px] sm:text-xs text-slate-300 leading-relaxed">
+                                {expBoost.reason} Bonus ini otomatis ditambahkan saat quest kamu disetujui.
+                            </p>
+                        </div>
+                    </div>
+                )}
+
                 {/* Stats Grid */}
                 <div ref={statsRef} className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                     <div className="stat-card">
                         <StatCard 
-                            title="Total EXP" 
-                            value={stats.totalExp || 0} 
+                            label="Total EXP" 
+                            value={stats.totalExp ?? stats.exp ?? user.exp ?? 0} 
                             icon={StarIcon} 
                             color="amber" 
                         />
                     </div>
                     <div className="stat-card">
                         <StatCard 
-                            title="Quest Selesai" 
-                            value={stats.completedQuests || 0} 
+                            label="Quest Selesai" 
+                            value={stats.completedQuests ?? stats.questsCompleted ?? 0} 
                             icon={CheckBadgeIcon} 
                             color="emerald" 
                         />
                     </div>
                     <div className="stat-card">
                         <StatCard 
-                            title="Daily Streak" 
-                            value={`${stats.streak || 0} Hari`} 
+                            label="Daily Streak" 
+                            value={`${stats.streak ?? user.streak_days ?? 0} Hari`} 
                             icon={FireIcon} 
                             color="rose" 
                         />
                     </div>
                     <div className="stat-card">
                         <StatCard 
-                            title="Peringkat" 
-                            value={`#${stats.rankPosition || '-'}`} 
+                            label="Peringkat" 
+                            value={`#${stats.rankPosition ?? '-'}`} 
                             icon={TrophyIcon} 
                             color="blue" 
                         />

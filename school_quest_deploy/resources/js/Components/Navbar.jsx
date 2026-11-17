@@ -41,6 +41,7 @@ export default function Navbar({ user, onMenuToggle, isAdmin = false }) {
                             <img 
                                 src={user.avatar} 
                                 alt={user.name} 
+                                onError={(e) => { e.currentTarget.src = '/images/default-avatar.svg'; }}
                                 className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-gray-800 border-2 ${isAdmin ? 'border-indigo-500/60' : 'border-blue-500/60'} object-cover`} 
                             />
                             {!isAdmin && (

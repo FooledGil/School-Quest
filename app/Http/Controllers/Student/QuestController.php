@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Student;
 use App\Http\Controllers\Controller;
 use App\Models\Quest;
 use App\Models\QuestCompletion;
+use App\Services\ExpService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,6 +27,9 @@ class QuestController extends Controller
             ->get()
             ->keyBy('quest_id');
 
+        // Calculate once so every quest card shows the same live multiplier.
+        $catchUp = ExpService::getCatchUpMultiplier($user);
+
         // Main quests (Daily) - filtered for user's class
         $mainQuests = Quest::where('type', 'main')
             ->where('available_date', $today->toDateString())
@@ -33,11 +37,12 @@ class QuestController extends Controller
                 $q->whereNull('class')->orWhere('class', $user->class);
             })
             ->get()
-            ->map(function($q) use ($todayCompletions) {
+            ->map(function($q) use ($todayCompletions, $user, $catchUp) {
                 $completion = $todayCompletions->get($q->id);
-                $q->completed = $completion !== null;
+                $q->completed = $completion !== null && $completion->status === 'approved';
                 $q->submission_status = $completion?->status ?? null;
                 $q->rejection_reason = $completion?->rejection_reason ?? null;
+                ExpService::attachRewardPreview($user, $q, $catchUp);
                 return $q;
             });
 
@@ -45,17 +50,19 @@ class QuestController extends Controller
         $additionalQuests = Quest::where('type', 'additional')
             ->where('is_active', true)
             ->get()
-            ->map(function($q) use ($todayCompletions) {
+            ->map(function($q) use ($todayCompletions, $user, $catchUp) {
                 $completion = $todayCompletions->get($q->id);
                 $q->completed = $completion !== null && $completion->status === 'approved';
                 $q->submission_status = $completion?->status ?? null;
                 $q->rejection_reason = $completion?->rejection_reason ?? null;
+                ExpService::attachRewardPreview($user, $q, $catchUp);
                 return $q;
             });
 
         return Inertia::render('Student/Quests', [
             'mainQuests' => $mainQuests,
             'additionalQuests' => $additionalQuests,
+            'expBoost' => $catchUp,
         ]);
     }
 

@@ -21,6 +21,18 @@ export default function QuestCard({ quest = {}, onComplete, isCompleted, submiss
 
     const diffClass = difficultyStyles[quest.difficulty] || difficultyStyles.easy;
 
+    // EXP breakdown so the card total matches what the user actually receives.
+    const baseExp = Number(quest.exp_base ?? quest.exp ?? quest.exp_reward ?? 0);
+    const totalEstimate = Number(quest.exp_total_estimate ?? baseExp);
+    const catchUp = quest.catch_up || null;
+    const catchUpBonus = Number(quest.catch_up_bonus ?? 0);
+    const achievementBonus = Number(quest.achievement_bonus_exp ?? 0);
+    const achievementPreview = Array.isArray(quest.achievement_preview) ? quest.achievement_preview : [];
+    const achievementNames = achievementPreview.map(a => a.name).filter(Boolean).join(', ');
+    const showExpBreakdown = !isCompleted
+        && submissionStatus !== 'approved'
+        && (totalEstimate > baseExp || catchUp?.has_boost);
+
     useGSAP(() => {
         if (cardRef.current) {
             gsap.fromTo(
@@ -132,9 +144,16 @@ export default function QuestCard({ quest = {}, onComplete, isCompleted, submiss
                     <span className={`px-2 py-0.5 font-game text-[8px] uppercase tracking-wider rounded border-2 shrink-0 ${diffClass}`}>
                         {quest.difficulty || 'medium'}
                     </span>
-                    <div className="text-amber-400 font-game text-[9px] sm:text-[10px] flex items-center gap-1 shrink-0 drop-shadow-xs">
-                        <span>+{(quest.exp || quest.exp_reward || 0).toLocaleString()}</span>
-                        <span className="text-[7px] sm:text-[8px] text-blue-300">EXP</span>
+                    <div className="text-right shrink-0">
+                        <div className="text-amber-400 font-game text-[9px] sm:text-[10px] flex items-center justify-end gap-1 drop-shadow-xs">
+                            <span>+{baseExp.toLocaleString()}</span>
+                            <span className="text-[7px] sm:text-[8px] text-blue-300">EXP</span>
+                        </div>
+                        {totalEstimate > baseExp && (
+                            <div className="font-mono text-[8px] sm:text-[9px] text-emerald-400 font-bold">
+                                ≈ +{totalEstimate.toLocaleString()} total
+                            </div>
+                        )}
                     </div>
                 </div>
 
@@ -145,6 +164,41 @@ export default function QuestCard({ quest = {}, onComplete, isCompleted, submiss
                 <p className="text-xs text-slate-400 mb-3 sm:mb-4 line-clamp-2 leading-relaxed">
                     {quest.description}
                 </p>
+
+                {/* EXP breakdown: base + catch-up multiplier + achievement bonus */}
+                {showExpBreakdown && (
+                    <div className="mb-3 p-2.5 rounded-lg bg-emerald-500/5 border border-emerald-500/25 space-y-1">
+                        <div className="text-[9px] uppercase tracking-wider text-emerald-400 font-bold flex items-center gap-1">
+                            <span>⚡</span>
+                            <span>Rincian EXP saat disetujui</span>
+                        </div>
+                        <div className="flex justify-between gap-2 text-[10px] text-slate-300">
+                            <span>EXP dasar quest</span>
+                            <span className="font-mono text-amber-300">+{baseExp.toLocaleString()}</span>
+                        </div>
+                        {catchUp?.has_boost && catchUpBonus > 0 && (
+                            <div className="flex justify-between gap-2 text-[10px] text-cyan-300">
+                                <span className="truncate">×{catchUp.multiplier} {catchUp.title}</span>
+                                <span className="font-mono shrink-0">+{catchUpBonus.toLocaleString()}</span>
+                            </div>
+                        )}
+                        {achievementBonus > 0 && (
+                            <div className="flex justify-between gap-2 text-[10px] text-amber-300">
+                                <span className="truncate">🏆 {achievementNames || 'Bonus pencapaian'}</span>
+                                <span className="font-mono shrink-0">+{achievementBonus.toLocaleString()}</span>
+                            </div>
+                        )}
+                        <div className="flex justify-between gap-2 pt-1 mt-1 border-t border-emerald-500/20 text-[11px] font-bold text-white">
+                            <span>Estimasi total</span>
+                            <span className="font-mono text-emerald-300">+{totalEstimate.toLocaleString()} EXP</span>
+                        </div>
+                        {achievementBonus > 0 && (
+                            <p className="text-[9px] text-slate-500 leading-snug">
+                                *Bonus achievement hanya diberikan sekali saat syaratnya terpenuhi.
+                            </p>
+                        )}
+                    </div>
+                )}
 
                 {/* Rejection notice */}
                 {submissionStatus === 'rejected' && (

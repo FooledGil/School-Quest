@@ -41,7 +41,9 @@ export default function StudentsIndex({ students = [], passwordResetRequests = [
             ? "Setujui laporan dan reset kata sandi akun ke default ('password')?"
             : "Tolak permintaan reset kata sandi ini?";
         if (confirm(confirmMsg)) {
-            router.post(`/password-resets/${requestId}/resolve`, { action });
+            router.post(`/admin/password-resets/${requestId}/resolve`, { action }, {
+                preserveScroll: true,
+            });
         }
     };
 
@@ -66,43 +68,54 @@ export default function StudentsIndex({ students = [], passwordResetRequests = [
                         </h2>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        {pendingRequests.map(req => (
-                            <div key={req.id} className="p-3 rounded-lg bg-black/50 border border-amber-500/30 text-xs space-y-2">
-                                <div className="flex justify-between items-start gap-2">
-                                    <div>
-                                        <p className="font-bold text-white">{req.user?.name || req.identifier}</p>
-                                        <p className="text-gray-400 text-[11px]">
-                                            NISN/ID: <span className="font-mono text-amber-300">{req.identifier}</span>
-                                            {req.user?.class && ` • Kelas: ${req.user.class}`}
-                                        </p>
+                        {pendingRequests.map(req => {
+                            const accountMissing = !req.user_id && !req.user;
+
+                            return (
+                                <div key={req.id} className="p-3 rounded-lg bg-black/50 border border-amber-500/30 text-xs space-y-2">
+                                    <div className="flex justify-between items-start gap-2">
+                                        <div>
+                                            <p className="font-bold text-white">{req.user?.name || req.identifier}</p>
+                                            <p className="text-gray-400 text-[11px]">
+                                                NISN/ID: <span className="font-mono text-amber-300">{req.identifier}</span>
+                                                {req.user?.class && ` • Kelas: ${req.user.class}`}
+                                            </p>
+                                        </div>
+                                        <span className="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 text-[10px] font-bold">
+                                            PENDING
+                                        </span>
                                     </div>
-                                    <span className="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 text-[10px] font-bold">
-                                        PENDING
-                                    </span>
+
+                                    {accountMissing && (
+                                        <p className="text-[11px] text-red-300 bg-red-950/50 border border-red-700/40 rounded p-2">
+                                            ⚠️ Akun dengan identitas ini tidak ditemukan. Reset akan ditolak sistem — silakan tolak permintaan ini.
+                                        </p>
+                                    )}
+
+                                    {req.notes && (
+                                        <p className="text-gray-300 italic text-[11px] bg-white/5 p-2 rounded">
+                                            "{req.notes}"
+                                        </p>
+                                    )}
+                                    <div className="flex gap-2 pt-1">
+                                        <button
+                                            type="button"
+                                            onClick={() => handleResolveRequest(req.id, 'resolve')}
+                                            className="flex-1 py-1.5 px-2.5 rounded bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-[11px] cursor-pointer"
+                                        >
+                                            ✓ Reset ke 'password'
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => handleResolveRequest(req.id, 'reject')}
+                                            className="py-1.5 px-2.5 rounded bg-red-950 hover:bg-red-900 border border-red-700/50 text-red-300 text-[11px] cursor-pointer"
+                                        >
+                                            Tolak
+                                        </button>
+                                    </div>
                                 </div>
-                                {req.notes && (
-                                    <p className="text-gray-300 italic text-[11px] bg-white/5 p-2 rounded">
-                                        "{req.notes}"
-                                    </p>
-                                )}
-                                <div className="flex gap-2 pt-1">
-                                    <button
-                                        type="button"
-                                        onClick={() => handleResolveRequest(req.id, 'resolve')}
-                                        className="flex-1 py-1.5 px-2.5 rounded bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-[11px] cursor-pointer"
-                                    >
-                                        ✓ Reset ke 'password'
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => handleResolveRequest(req.id, 'reject')}
-                                        className="py-1.5 px-2.5 rounded bg-red-950 hover:bg-red-900 border border-red-700/50 text-red-300 text-[11px] cursor-pointer"
-                                    >
-                                        Tolak
-                                    </button>
-                                </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 </div>
             )}

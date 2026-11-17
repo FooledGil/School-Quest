@@ -63,8 +63,35 @@ function SubmissionCard({ submission, onApprove, onReject }) {
                 <div className="text-right shrink-0">
                     <p className="text-[9px] sm:text-[10px] text-slate-500 uppercase tracking-wider">{submission.submitted_at}</p>
                     <p className="text-amber-400 font-bold text-xs mt-0.5">+{submission.exp_reward} EXP</p>
+                    {submission.exp_total_estimate > submission.exp_reward && (
+                        <p className="text-[9px] text-emerald-400 font-mono font-bold mt-0.5">
+                            ≈ +{submission.exp_total_estimate} total
+                        </p>
+                    )}
                 </div>
             </div>
+
+            {/* EXP breakdown so admin knows exactly what will be awarded */}
+            {(submission.catch_up?.has_boost || submission.exp_achievement_bonus > 0) && (
+                <div className="rounded-lg bg-emerald-500/5 border border-emerald-500/25 p-2.5 space-y-1 text-[10px]">
+                    <div className="flex justify-between gap-2 text-slate-300">
+                        <span>EXP dasar</span>
+                        <span className="font-mono text-amber-300">+{submission.exp_reward}</span>
+                    </div>
+                    {submission.catch_up?.has_boost && submission.exp_catch_up_bonus > 0 && (
+                        <div className="flex justify-between gap-2 text-cyan-300">
+                            <span>×{submission.catch_up.multiplier} {submission.catch_up.title}</span>
+                            <span className="font-mono">+{submission.exp_catch_up_bonus}</span>
+                        </div>
+                    )}
+                    {submission.exp_achievement_bonus > 0 && (
+                        <div className="flex justify-between gap-2 text-amber-300">
+                            <span>🏆 Bonus achievement</span>
+                            <span className="font-mono">+{submission.exp_achievement_bonus}</span>
+                        </div>
+                    )}
+                </div>
+            )}
 
             {/* Quest info */}
             <div className="bg-[#0d1118] border border-slate-800 rounded-lg p-2.5 sm:p-3">
@@ -251,7 +278,7 @@ export default function Validations({ submissions = [], history = [] }) {
                                         <th className="py-3 px-4 text-[10px] font-bold uppercase tracking-wider text-slate-400">Siswa</th>
                                         <th className="py-3 px-4 text-[10px] font-bold uppercase tracking-wider text-slate-400">Quest</th>
                                         <th className="py-3 px-4 text-[10px] font-bold uppercase tracking-wider text-slate-400">Status</th>
-                                        <th className="py-3 px-4 text-[10px] font-bold uppercase tracking-wider text-slate-400">EXP</th>
+                                        <th className="py-3 px-4 text-[10px] font-bold uppercase tracking-wider text-slate-400">EXP Diberikan</th>
                                         <th className="py-3 px-4 text-[10px] font-bold uppercase tracking-wider text-slate-400">Divalidasi Oleh</th>
                                         <th className="py-3 px-4 text-[10px] font-bold uppercase tracking-wider text-slate-400">Waktu</th>
                                     </tr>

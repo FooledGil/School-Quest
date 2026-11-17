@@ -52,6 +52,9 @@ class DashboardController extends Controller
             ->take(4)
             ->get();
 
+        $catchUp = ExpService::getCatchUpMultiplier($user);
+        $recentQuests->each(fn ($quest) => ExpService::attachRewardPreview($user, $quest, $catchUp));
+
         $allAchievements = Achievement::all();
         $userAchievementIds = $user->achievements()->pluck('achievement_id')->toArray();
 
@@ -60,18 +63,33 @@ class DashboardController extends Controller
             return $ach;
         });
 
+        $rankPosition = \App\Models\User::where('role', 'student')
+            ->where(function ($query) use ($user) {
+                $query->where('exp', '>', $user->exp ?? 0)
+                      ->orWhere(function ($q) use ($user) {
+                          $q->where('exp', $user->exp ?? 0)
+                            ->where('id', '<', $user->id);
+                      });
+            })
+            ->count() + 1;
+
+        $questsCompletedCount = $user->questCompletions()->count();
+
         $stats = [
-            'exp' => $user->exp,
-            'level' => $user->level,
-            'rank' => $user->rank_name,
-            'streak' => $user->streak_days,
-            'questsCompleted' => $user->questCompletions()->count(),
-            'nextLevelExp' => $user->next_level_exp,
-            'currentLevelBaseExp' => $user->current_level_base_exp,
-            'expInLevel' => $user->exp_in_level,
-            'expNeededInLevel' => $user->exp_needed_in_level,
-            'expPercentage' => $user->exp_percentage,
-            'expRemaining' => $user->exp_remaining,
+            'exp' => $user->exp ?? 0,
+            'totalExp' => $user->exp ?? 0,
+            'level' => $user->level ?? 1,
+            'rank' => $user->rank_name ?? 'Novice',
+            'rankPosition' => $rankPosition,
+            'streak' => $user->streak_days ?? 0,
+            'questsCompleted' => $questsCompletedCount,
+            'completedQuests' => $questsCompletedCount,
+            'nextLevelExp' => $user->next_level_exp ?? 150,
+            'currentLevelBaseExp' => $user->current_level_base_exp ?? 0,
+            'expInLevel' => $user->exp_in_level ?? ($user->exp ?? 0),
+            'expNeededInLevel' => $user->exp_needed_in_level ?? 150,
+            'expPercentage' => $user->exp_percentage ?? 0,
+            'expRemaining' => $user->exp_remaining ?? 150,
         ];
 
         return Inertia::render('Student/Dashboard', [
@@ -80,6 +98,7 @@ class DashboardController extends Controller
             'stats' => $stats,
             'recentQuests' => $recentQuests,
             'achievements' => $achievements,
+            'expBoost' => $catchUp,
         ]);
     }
 }

@@ -48,6 +48,20 @@ class ProfileController extends Controller
         // Store new avatar file in public storage (storage/app/public/avatars)
         $path = $request->file('avatar_file')->store('avatars', 'public');
 
+        // Mirror to web root storage directory if in shared hosting structure
+        $rootStorage = dirname(base_path()) . '/storage/' . $path;
+        $localFile = storage_path('app/public/' . $path);
+        if (file_exists($localFile) && !file_exists($rootStorage)) {
+            @mkdir(dirname($rootStorage), 0777, true);
+            @copy($localFile, $rootStorage);
+            @chmod($rootStorage, 0666);
+        }
+        if (file_exists($rootStorage) && !file_exists($localFile)) {
+            @mkdir(dirname($localFile), 0777, true);
+            @copy($rootStorage, $localFile);
+            @chmod($localFile, 0666);
+        }
+
         $user->avatar = '/storage/' . $path;
         $user->avatar_seed = null;
         $user->save();
@@ -145,6 +159,10 @@ class ProfileController extends Controller
             $relativeFilePath = str_replace('/storage/', '', $user->avatar);
             if (Storage::disk('public')->exists($relativeFilePath)) {
                 Storage::disk('public')->delete($relativeFilePath);
+            }
+            $rootFile = dirname(base_path()) . '/storage/' . $relativeFilePath;
+            if (file_exists($rootFile)) {
+                @unlink($rootFile);
             }
         }
     }

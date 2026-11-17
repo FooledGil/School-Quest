@@ -195,6 +195,7 @@ export default function Profile({ user: propUser }) {
                                 <img 
                                     src={avatar} 
                                     alt="Avatar" 
+                                    onError={(e) => { e.currentTarget.src = '/images/default-avatar.svg'; }}
                                     className="w-full h-full rounded-xl object-cover" 
                                     style={user.avatar_seed ? { imageRendering: 'pixelated' } : {}} 
                                 />
@@ -375,7 +376,12 @@ export default function Profile({ user: propUser }) {
                                             {filePreview ? (
                                                 <img src={filePreview} alt="Preview Upload" className="w-full h-full rounded-xl object-cover" />
                                             ) : user.avatar ? (
-                                                <img src={user.avatar} alt="Current Foto" className="w-full h-full rounded-xl object-cover" />
+                                                <img 
+                                                    src={user.avatar} 
+                                                    alt="Current Foto" 
+                                                    onError={(e) => { e.currentTarget.src = '/images/default-avatar.svg'; }}
+                                                    className="w-full h-full rounded-xl object-cover" 
+                                                />
                                             ) : (
                                                 <div className="w-full h-full rounded-xl flex flex-col items-center justify-center text-slate-500 bg-slate-900 text-center p-2">
                                                     <ApiIcon icon={ICON_API.uploadPhoto} className="w-6 h-6 mb-1 text-slate-500" />

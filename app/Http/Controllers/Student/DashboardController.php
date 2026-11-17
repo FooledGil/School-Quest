@@ -52,6 +52,9 @@ class DashboardController extends Controller
             ->take(4)
             ->get();
 
+        $catchUp = ExpService::getCatchUpMultiplier($user);
+        $recentQuests->each(fn ($quest) => ExpService::attachRewardPreview($user, $quest, $catchUp));
+
         $allAchievements = Achievement::all();
         $userAchievementIds = $user->achievements()->pluck('achievement_id')->toArray();
 
@@ -95,6 +98,7 @@ class DashboardController extends Controller
             'stats' => $stats,
             'recentQuests' => $recentQuests,
             'achievements' => $achievements,
+            'expBoost' => $catchUp,
         ]);
     }
 }

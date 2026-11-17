@@ -18,16 +18,29 @@ class QuestValidationController extends Controller
             ->latest()
             ->get()
             ->map(function ($completion) {
+                $preview = $completion->user && $completion->quest
+                    ? ExpService::getQuestRewardPreview(
+                        $completion->user,
+                        (int) $completion->exp_earned,
+                        $completion->quest->category
+                    )
+                    : null;
+
                 return [
                     'id' => $completion->id,
-                    'student_name' => $completion->user->name,
-                    'student_nisn' => $completion->user->nisn,
-                    'student_avatar' => $completion->user->avatar,
-                    'student_avatar_seed' => $completion->user->avatar_seed,
-                    'quest_title' => $completion->quest->title,
-                    'quest_category' => $completion->quest->category,
-                    'quest_difficulty' => $completion->quest->difficulty,
+                    'student_name' => $completion->user?->name,
+                    'student_nisn' => $completion->user?->nisn,
+                    'student_avatar' => $completion->user?->avatar,
+                    'student_avatar_seed' => $completion->user?->avatar_seed,
+                    'quest_title' => $completion->quest?->title,
+                    'quest_category' => $completion->quest?->category,
+                    'quest_difficulty' => $completion->quest?->difficulty,
                     'exp_reward' => $completion->exp_earned,
+                    'exp_base' => (int) $completion->exp_earned,
+                    'catch_up' => $preview['catch_up'] ?? null,
+                    'exp_catch_up_bonus' => $preview['catch_up_bonus'] ?? 0,
+                    'exp_achievement_bonus' => $preview['achievement_bonus_exp'] ?? 0,
+                    'exp_total_estimate' => $preview['exp_total_estimate'] ?? (int) $completion->exp_earned,
                     'proof_text' => $completion->proof_text,
                     'proof_image' => \App\Services\StorageMirrorService::mirrorToRoot($completion->proof_image),
                     'submitted_at' => $completion->completed_at->diffForHumans(),
@@ -68,6 +81,7 @@ class QuestValidationController extends Controller
 
         $user = $completion->user;
         $oldLevel = $user->level;
+        $baseExp = (int) $completion->exp_earned;
 
         // Update status
         $completion->update([
@@ -77,17 +91,24 @@ class QuestValidationController extends Controller
         ]);
 
         // Now give the EXP with Catch-Up multiplier support
-        $result = $expService->addExp($user, $completion->exp_earned);
+        $result = $expService->addExp($user, $baseExp);
+
+        // Store the actual EXP awarded (base + catch-up + achievement bonuses)
+        $completion->update(['exp_earned' => $result['total_exp_gained']]);
 
         $user->refresh();
         $newLevel = $user->level;
 
-        $bonusMsg = ($result['bonus_exp'] ?? 0) > 0 
-            ? " (Termasuk +{$result['bonus_exp']} EXP {$result['catch_up']['title']}!)" 
-            : "";
+        $breakdown = ["{$result['exp_base']} EXP dasar"];
+        if (($result['bonus_exp'] ?? 0) > 0) {
+            $breakdown[] = "+{$result['bonus_exp']} {$result['catch_up']['title']}";
+        }
+        if (($result['achievement_bonus_exp'] ?? 0) > 0) {
+            $breakdown[] = "+{$result['achievement_bonus_exp']} bonus achievement";
+        }
 
         $flashData = [
-            'success' => "Quest \"{$completion->quest->title}\" untuk {$user->name} telah di-approve! +{$result['exp_gained']} EXP{$bonusMsg} diberikan.",
+            'success' => "Quest \"{$completion->quest->title}\" untuk {$user->name} telah di-approve! +{$result['total_exp_gained']} EXP (".implode(', ', $breakdown).") diberikan.",
         ];
 
         return back()->with($flashData);

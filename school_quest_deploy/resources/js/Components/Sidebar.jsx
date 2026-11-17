@@ -45,7 +45,12 @@ export default function Sidebar({ links, isOpen, setIsOpen, user, role }) {
 
                 {/* User Info (Mobile / Drawer Only) */}
                 <div className="md:hidden p-4 border-b border-gray-800/80 bg-slate-900/40 flex items-center gap-3 shrink-0">
-                    <img src={user.avatar} alt="Avatar" className="w-11 h-11 rounded-lg bg-gray-800 border border-gray-700 object-cover shrink-0" />
+                    <img 
+                        src={user.avatar} 
+                        alt="Avatar" 
+                        onError={(e) => { e.currentTarget.src = '/images/default-avatar.svg'; }}
+                        className="w-11 h-11 rounded-lg bg-gray-800 border border-gray-700 object-cover shrink-0" 
+                    />
                     <div className="min-w-0 flex-1">
                         <p className="font-bold text-sm text-white truncate">{user.name}</p>
                         <p className="text-xs text-blue-400 font-medium truncate">
@@ -104,7 +109,7 @@ export default function Sidebar({ links, isOpen, setIsOpen, user, role }) {
                 {/* Logout Button */}
                 <div className="p-4 border-t border-gray-800 shrink-0 bg-[#0b0f19]">
                     <Link
-                        href="/logout"
+                        href={typeof window !== 'undefined' && window.location.pathname.includes('/index.php') ? '/index.php/logout' : '/logout'}
                         method="post"
                         as="button"
                         onClick={handleLinkClick}

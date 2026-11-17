@@ -2,13 +2,13 @@ import React, { useRef, useState } from 'react';
 import { Head } from '@inertiajs/react';
 import StudentLayout from '@/Layouts/StudentLayout';
 import QuestCard from '@/Components/QuestCard';
-import { ClipboardDocumentListIcon } from '@heroicons/react/24/solid';
+import { ClipboardDocumentListIcon, BoltIcon } from '@heroicons/react/24/solid';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 
 import GuildHallScene from '@/Components/Quests/GuildHallScene';
 
-export default function Quests({ mainQuests = [], additionalQuests = [] }) {
+export default function Quests({ mainQuests = [], additionalQuests = [], expBoost = null }) {
     const gridRef = useRef(null);
     const heroRef = useRef(null);
     const [tab, setTab] = useState('main');
@@ -22,6 +22,12 @@ export default function Quests({ mainQuests = [], additionalQuests = [] }) {
         difficulty: q.difficulty || 'medium',
         exp: q.exp_reward || q.exp || 50,
         exp_reward: q.exp_reward || q.exp || 50,
+        exp_base: q.exp_base ?? q.exp_reward ?? q.exp ?? 0,
+        exp_total_estimate: q.exp_total_estimate ?? q.exp_reward ?? q.exp ?? 0,
+        catch_up: q.catch_up || null,
+        catch_up_bonus: q.catch_up_bonus || 0,
+        achievement_bonus_exp: q.achievement_bonus_exp || 0,
+        achievement_preview: q.achievement_preview || [],
         category: q.category || 'School',
         isCompleted: q.completed || false,
         submissionStatus: q.submission_status || null,
@@ -140,6 +146,28 @@ export default function Quests({ mainQuests = [], additionalQuests = [] }) {
                     </div>
                 </div>
             </div>
+
+            {/* Active Catch-Up / Challenger Surge Banner */}
+            {expBoost?.has_boost && (
+                <div className="mb-5 sm:mb-6 bg-gradient-to-r from-amber-950/40 via-blue-950/40 to-amber-950/40 border-2 border-amber-500/40 rounded-xl p-3.5 shadow-lg shadow-amber-500/5 flex items-start gap-3">
+                    <div className="p-2 rounded-lg bg-amber-500/20 border border-amber-500/40 shrink-0 text-amber-400 mt-0.5">
+                        <BoltIcon className="w-5 h-5 animate-pulse" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap mb-0.5">
+                            <h4 className="font-game text-xs sm:text-sm text-amber-300 tracking-wider">
+                                {expBoost.title} AKTIF!
+                            </h4>
+                            <span className="bg-amber-500/30 text-amber-300 border border-amber-400/50 font-mono font-bold text-[10px] px-2 py-0.5 rounded-full">
+                                ×{expBoost.multiplier} (+{expBoost.bonus_percentage}% EXP)
+                            </span>
+                        </div>
+                        <p className="text-[11px] sm:text-xs text-slate-300 leading-relaxed">
+                            {expBoost.reason} Rincian bonus sudah ditampilkan di setiap kartu quest di bawah.
+                        </p>
+                    </div>
+                </div>
+            )}
 
             {/* Main Tabs */}
             <div className="flex overflow-x-auto gap-4 sm:gap-6 mb-5 sm:mb-6 border-b border-slate-800 pb-px">

@@ -67,19 +67,27 @@ class AdminStudentController extends Controller
         $resetReq = \App\Models\PasswordResetRequest::findOrFail($id);
         $action = $request->input('action', 'resolve');
 
+        if (!in_array($action, ['resolve', 'reject'], true)) {
+            return back()->with('error', 'Aksi permintaan reset tidak valid.');
+        }
+
         if ($action === 'resolve') {
             $user = $resetReq->user;
             if (!$user && $resetReq->identifier) {
-                $user = User::where('nisn', $resetReq->identifier)
-                    ->orWhere('name', $resetReq->identifier)
-                    ->orWhere('email', $resetReq->identifier)
-                    ->first();
+                $normalized = mb_strtolower(trim($resetReq->identifier));
+                $user = User::where(function ($q) use ($normalized) {
+                    $q->whereRaw('LOWER(nisn) = ?', [$normalized])
+                        ->orWhereRaw('LOWER(name) = ?', [$normalized])
+                        ->orWhereRaw('LOWER(email) = ?', [$normalized]);
+                })->first();
             }
 
-            if ($user) {
-                $user->password = \Illuminate\Support\Facades\Hash::make('password');
-                $user->save();
+            if (!$user) {
+                return back()->with('error', "Akun dengan identitas \"{$resetReq->identifier}\" tidak ditemukan. Permintaan tidak direset — silakan tolak permintaan ini.");
             }
+
+            $user->password = \Illuminate\Support\Facades\Hash::make('password');
+            $user->save();
 
             $resetReq->status = 'resolved';
             $resetReq->resolved_by = auth()->id();

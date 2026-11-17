@@ -17,6 +17,14 @@ class QuestValidationApiController extends Controller
             ->latest()
             ->get()
             ->map(function ($completion) {
+                $preview = $completion->user && $completion->quest
+                    ? ExpService::getQuestRewardPreview(
+                        $completion->user,
+                        (int) $completion->exp_earned,
+                        $completion->quest->category
+                    )
+                    : null;
+
                 return [
                     'id' => $completion->id,
                     'student_id' => $completion->user?->id,
@@ -29,6 +37,11 @@ class QuestValidationApiController extends Controller
                     'quest_category' => $completion->quest?->category,
                     'quest_difficulty' => $completion->quest?->difficulty,
                     'exp_reward' => $completion->exp_earned,
+                    'exp_base' => (int) $completion->exp_earned,
+                    'catch_up' => $preview['catch_up'] ?? null,
+                    'exp_catch_up_bonus' => $preview['catch_up_bonus'] ?? 0,
+                    'exp_achievement_bonus' => $preview['achievement_bonus_exp'] ?? 0,
+                    'exp_total_estimate' => $preview['exp_total_estimate'] ?? (int) $completion->exp_earned,
                     'proof_text' => $completion->proof_text,
                     'proof_image' => \App\Services\StorageMirrorService::mirrorToRoot($completion->proof_image),
                     'submitted_at_human' => $completion->completed_at?->diffForHumans(),
@@ -73,6 +86,7 @@ class QuestValidationApiController extends Controller
         }
 
         $user = $completion->user;
+        $baseExp = (int) $completion->exp_earned;
 
         $completion->update([
             'status' => 'approved',
@@ -80,19 +94,31 @@ class QuestValidationApiController extends Controller
             'validated_at' => now(),
         ]);
 
-        $result = $expService->addExp($user, $completion->exp_earned);
+        $result = $expService->addExp($user, $baseExp);
+
+        // Store the actual EXP awarded (base + catch-up + achievement bonuses)
+        $completion->update(['exp_earned' => $result['total_exp_gained']]);
 
         $user->refresh();
 
-        $bonusMsg = ($result['bonus_exp'] ?? 0) > 0
-            ? " (Termasuk +{$result['bonus_exp']} EXP {$result['catch_up']['title']}!)"
-            : "";
+        $breakdown = ["{$result['exp_base']} EXP dasar"];
+        if (($result['bonus_exp'] ?? 0) > 0) {
+            $breakdown[] = "+{$result['bonus_exp']} {$result['catch_up']['title']}";
+        }
+        if (($result['achievement_bonus_exp'] ?? 0) > 0) {
+            $breakdown[] = "+{$result['achievement_bonus_exp']} bonus achievement";
+        }
 
         return response()->json([
             'status' => 'success',
-            'message' => "Quest \"{$completion->quest->title}\" untuk {$user->name} telah di-approve! +{$result['exp_gained']} EXP{$bonusMsg} diberikan.",
+            'message' => "Quest \"{$completion->quest->title}\" untuk {$user->name} telah di-approve! +{$result['total_exp_gained']} EXP (".implode(', ', $breakdown).") diberikan.",
             'data' => [
-                'exp_gained' => $result['exp_gained'],
+                'exp_base' => $result['exp_base'],
+                'exp_catch_up_bonus' => $result['bonus_exp'],
+                'exp_achievement_bonus' => $result['achievement_bonus_exp'],
+                'exp_gained' => $result['total_exp_gained'],
+                'total_exp_gained' => $result['total_exp_gained'],
+                'unlocked_achievements' => $result['unlocked_achievements'],
                 'student_level' => $user->level,
                 'student_exp' => $user->exp,
             ],

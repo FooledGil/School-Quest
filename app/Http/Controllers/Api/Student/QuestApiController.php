@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Student;
 use App\Http\Controllers\Controller;
 use App\Models\Quest;
 use App\Models\QuestCompletion;
+use App\Services\ExpService;
 use App\Services\QuestGeneratorService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -26,6 +27,9 @@ class QuestApiController extends Controller
             ->get()
             ->keyBy('quest_id');
 
+        // Calculate once so every quest card shows the same live multiplier.
+        $catchUp = ExpService::getCatchUpMultiplier($user);
+
         // Main quests (Daily) - filtered for user's class
         $mainQuests = Quest::where('type', 'main')
             ->where('available_date', $today->toDateString())
@@ -33,13 +37,14 @@ class QuestApiController extends Controller
                 $q->whereNull('class')->orWhere('class', $user->class);
             })
             ->get()
-            ->map(function ($q) use ($todayCompletions) {
+            ->map(function ($q) use ($todayCompletions, $user, $catchUp) {
                 $completion = $todayCompletions->get($q->id);
-                $q->completed = $completion !== null;
+                $q->completed = $completion !== null && $completion->status === 'approved';
                 $q->submission_status = $completion?->status ?? null;
                 $q->rejection_reason = $completion?->rejection_reason ?? null;
                 $q->submitted_proof_text = $completion?->proof_text ?? null;
                 $q->submitted_proof_image = $completion?->proof_image ? Storage::url($completion->proof_image) : null;
+                ExpService::attachRewardPreview($user, $q, $catchUp);
                 return $q;
             });
 
@@ -47,13 +52,14 @@ class QuestApiController extends Controller
         $additionalQuests = Quest::where('type', 'additional')
             ->where('is_active', true)
             ->get()
-            ->map(function ($q) use ($todayCompletions) {
+            ->map(function ($q) use ($todayCompletions, $user, $catchUp) {
                 $completion = $todayCompletions->get($q->id);
                 $q->completed = $completion !== null && $completion->status === 'approved';
                 $q->submission_status = $completion?->status ?? null;
                 $q->rejection_reason = $completion?->rejection_reason ?? null;
                 $q->submitted_proof_text = $completion?->proof_text ?? null;
                 $q->submitted_proof_image = $completion?->proof_image ? Storage::url($completion->proof_image) : null;
+                ExpService::attachRewardPreview($user, $q, $catchUp);
                 return $q;
             });
 
@@ -62,6 +68,7 @@ class QuestApiController extends Controller
             'data' => [
                 'main_quests' => $mainQuests,
                 'additional_quests' => $additionalQuests,
+                'exp_boost' => $catchUp,
             ],
         ]);
     }

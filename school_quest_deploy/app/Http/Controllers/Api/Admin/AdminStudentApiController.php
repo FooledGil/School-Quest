@@ -191,19 +191,33 @@ class AdminStudentApiController extends Controller
         $resetReq = \App\Models\PasswordResetRequest::findOrFail($id);
         $action = $request->input('action', 'resolve'); // 'resolve' or 'reject'
 
+        if (!in_array($action, ['resolve', 'reject'], true)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Aksi permintaan reset tidak valid.',
+            ], 422);
+        }
+
         if ($action === 'resolve') {
             $user = $resetReq->user;
             if (!$user && $resetReq->identifier) {
-                $user = User::where('nisn', $resetReq->identifier)
-                    ->orWhere('name', $resetReq->identifier)
-                    ->orWhere('email', $resetReq->identifier)
-                    ->first();
+                $normalized = mb_strtolower(trim($resetReq->identifier));
+                $user = User::where(function ($q) use ($normalized) {
+                    $q->whereRaw('LOWER(nisn) = ?', [$normalized])
+                        ->orWhereRaw('LOWER(name) = ?', [$normalized])
+                        ->orWhereRaw('LOWER(email) = ?', [$normalized]);
+                })->first();
             }
 
-            if ($user) {
-                $user->password = \Illuminate\Support\Facades\Hash::make('password');
-                $user->save();
+            if (!$user) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => "Akun dengan identitas \"{$resetReq->identifier}\" tidak ditemukan. Permintaan tidak direset — silakan tolak permintaan ini.",
+                ], 422);
             }
+
+            $user->password = \Illuminate\Support\Facades\Hash::make('password');
+            $user->save();
 
             $resetReq->status = 'resolved';
             $resetReq->resolved_by = auth()->id();
