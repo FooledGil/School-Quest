@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
 use App\Services\ExpService;
+use App\Services\IdentityResolver;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
@@ -23,15 +23,9 @@ class AuthController extends Controller
         ]);
 
         $loginInput = trim($request->login);
-        $isEmail = filter_var($loginInput, FILTER_VALIDATE_EMAIL);
 
-        if ($isEmail) {
-            $user = User::where('email', $loginInput)->first();
-        } else {
-            $user = User::where('nisn', $loginInput)
-                ->orWhere('name', $loginInput)
-                ->first();
-        }
+        // Normalized lookup so names with trailing/double spaces still work.
+        $user = IdentityResolver::find($loginInput);
 
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
@@ -179,13 +173,10 @@ class AuthController extends Controller
         \App\Models\PasswordResetRequest::ensureTableExists();
 
         $identifier = trim($request->identifier);
-        $normalized = mb_strtolower($identifier);
+        $normalized = IdentityResolver::normalize($identifier);
 
-        $user = User::where(function ($q) use ($normalized) {
-            $q->whereRaw('LOWER(nisn) = ?', [$normalized])
-                ->orWhereRaw('LOWER(name) = ?', [$normalized])
-                ->orWhereRaw('LOWER(email) = ?', [$normalized]);
-        })->first();
+        // Handles trailing/double spaces and non-breaking spaces in stored names.
+        $user = IdentityResolver::find($identifier);
 
         // Do not create a request for an identity that does not exist.
         if (!$user) {
@@ -199,12 +190,13 @@ class AuthController extends Controller
             ], 422);
         }
 
-        // Check if there is already a pending request (same account or same identifier, case-insensitive)
+        // Check if there is already a pending request (same account or normalized identifier).
         $existing = \App\Models\PasswordResetRequest::where('status', 'pending')
-            ->where(function ($q) use ($normalized, $user) {
-                $q->where('user_id', $user->id)
-                    ->orWhereRaw('LOWER(identifier) = ?', [$normalized]);
-            })->first();
+            ->get()
+            ->first(function ($resetReq) use ($user, $normalized) {
+                return (int) $resetReq->user_id === (int) $user->id
+                    || IdentityResolver::normalize($resetReq->identifier) === $normalized;
+            });
 
         if ($existing) {
             return response()->json([

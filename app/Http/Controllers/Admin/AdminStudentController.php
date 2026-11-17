@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Services\ExpService;
+use App\Services\IdentityResolver;
 use Inertia\Inertia;
 
 class AdminStudentController extends Controller
@@ -22,7 +23,18 @@ class AdminStudentController extends Controller
             ->orderByRaw("FIELD(status, 'pending', 'resolved', 'rejected')")
             ->latest()
             ->take(50)
-            ->get();
+            ->get()
+            ->each(function ($resetReq) {
+                // Old requests may have been stored with user_id = NULL. Resolve the
+                // account again so the admin card shows the correct name/details.
+                if (!$resetReq->user && $resetReq->identifier) {
+                    $resolved = IdentityResolver::find($resetReq->identifier);
+                    if ($resolved) {
+                        $resetReq->setRelation('user', $resolved);
+                        $resetReq->user_id = $resolved->id;
+                    }
+                }
+            });
 
         return Inertia::render('Admin/Students/Index', [
             'students' => $students,
@@ -74,12 +86,7 @@ class AdminStudentController extends Controller
         if ($action === 'resolve') {
             $user = $resetReq->user;
             if (!$user && $resetReq->identifier) {
-                $normalized = mb_strtolower(trim($resetReq->identifier));
-                $user = User::where(function ($q) use ($normalized) {
-                    $q->whereRaw('LOWER(nisn) = ?', [$normalized])
-                        ->orWhereRaw('LOWER(name) = ?', [$normalized])
-                        ->orWhereRaw('LOWER(email) = ?', [$normalized]);
-                })->first();
+                $user = IdentityResolver::find($resetReq->identifier);
             }
 
             if (!$user) {
@@ -89,12 +96,14 @@ class AdminStudentController extends Controller
             $user->password = \Illuminate\Support\Facades\Hash::make('password');
             $user->save();
 
+            // Link orphaned requests to the resolved account for future reference.
+            $resetReq->user_id = $user->id;
             $resetReq->status = 'resolved';
             $resetReq->resolved_by = auth()->id();
             $resetReq->resolved_at = now();
             $resetReq->save();
 
-            return back()->with('success', "Permintaan disetujui. Akun {$resetReq->identifier} telah direset ke 'password'.");
+            return back()->with('success', "Permintaan disetujui. Akun {$user->name} (NISN: {$user->nisn}) telah direset ke 'password'.");
         } else {
             $resetReq->status = 'rejected';
             $resetReq->resolved_by = auth()->id();

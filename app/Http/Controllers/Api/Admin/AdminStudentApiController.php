@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Services\ExpService;
+use App\Services\IdentityResolver;
 use Illuminate\Http\Request;
 
 class AdminStudentApiController extends Controller
@@ -161,15 +162,21 @@ class AdminStudentApiController extends Controller
             ->take(50)
             ->get()
             ->map(function ($r) {
+                // Old requests may have been stored with user_id = NULL.
+                $resolvedUser = $r->user;
+                if (!$resolvedUser && $r->identifier) {
+                    $resolvedUser = IdentityResolver::find($r->identifier);
+                }
+
                 return [
                     'id' => $r->id,
                     'identifier' => $r->identifier,
                     'notes' => $r->notes,
                     'status' => $r->status,
-                    'user_id' => $r->user_id,
-                    'user_name' => $r->user?->name,
-                    'user_class' => $r->user?->class,
-                    'user_nisn' => $r->user?->nisn,
+                    'user_id' => $r->user_id ?: $resolvedUser?->id,
+                    'user_name' => $resolvedUser?->name,
+                    'user_class' => $resolvedUser?->class,
+                    'user_nisn' => $resolvedUser?->nisn,
                     'created_at' => $r->created_at->format('d M Y, H:i'),
                     'resolved_at' => $r->resolved_at?->format('d M Y, H:i'),
                 ];
@@ -201,12 +208,7 @@ class AdminStudentApiController extends Controller
         if ($action === 'resolve') {
             $user = $resetReq->user;
             if (!$user && $resetReq->identifier) {
-                $normalized = mb_strtolower(trim($resetReq->identifier));
-                $user = User::where(function ($q) use ($normalized) {
-                    $q->whereRaw('LOWER(nisn) = ?', [$normalized])
-                        ->orWhereRaw('LOWER(name) = ?', [$normalized])
-                        ->orWhereRaw('LOWER(email) = ?', [$normalized]);
-                })->first();
+                $user = IdentityResolver::find($resetReq->identifier);
             }
 
             if (!$user) {
@@ -219,6 +221,8 @@ class AdminStudentApiController extends Controller
             $user->password = \Illuminate\Support\Facades\Hash::make('password');
             $user->save();
 
+            // Link orphaned requests to the resolved account for future reference.
+            $resetReq->user_id = $user->id;
             $resetReq->status = 'resolved';
             $resetReq->resolved_by = auth()->id();
             $resetReq->resolved_at = now();
@@ -226,7 +230,7 @@ class AdminStudentApiController extends Controller
 
             return response()->json([
                 'status' => 'success',
-                'message' => "Permintaan disetujui. Kata sandi akun {$resetReq->identifier} telah direset ke default ('password').",
+                'message' => "Permintaan disetujui. Kata sandi akun {$user->name} (NISN: {$user->nisn}) telah direset ke default ('password').",
             ]);
         } else {
             $resetReq->status = 'rejected';
