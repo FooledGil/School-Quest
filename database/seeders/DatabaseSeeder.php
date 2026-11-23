@@ -16,8 +16,6 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        $password = Hash::make('password');
-
         // ADMINS
         User::create(['name' => 'Admin Sekolah', 'email' => 'admin@schoolquest.id', 'password' => Hash::make('admin123'), 'role' => 'admin', 'has_completed_onboarding' => true]);
         User::create(['name' => 'Guru Piket', 'email' => 'guru@schoolquest.id', 'password' => Hash::make('guru123'), 'role' => 'admin', 'has_completed_onboarding' => true]);
@@ -276,7 +274,7 @@ class DatabaseSeeder extends Seeder
             ['nisn' => '0084169869', 'name' => 'MITA', 'gender' => 'P', 'class' => 'XII RPL', 'exp' => 0],
             ['nisn' => '0093724681', 'name' => 'MONI ASTRIYANI', 'gender' => 'P', 'class' => 'XII RPL', 'exp' => 0],
             ['nisn' => '0098858266', 'name' => 'MUHAMAD AFDZAN SBASTIAN', 'gender' => 'L', 'class' => 'XII RPL', 'exp' => 0],
-            ['nisn' => '0083707851', 'name' => 'MUHAMAD FAHRI AL HIDAYAT', 'gender' => 'L', 'class' => 'XII RPL', 'exp' => 0],
+            ['nisn' => '0083707851', 'name' => 'MUHAMAD PAHRI AL HIDAYAT', 'gender' => 'L', 'class' => 'XII RPL', 'exp' => 0],
             ['nisn' => '0095384722', 'name' => 'MUHAMMAD NAFIS SHIDDIQ', 'gender' => 'L', 'class' => 'XII RPL', 'exp' => 0],
             ['nisn' => '0096821016', 'name' => 'NATASYIA SAPUTRI', 'gender' => 'P', 'class' => 'XII RPL', 'exp' => 0],
             ['nisn' => '0092748865', 'name' => 'NAYARA KHANSA ZENINA', 'gender' => 'P', 'class' => 'XII RPL', 'exp' => 0],
@@ -299,7 +297,7 @@ class DatabaseSeeder extends Seeder
             $studentModels[] = User::create([
                 'nisn' => $s['nisn'],
                 'name' => $s['name'],
-                'password' => $password,
+                'password' => $s['nisn'],
                 'role' => 'student',
                 'class' => $s['class'],
                 'gender' => $s['gender'] ?? null,
