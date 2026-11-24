@@ -11,6 +11,7 @@ class ExpService
      * Calculate level from total accumulated EXP using scalable quadratic progression.
      * Curve: Total EXP required for Level L = 60 * (L - 1)^2 + 90 * (L - 1)
      */
+    //EXP(L)=60(L−1)2+90(L−1)//
     public static function calculateLevel(int $exp): int
     {
         if ($exp <= 0) {

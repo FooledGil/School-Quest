@@ -414,7 +414,7 @@ class DatabaseSeeder extends Seeder
                 ['sub' => 'Mata Pelajaran Pilihan RPL', 'start' => '09:10:00', 'end' => '09:50:00', 'teacher' => 'Cep Kusaeri, ST.'],
                 ['sub' => 'Konsentrasi Keahlian RPL', 'start' => '09:50:00', 'end' => '11:10:00', 'teacher' => 'Cep Kusaeri, ST.'],
                 ['sub' => 'Konsentrasi Keahlian RPL', 'start' => '12:10:00', 'end' => '14:50:00', 'teacher' => 'Cep Kusaeri, ST.'],
-                ['sub' => 'Apel Sore', 'start' => '14:50:00', 'end' => '15:20:00', 'teacher' => null],
+                ['sub' => 'Apelain Sore', 'start' => '14:50:00', 'end' => '15:20:00', 'teacher' => null],
                 ['sub' => 'ESKUL', 'start' => '15:20:00', 'end' => '16:00:00', 'teacher' => null],
             ],
             4 => [ // Kamis
